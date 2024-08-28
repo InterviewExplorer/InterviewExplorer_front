@@ -1,11 +1,24 @@
 import React, { useState } from 'react';
+import VideoRecorder from '../VideoRecorder';
+import { useNavigate } from 'react-router-dom';
 
 function Pdf() {
+    const navigate = useNavigate();
     const [job, setJob] = useState('');
     const [years, setYears] = useState('');
     const [pdfFile, setPdfFile] = useState(null);
     const [questions, setQuestions] = useState(null);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+    // dj
+    const [answers, setAnswers] = useState(null);
+    const handleAnswers = (newData) => {
+        setAnswers(prevAnswers => ({
+            ...prevAnswers,
+            ...newData
+        }));
+    };
+    console.log("answers", answers);
 
     const handleJobChange = (event) => {
         setJob(event.target.value);
@@ -58,6 +71,12 @@ function Pdf() {
         }
     };
 
+    const [showEndInterviewButton, setShowEndInterviewButton] = useState(false);
+
+    const handleEndInterview = () => {
+        navigate('/report'); // /report 페이지로 이동
+    };
+
     return (
         <div>
             <form onSubmit={handleSubmit}>
@@ -80,10 +99,19 @@ function Pdf() {
             {questions && (
                 <div>
                     <h3>질문 {currentQuestionIndex + 1}:</h3>
-                    <p>{currentQuestionIndex === 0 ? questions.first_question : questions.second_question}</p>
-                    {currentQuestionIndex === 0 && (
+                    <p>
+                        {currentQuestionIndex === 0 
+                            ? questions.first_question 
+                            : questions.second_question}
+                    </p>
+                    {currentQuestionIndex < 1 && (
                         <button onClick={handleNextQuestion}>다음 질문</button>
                     )}
+                    {showEndInterviewButton && (
+                        <button onClick={handleEndInterview}>면접 종료</button>
+                    )}
+                    
+                    <VideoRecorder handleAnswers={handleAnswers}/>
                 </div>
             )}
         </div>

@@ -4,8 +4,8 @@ function Main() {
 
     return (
         <>
-            <p>해윙~</p>
-            <Link to="/pdf">질문 생성</Link>
+            <h1>메인페이지</h1>
+            <Link to="/pdf">면접 시작</Link>
         </>
     )
 }

@@ -1,12 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
-const VideoRecorder = () => {
+const VideoRecorder = ({ handleAnswers }) => {
     const [recording, setRecording] = useState(false);
     const [transcript, setTranscript] = useState(''); // 텍스트 추출 결과 상태
     const [loading, setLoading] = useState(false); // 로딩 상태 추가
     const mediaRecorderRef = useRef(null);
     const videoRef = useRef(null);
     const chunks = useRef([]);
+    const indexRef = useRef(1); // 순서 번호를 저장하기 위한 useRef
 
     const startRecording = async () => {
         try {
@@ -65,6 +66,20 @@ const VideoRecorder = () => {
         }
     };
 
+    useEffect(() => {
+        if (transcript) {
+            // 현재 순서 번호를 기반으로 키를 생성
+            const currentIndex = indexRef.current;
+            const key = `A${currentIndex}`;
+
+            // `handleAnswers`를 호출하여 `transcript` 값을 추가
+            handleAnswers({ [key]: transcript });
+
+            // 순서 번호 증가
+            indexRef.current += 1;
+        }
+    }, [transcript]);
+
     return (
         <>
             <h1>Video Recorder</h1>
@@ -77,9 +92,6 @@ const VideoRecorder = () => {
                 )}
             </div>
             {loading && <p>Loading...</p>} {/* 로딩 상태 표시 */}
-            {transcript && (
-                <div>{transcript}</div>
-            )}
         </>
     );
 };
