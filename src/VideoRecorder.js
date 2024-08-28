@@ -2,8 +2,7 @@ import React, { useState, useRef } from 'react';
 
 const VideoRecorder = () => {
     const [recording, setRecording] = useState(false);
-    const [videoURL, setVideoURL] = useState('');
-    const [audioURL, setAudioURL] = useState(''); // 추가된 상태
+    const [transcript, setTranscript] = useState(''); // 텍스트 추출 결과 상태
     const [loading, setLoading] = useState(false); // 로딩 상태 추가
     const mediaRecorderRef = useRef(null);
     const videoRef = useRef(null);
@@ -25,18 +24,7 @@ const VideoRecorder = () => {
             mediaRecorderRef.current.onstop = async () => {
                 const blob = new Blob(chunks.current, { type: 'video/webm' });
                 chunks.current = [];
-                const videoURL = URL.createObjectURL(blob);
-                setVideoURL(videoURL);
-
-                // 다운로드 링크 생성
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = videoURL;
-                a.download = 'recorded_video.webm'; // 파일 확장자에 맞춤
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(videoURL);
-
+                
                 // 비디오를 서버로 전송
                 const formData = new FormData();
                 formData.append('file', blob, 'recorded_video.webm');
@@ -44,7 +32,7 @@ const VideoRecorder = () => {
                 setLoading(true); // 로딩 시작
 
                 try {
-                    const response = await fetch('/extract-audio/', { // 실제 서버 URL로 업데이트 필요
+                    const response = await fetch('http://localhost:8000/process_audio', { // 실제 서버 URL로 업데이트 필요
                         method: 'POST',
                         body: formData
                     });
@@ -54,7 +42,7 @@ const VideoRecorder = () => {
                     }
 
                     const result = await response.json();
-                    setAudioURL(result.audio_file_path);
+                    setTranscript(result.transcript); // 서버에서 받은 텍스트 설정
                 } catch (error) {
                     console.error('Error uploading video:', error);
                 } finally {
@@ -78,30 +66,21 @@ const VideoRecorder = () => {
     };
 
     return (
-        <div>
+        <>
             <h1>Video Recorder</h1>
             <video ref={videoRef} autoPlay playsInline></video>
             <div>
                 {recording ? (
-                    <button onClick={stopRecording}>Stop Recording</button>
+                    <button onClick={stopRecording}>녹화 종료</button>
                 ) : (
-                    <button onClick={startRecording}>Start Recording</button>
+                    <button onClick={startRecording}>녹화 시작</button>
                 )}
             </div>
             {loading && <p>Loading...</p>} {/* 로딩 상태 표시 */}
-            {videoURL && (
-                <div>
-                    <h2>Recorded Video:</h2>
-                    <video src={videoURL} controls></video>
-                </div>
+            {transcript && (
+                <div>{transcript}</div>
             )}
-            {audioURL && (
-                <div>
-                    <h2>Extracted Audio:</h2>
-                    <audio src={audioURL} controls></audio>
-                </div>
-            )}
-        </div>
+        </>
     );
 };
 
