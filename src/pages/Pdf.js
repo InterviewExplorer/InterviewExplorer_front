@@ -1,77 +1,93 @@
 import React, { useState } from 'react';
 
 function Pdf() {
-  const [job, setJob] = useState('');
-  const [years, setYears] = useState('');
-  const [pdfFile, setPdfFile] = useState(null);
-  const [result, setResult] = useState('');
+    const [job, setJob] = useState('');
+    const [years, setYears] = useState('');
+    const [pdfFile, setPdfFile] = useState(null);
+    const [questions, setQuestions] = useState(null);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-  const handleJobChange = (event) => {
-    setJob(event.target.value);
-  };
+    const handleJobChange = (event) => {
+        setJob(event.target.value);
+    };
 
-  const handleYearsChange = (event) => {
-    setYears(event.target.value);
-  };
+    const handleYearsChange = (event) => {
+        setYears(event.target.value);
+    };
 
-  const handleFileChange = (event) => {
-    setPdfFile(event.target.files[0]);
-  };
+    const handleFileChange = (event) => {
+        setPdfFile(event.target.files[0]);
+    };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        if (!job || !years) {
+            alert('직업군과 연차는 필수 입력 항목입니다.');
+            return;
+        }
 
-    const formData = new FormData();
-    formData.append('job', job);
-    formData.append('years', years);
-    formData.append('file', pdfFile);
+        const formData = new FormData();
+        formData.append('job', job);
+        formData.append('years', years);
+        if (pdfFile) {
+            formData.append('file', pdfFile);
+        }
 
-    try {
-      const response = await fetch('http://localhost:8000/generateQ/', {
-        method: 'POST',
-        body: formData,
-      });
+        try {
+            const response = await fetch('http://localhost:8000/generateQ/', {
+                method: 'POST',
+                body: formData,
+            });
 
-      if (!response.ok) {
-        throw new Error('파일 업로드 실패');
-      }
+            if (!response.ok) {
+                throw new Error('질문 생성에 실패했습니다.');
+            }
 
-      const data = await response.json();
-      setResult(data.result); // 서버로부터 받은 결과값을 상태로 설정
-    } catch (error) {
-      console.error('에러 발생:', error);
-      setResult('에러가 발생했습니다.'); // 에러 메시지 설정
-    }
-  };
+            const data = await response.json();
+            setQuestions(data);
+            setCurrentQuestionIndex(0);
+        } catch (error) {
+            console.error('에러 발생:', error);
+            alert('질문 생성 중 오류가 발생했습니다.');
+        }
+    };
 
+    const handleNextQuestion = () => {
+        if (currentQuestionIndex < 1) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
+        }
+    };
 
-  return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <select value={job} onChange={handleJobChange}>
-          <option value="">선택</option>
-          <option value="developer">개발자</option>
-          {/* 다른 옵션 추가 가능 */}
-        </select>
-        <input
-          type="text"
-          placeholder="ex:) 3년"
-          value={years}
-          onChange={handleYearsChange}
-        />
-        <input type="file" accept=".pdf" onChange={handleFileChange} />
-        <button type="submit">전송</button>
-      </form>
-
-      {/* 서버로부터 받은 결과값을 화면에 표시 */}
-      {result && (
+    return (
         <div>
-          <h3>결과:</h3>
-          <p>{result}</p>
+            <form onSubmit={handleSubmit}>
+                <select value={job} onChange={handleJobChange} required>
+                    <option value="">직업군 선택</option>
+                    <option value="developer">개발자</option>
+                    {/* 필요에 따라 다른 옵션 추가 */}
+                </select>
+                <input
+                    type="text"
+                    placeholder="연차 (예: 3년)"
+                    value={years}
+                    onChange={handleYearsChange}
+                    required
+                />
+                <input type="file" accept=".pdf" onChange={handleFileChange} />
+                <button type="submit">질문 생성</button>
+            </form>
+
+            {questions && (
+                <div>
+                    <h3>질문 {currentQuestionIndex + 1}:</h3>
+                    <p>{currentQuestionIndex === 0 ? questions.first_question : questions.second_question}</p>
+                    {currentQuestionIndex === 0 && (
+                        <button onClick={handleNextQuestion}>다음 질문</button>
+                    )}
+                </div>
+            )}
         </div>
-      )}
-    </div>
-  );
+    );
 }
 
 export default Pdf;
