@@ -1,5 +1,6 @@
+import axios from 'axios';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { json, useNavigate } from 'react-router-dom';
 
 function GetInfo() {
     const navigate = useNavigate();
@@ -54,6 +55,33 @@ function GetInfo() {
         } catch (error) {
             console.error('에러 발생:', error);
             alert('질문 생성 중 오류가 발생했습니다.');
+        }
+        try {
+            const response = await fetch('http://localhost:8000/generate_question/', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    job: job,
+                    years: years,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('꼬리물기 질문 생성에 실패했습니다.');
+            }
+
+            const data = await response.json();
+            console.log("꼬리물기 질문: " + JSON.stringify(data));
+            setQuestions(data);
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
+
+            // 질문 생성에 성공한 경우
+            navigate('/interview_technical', { state: { questions: data } });
+        } catch (error) {
+            console.error('에러 발생:', error);
+            alert('꼬리물기 질문 생성 중 오류가 발생했습니다.');
         }
     };
 
