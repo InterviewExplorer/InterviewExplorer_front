@@ -49,15 +49,8 @@ function GetInfo() {
             const data = await response.json();
             setQuestions(data);
             setCurrentQuestionIndex(0);
-
-            // 질문 생성에 성공한 경우
-            navigate('/interview_technical', { state: { questions: data } });
-        } catch (error) {
-            console.error('에러 발생:', error);
-            alert('질문 생성 중 오류가 발생했습니다.');
-        }
-        try {
-            const response = await fetch('http://localhost:8000/generate_question/', {
+            
+            const response2 = await fetch('http://localhost:8000/generate_question/', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
@@ -68,20 +61,23 @@ function GetInfo() {
                 }),
             });
 
-            if (!response.ok) {
+            if (!response2.ok) {
                 throw new Error('꼬리물기 질문 생성에 실패했습니다.');
             }
 
-            const data = await response.json();
-            console.log("꼬리물기 질문: " + JSON.stringify(data));
-            setQuestions(data);
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
+            const data2 = await response2.json();
+
+            const combinedQuestions = { ...data, ...data2 };
+
+            setQuestions(combinedQuestions)
+
+            console.log("총 문제: " + JSON.stringify(combinedQuestions));
 
             // 질문 생성에 성공한 경우
-            navigate('/interview_technical', { state: { questions: data } });
+            navigate('/interview_technical', { state: { questions: combinedQuestions } });
         } catch (error) {
             console.error('에러 발생:', error);
-            alert('꼬리물기 질문 생성 중 오류가 발생했습니다.');
+            alert('질문 생성 중 오류가 발생했습니다.');
         }
     };
 
