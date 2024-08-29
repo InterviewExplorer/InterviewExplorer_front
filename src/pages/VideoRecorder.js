@@ -82,7 +82,7 @@ const VideoRecorder = ({ handleAnswers }) => {
 
     return (
         <>
-            <video ref={videoRef} autoPlay playsInline style={{width:'640px',height:'480px',backgroundColor:'black'}}></video>
+            <video ref={videoRef} autoPlay playsInline style={{ width: '640px', height: '480px', backgroundColor: 'black' }}></video>
             <div>
                 {recording ? (
                     <button onClick={stopRecording}>녹화 종료</button>

@@ -8,6 +8,7 @@ function GetInfo() {
     const [pdfFile, setPdfFile] = useState(null);
     const [questions, setQuestions] = useState(null);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [loading, setLoading] = useState(false);  // 로딩 상태 추가
 
     const handleJobChange = (event) => {
         setJob(event.target.value);
@@ -35,6 +36,8 @@ function GetInfo() {
             formData.append('file', pdfFile);
         }
 
+        setLoading(true);  // 로딩 시작
+
         try {
             const response = await fetch('http://localhost:8000/generateQ/', {
                 method: 'POST',
@@ -50,38 +53,46 @@ function GetInfo() {
             setCurrentQuestionIndex(0);
 
             // 질문 생성에 성공한 경우
-            navigate('/interview_technical', { state: { questions: data } });
+            navigate('/interview_technical', { state: { questions: data, job, years } });
         } catch (error) {
             console.error('에러 발생:', error);
             alert('질문 생성 중 오류가 발생했습니다.');
+        } finally {
+            setLoading(false);  // 로딩 종료
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>직업 :
-                <select value={job} onChange={handleJobChange} required>
-                    <option value="">선택</option>
-                    <option value="developer">개발자</option>
-                </select>
-            </label>
-            <br/>
-            <label>경력 :
-                <input
-                    type="text"
-                    placeholder="년 단위로 숫자만 입력해주세요."
-                    value={years}
-                    onChange={handleYearsChange}
-                    required
-                />
-            </label>
-            <br/>
-            <label>이력서 :
-                <input type="file" accept=".pdf" onChange={handleFileChange} />
-            </label>
-            <br/>
-            <button type="submit">기술면접 응시</button>
-        </form>
+        <div>
+            {loading ? (
+                <div>로딩 중...</div>  // 로딩 중일 때 표시할 메시지
+            ) : (
+                <form onSubmit={handleSubmit}>
+                    <label>직업 :
+                        <select value={job} onChange={handleJobChange} required>
+                            <option value="">선택</option>
+                            <option value="developer">개발자</option>
+                        </select>
+                    </label>
+                    <br/>
+                    <label>경력 :
+                        <input
+                            type="text"
+                            placeholder="년 단위로 숫자만 입력해주세요."
+                            value={years}
+                            onChange={handleYearsChange}
+                            required
+                        />
+                    </label>
+                    <br/>
+                    <label>이력서 :
+                        <input type="file" accept=".pdf" onChange={handleFileChange} />
+                    </label>
+                    <br/>
+                    <button type="submit">기술면접 응시</button>
+                </form>
+            )}
+        </div>
     );
 }
 
