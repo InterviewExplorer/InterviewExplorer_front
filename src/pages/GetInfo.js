@@ -84,10 +84,13 @@ function GetInfo() {
     return (
         <form onSubmit={handleSubmit}>
             <label>직업 :
-                <select value={job} onChange={handleJobChange} required>
-                    <option value="">선택</option>
-                    <option value="developer">개발자</option>
-                </select>
+            <input
+                    type="text"
+                    placeholder="직군을 입력해주세요."
+                    value={job}
+                    onChange={handleJobChange}
+                    required
+                />
             </label>
             <br/>
             <label>경력 :
