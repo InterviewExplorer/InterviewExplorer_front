@@ -19,6 +19,9 @@ function Interview_technical() {
         setIsRecordingDone(true); // 답변이 업데이트되면 recording이 완료된 것으로 간주
     };
 
+    console.log("questions",questions)
+    console.log("answers",answers)
+
     const handleNextQuestion = () => {
         if (!isRecordingDone) {
             alert('현재 질문에 대한 답변을 먼저 완료해주세요.');
