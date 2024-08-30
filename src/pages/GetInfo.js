@@ -10,13 +10,6 @@ function GetInfo() {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [loading, setLoading] = useState(false);  // 로딩 상태 추가
 
-    const handleQuestions = (newData) => {
-        setQuestions(prevQuestions => ({
-            ...prevQuestions,
-            ...newData
-        }));
-    };
-
     const handleJobChange = (event) => {
         setJob(event.target.value);
     };
@@ -72,9 +65,8 @@ function GetInfo() {
                 throw new Error('영상 생성에 실패했습니다.');
             }
             const data2 = await response2.json();
-            console.log(data2);
             // 질문 생성에 성공한 경우
-            navigate('/interview_technical', { state: { questions: data, interviewer: data2 }});
+            navigate('/interview_technical', { state: { questions: data, job, years, interviewer: data2 }});
         } catch (error) {
             console.error('에러 발생:', error);
             alert('질문 생성 중 오류가 발생했습니다.');
