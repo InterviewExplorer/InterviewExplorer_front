@@ -1,52 +1,68 @@
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'
+import handleQuestions from "./GetInfo"
 
-const Follow = () => {
 
-    const location = useLocation();
-    const { questions } = location.state || {};
-    const [isLastQuestion, setIsLastQuestion ] = useState(false);
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const navigate = useNavigate();
-    const [answers, setAnswers] = useState(null);
+const Follow = ({job, years, answers, questions}) => {
 
-    console.log("questions(질문)", questions);
+    const [questionCount, setQuestionCount] = useState(0); // 질문 생성 카운트 추가
+    const [fetchingQuestions, setFetchingQuestions] = useState(false); // 질문 생성 요청 상태 추적
 
-    if (!questions) {
-        console.error("질문 데이터가 없습니다.");  // 질문 데이터가 없는 경우 에러 출력
-        return <div>질문 데이터를 불러올 수 없습니다.</div>;
-    }
+    // answers -> 꼬리물기 질문으로 보내기
+    useEffect(() => {
+        const sendAnswer = async () => {
+            try {
+                // 두 번의 질문 생성만 허용
+                if (questionCount < 2 && !fetchingQuestions) {
 
-    const handleNextQuestion = () => {
-        const questionKeys = Object.keys(questions);
-        if (currentQuestionIndex < questionKeys.length - 1) {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
-            if (currentQuestionIndex + 1 === questionKeys.length - 1) {
-                setIsLastQuestion(true);  // 마지막 질문임을 표시
+                    const answerValues = Object.values(answers);
+
+                    // 답변 셔플 선택
+                    // const randomAnswer = answerValues[Math.floor(Math.random() * answerValues.length)];
+                    
+                    const res = await axios.post('http://localhost:8000/generate_question/', {
+                        job: job,
+                        years: years,
+                        answer: answerValues
+                    });
+
+                    // JSON 배열로 응답 받기
+                    const newQuestionText = res.data;
+
+                    if (newQuestionText.length > 0) {
+
+                        // 기존 questions에서 마지막 키 값 찾기
+                        const questionKeys = Object.keys(questions);
+                        const lastKeyNumber = Math.max(...questionKeys.map(key => parseInt(key.substring(1), 10)));
+
+                        // 기존 questions에서 마지막 키 값 찾기
+                        const newQuestionKey = `Q${lastKeyNumber + 1}`;
+
+                        // 기존 questions와 꼬리물기 질문 합치기
+                        // const combinedQuestions = { ...questions, [newQuestionKey]: newQuestionText };
+                        handleQuestions({ [newQuestionKey]: newQuestionText });
+
+                        // 질문 생성 카운트 증가
+                        setQuestionCount(prevCount => prevCount + 1);
+
+                        console.log("서버 응답: " + JSON.stringify(res.data));
+
+                        // setNewQuestions(combinedQuestions);
+
+                    }
+
+                    setFetchingQuestions(false);
+                }
+            } catch (error) {
+                console.error('서버 요청 실패: ', error);
+                setFetchingQuestions(false);
             }
+        };
+        if (Object.keys(answers).length > 0) {
+            sendAnswer();
         }
-    };
+    }, [answers]);
 
-    const handleEndInterview = () => {
-        // /report 페이지로 이동할 때 answers와 questions을 state로 전달
-        navigate('/report', { state: { answers, questions } });
-    };
-
-    return (
-        <>
-            {questions && (
-                <div>
-                    <h3>질문 {currentQuestionIndex + 1}</h3>
-                    <p>{questions[`Q${currentQuestionIndex + 3}`]}</p>
-                    {isLastQuestion ? (
-                        <button onClick={handleEndInterview}>면접 종료</button>
-                    ) : (
-                        <button onClick={handleNextQuestion}>다음 질문</button>
-                    )}
-                </div>
-            )}
-        </>
-    )
 }
 
 export default Follow;

@@ -1,6 +1,5 @@
-import axios from 'axios';
 import React, { useState } from 'react';
-import { json, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function GetInfo() {
     const navigate = useNavigate();
@@ -9,6 +8,14 @@ function GetInfo() {
     const [pdfFile, setPdfFile] = useState(null);
     const [questions, setQuestions] = useState(null);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [loading, setLoading] = useState(false);  // 로딩 상태 추가
+
+    const handleQuestions = (newData) => {
+        setQuestions(prevQuestions => ({
+            ...prevQuestions,
+            ...newData
+        }));
+    };
 
     const handleJobChange = (event) => {
         setJob(event.target.value);
@@ -36,6 +43,8 @@ function GetInfo() {
             formData.append('file', pdfFile);
         }
 
+        setLoading(true);  // 로딩 시작
+
         try {
             const response = await fetch('http://localhost:8000/generateQ/', {
                 method: 'POST',
@@ -49,66 +58,51 @@ function GetInfo() {
             const data = await response.json();
             setQuestions(data);
             setCurrentQuestionIndex(0);
-            
-            const response2 = await fetch('http://localhost:8000/generate_question/', {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    job: job,
-                    years: years,
-                }),
-            });
-
-            if (!response2.ok) {
-                throw new Error('꼬리물기 질문 생성에 실패했습니다.');
-            }
-
-            const data2 = await response2.json();
-
-            const combinedQuestions = { ...data, ...data2 };
-
-            setQuestions(combinedQuestions)
-
-            console.log("총 문제: " + JSON.stringify(combinedQuestions));
 
             // 질문 생성에 성공한 경우
-            navigate('/interview_technical', { state: { questions: combinedQuestions } });
+            navigate('/interview_technical', { state: { questions: data, job, years } });
         } catch (error) {
             console.error('에러 발생:', error);
             alert('질문 생성 중 오류가 발생했습니다.');
+        } finally {
+            setLoading(false);  // 로딩 종료
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>직업 :
-            <input
-                    type="text"
-                    placeholder="직군을 입력해주세요."
-                    value={job}
-                    onChange={handleJobChange}
-                    required
-                />
-            </label>
-            <br/>
-            <label>경력 :
-                <input
-                    type="text"
-                    placeholder="년 단위로 숫자만 입력해주세요."
-                    value={years}
-                    onChange={handleYearsChange}
-                    required
-                />
-            </label>
-            <br/>
-            <label>이력서 :
-                <input type="file" accept=".pdf" onChange={handleFileChange} />
-            </label>
-            <br/>
-            <button type="submit">기술면접 응시</button>
-        </form>
+        <div>
+            {loading ? (
+                <div>로딩 중...</div>  // 로딩 중일 때 표시할 메시지
+            ) : (
+                <form onSubmit={handleSubmit}>
+                    <label>직업 :
+                        <input
+                            type="text"
+                            placeholder="직군을 입력해주세요."
+                            value={job}
+                            onChange={handleJobChange}
+                            required
+                        />
+                    </label>
+                    <br />
+                    <label>경력 :
+                        <input
+                            type="text"
+                            placeholder="년 단위로 숫자만 입력해주세요."
+                            value={years}
+                            onChange={handleYearsChange}
+                            required
+                        />
+                    </label>
+                    <br />
+                    <label>이력서 :
+                        <input type="file" accept=".pdf" onChange={handleFileChange} />
+                    </label>
+                    <br />
+                    <button type="submit">기술면접 응시</button>
+                </form>
+            )}
+        </div>
     );
 }
 
