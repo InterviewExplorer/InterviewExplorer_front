@@ -1,7 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function FollowUp({ job, years, answers, questions, handleQuestion }) {
+    const [requested, setRequested] = useState({
+        A1: false,
+        A2: false,
+    });
+
     useEffect(() => {
         const fetchQuestionForAnswer = async (answer, keyPrefix) => {
             try {
@@ -37,6 +42,12 @@ function FollowUp({ job, years, answers, questions, handleQuestion }) {
                 // handleQuestions 호출
                 handleQuestion({ [newKey]: generatedQuestion });
 
+                // 요청 완료 상태 업데이트
+                setRequested((prevRequested) => ({
+                    ...prevRequested,
+                    [keyPrefix]: true,
+                }));
+
                 // 디버깅을 위한 로그
                 console.log(`Updated questions with new key: ${newKey} and value: ${generatedQuestion}`);
             } catch (error) {
@@ -44,15 +55,16 @@ function FollowUp({ job, years, answers, questions, handleQuestion }) {
             }
         };
 
-        // A1과 A2에 대해 각각 서버 요청 실행
-        if (answers.A1) {
+        // A1에 대해 요청이 한 번도 이루어지지 않았고, 유효한 값이 있을 때 요청 실행
+        if (answers.A1 && !requested.A1) {
             fetchQuestionForAnswer(answers.A1, 'A1');
         }
 
-        if (answers.A2) {
+        // A2에 대해 요청이 한 번도 이루어지지 않았고, 유효한 값이 있을 때 요청 실행
+        if (answers.A2 && !requested.A2) {
             fetchQuestionForAnswer(answers.A2, 'A2');
         }
-    }, [answers]);
+    }, [answers, job, years, questions, handleQuestion, requested]);
 
     return (
         <>
