@@ -6,7 +6,7 @@ import Follow from './Follow';
 function Interview_technical() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { questions, job, years, handleQuestions } = location.state || {};
+    const { questions, job, years, handleQuestions, interviewer } = location.state || {};
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isLastQuestion, setIsLastQuestion] = useState(false);
     const [answers, setAnswers] = useState({});
@@ -22,6 +22,7 @@ function Interview_technical() {
 
     console.log("questions",questions)
     console.log("answers",answers)
+    console.log("interviewer", interviewer)
 
     const handleNextQuestion = () => {
         if (!isRecordingDone) {
@@ -63,6 +64,14 @@ function Interview_technical() {
                             다음 질문
                         </button>
                     )}
+                </div>
+            )}
+            {interviewer && (
+                <div>
+                
+                    <video src={interviewer[`Q${currentQuestionIndex + 1}`]} controls width="600">
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
             )}
         </>

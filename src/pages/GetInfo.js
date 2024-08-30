@@ -59,13 +59,25 @@ function GetInfo() {
             setQuestions(data);
             setCurrentQuestionIndex(0);
 
+            const formData2 = new FormData();
+            for (const key in data) {
+                formData2.append(key, data[key]);
+            }
+
+            const response2 = await fetch('http://localhost:8000/ai-presenter/',{
+                method : 'POST',
+                body: formData2
+            });
+            if (!response2.ok) {
+                throw new Error('영상 생성에 실패했습니다.');
+            }
+            const data2 = await response2.json();
+            console.log(data2);
             // 질문 생성에 성공한 경우
-            navigate('/interview_technical', { state: { questions: data, job, years } });
+            navigate('/interview_technical', { state: { questions: data, interviewer: data2 }});
         } catch (error) {
             console.error('에러 발생:', error);
             alert('질문 생성 중 오류가 발생했습니다.');
-        } finally {
-            setLoading(false);  // 로딩 종료
         }
     };
 
