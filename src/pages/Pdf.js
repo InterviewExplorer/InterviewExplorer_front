@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import VideoRecorder from './VideoRecorder';
 import { useNavigate } from 'react-router-dom';
@@ -62,6 +63,23 @@ function Pdf() {
         } catch (error) {
             console.error('에러 발생:', error);
             alert('질문 생성 중 오류가 발생했습니다.');
+        }
+        try {
+            const response = await axios.post('http://localhost:8000/generate_question/', {
+                job: job,
+                years: years,
+            });
+
+            if (response.status !== 201) {
+                throw new Error('통신에러');
+            }
+
+            const data = response.data;
+            setQuestions(data);
+            setCurrentQuestionIndex(0);
+        } catch (error) {
+            console.error('Axios 에러 발생:', error);
+            alert('꼬리물기 질문 생성 중 오류가 발생했습니다.');
         }
     };
 
