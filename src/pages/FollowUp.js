@@ -1,76 +1,106 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function FollowUp({ job, years, answers, questions, handleQuestion }) {
-    const [requested, setRequested] = useState({
-        A1: false,
-        A2: false,
-    });
+function FollowUp({ job, years, answers, questions, handleQuestion, initialQuestionCount, shouldGenerate }) {
+    const [questionState, setQuestionState] = useState(questions);
 
     useEffect(() => {
-        const fetchQuestionForAnswer = async (answer, keyPrefix) => {
+        const fetchQuestionForAnswer = async (answer) => {
             try {
-                // 서버에 POST 요청을 보낼 URL
                 const url = 'http://localhost:8000/generate_question';
-
-                // 서버에 보낼 데이터
-                const userInfo = {
-                    job,
-                    years,
-                    answer // 개별 답변을 서버에 보냄
-                };
-
-                // 서버에 POST 요청 보내기
+                const userInfo = { job, years, answer };
                 const response = await axios.post(url, userInfo, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                    headers: { 'Content-Type': 'application/json' }
                 });
-
-                // 결과를 콘솔에 출력
-                console.log(`Generated Question for ${keyPrefix}:`, response.data);
-
-                // 서버로부터 받은 질문
-                const generatedQuestion = response.data;
-
-                // 현재 questions의 마지막 키를 가져와서 새로운 키 생성
-                const questionKeys = Object.keys(questions);
-                const lastKey = questionKeys[questionKeys.length - 1];
-                const lastKeyNumber = lastKey ? parseInt(lastKey.replace('Q', ''), 10) : 0;
-                const newKey = `Q${lastKeyNumber + 1}`;
-
-                // handleQuestions 호출
-                handleQuestion({ [newKey]: generatedQuestion });
-
-                // 요청 완료 상태 업데이트
-                setRequested((prevRequested) => ({
-                    ...prevRequested,
-                    [keyPrefix]: true,
-                }));
-
-                // 디버깅을 위한 로그
-                console.log(`Updated questions with new key: ${newKey} and value: ${generatedQuestion}`);
+                return response.data;
             } catch (error) {
-                console.error(`Error fetching question for ${keyPrefix}:`, error);
+                console.error('Error fetching question:', error);
+                return null;
             }
         };
 
-        // A1에 대해 요청이 한 번도 이루어지지 않았고, 유효한 값이 있을 때 요청 실행
-        if (answers.A1 && !requested.A1) {
-            fetchQuestionForAnswer(answers.A1, 'A1');
-        }
+        const generateFollowUpQuestions = async () => {
+            let newQuestions = { ...questions };
 
-        // A2에 대해 요청이 한 번도 이루어지지 않았고, 유효한 값이 있을 때 요청 실행
-        if (answers.A2 && !requested.A2) {
-            fetchQuestionForAnswer(answers.A2, 'A2');
-        }
-    }, [answers, job, years, questions, handleQuestion, requested]);
+            if (initialQuestionCount === 2) {
+                console.log("initialQuestionCount 2 실행중");
 
-    return (
-        <>
-            {/* 기타 UI 요소 */}
-        </>
-    );
+                const answer1 = answers['A1'];
+                const answer2 = answers['A2'];
+
+                if (answer1) {
+                    const generatedQuestion1 = await fetchQuestionForAnswer(answer1);
+                    if (generatedQuestion1) {
+                        newQuestions['Q3'] = generatedQuestion1;
+                    }
+                }
+
+                if (answer2) {
+                    const generatedQuestion2 = await fetchQuestionForAnswer(answer2);
+                    if (generatedQuestion2) {
+                        newQuestions['Q4'] = generatedQuestion2;
+                    }
+                }
+            } else if (initialQuestionCount === 4) {
+                console.log("initialQuestionCount 4 실행중");
+
+                const questionKeys = Object.keys(questions);
+                const randomIndices = [0, 1, 2, 3].sort(() => 0.5 - Math.random()).slice(0, 4);
+
+                // 랜덤으로 하나씩 선택하여 꼬리 질문 생성
+                const randomQ1 = randomIndices[0];
+                const randomQ2 = randomIndices[1];
+                const randomQ3 = randomIndices[2];
+                const randomQ4 = randomIndices[3];
+
+                const answer1Key = `A${randomQ1 + 1}`;
+                const answer2Key = `A${randomQ2 + 1}`;
+                const answer3Key = `A${randomQ3 + 1}`;
+                const answer4Key = `A${randomQ4 + 1}`;
+
+                const answer1 = answers[answer1Key];
+                const answer2 = answers[answer2Key];
+                const answer3 = answers[answer3Key];
+                const answer4 = answers[answer4Key];
+
+                if (answer1) {
+                    const generatedQuestion1 = await fetchQuestionForAnswer(answer1);
+                    if (generatedQuestion1) {
+                        newQuestions[`Q${Object.keys(newQuestions).length + 1}`] = generatedQuestion1;
+                    }
+                }
+                if (answer2) {
+                    const generatedQuestion2 = await fetchQuestionForAnswer(answer2);
+                    if (generatedQuestion2) {
+                        newQuestions[`Q${Object.keys(newQuestions).length + 1}`] = generatedQuestion2;
+                    }
+                }
+                if (answer3) {
+                    const generatedQuestion3 = await fetchQuestionForAnswer(answer3);
+                    if (generatedQuestion3) {
+                        newQuestions[`Q${Object.keys(newQuestions).length + 1}`] = generatedQuestion3;
+                    }
+                }
+                if (answer4) {
+                    const generatedQuestion4 = await fetchQuestionForAnswer(answer4);
+                    if (generatedQuestion4) {
+                        newQuestions[`Q${Object.keys(newQuestions).length + 1}`] = generatedQuestion4;
+                    }
+                }
+            }
+
+            if (Object.keys(newQuestions).length > 0) {
+                setQuestionState(newQuestions);
+                handleQuestion(newQuestions);
+            }
+        };
+
+        if (shouldGenerate) {
+            generateFollowUpQuestions();
+        }
+    }, [answers, initialQuestionCount, questions, handleQuestion, shouldGenerate]);
+
+    return null; // FollowUp 컴포넌트는 UI를 렌더링하지 않으므로 null 반환
 }
 
 export default FollowUp;

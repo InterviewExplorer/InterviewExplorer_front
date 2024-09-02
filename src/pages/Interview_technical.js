@@ -12,6 +12,10 @@ function Interview_technical() {
     const [isLastQuestion, setIsLastQuestion] = useState(false);
     const [answers, setAnswers] = useState({});
     const [isRecordingDone, setIsRecordingDone] = useState(false);
+    const [shouldGenerateFollowUp, setShouldGenerateFollowUp] = useState(false);
+
+    // 질문의 개수를 계산
+    const initialQuestionCount = Object.keys(initialQuestions || {}).length;
 
     useEffect(() => {
         const questionKeys = Object.keys(questions);
@@ -25,9 +29,6 @@ function Interview_technical() {
             ...newData
         }));
     };
-    
-    console.log("questions", questions)
-    console.log("answers", answers)
 
     const handleAnswers = (newData) => {
         setAnswers(prevAnswers => ({
@@ -36,6 +37,9 @@ function Interview_technical() {
         }));
         setIsRecordingDone(true);
     };
+
+    console.log("questions", questions);
+    console.log("answers", answers);
 
     const handleNextQuestion = () => {
         if (!isRecordingDone) {
@@ -47,6 +51,7 @@ function Interview_technical() {
         if (currentQuestionIndex < questionKeys.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             setIsRecordingDone(false);
+            setShouldGenerateFollowUp(true); // 다음 질문 클릭 시 꼬리 질문 생성 요청
         }
     };
 
@@ -60,13 +65,18 @@ function Interview_technical() {
                 <div>
                     <h3>질문 {currentQuestionIndex + 1}</h3>
                     <p>{questions[`Q${currentQuestionIndex + 1}`]}</p>
-                    <VideoRecorder handleAnswers={handleAnswers} />
+                    <VideoRecorder 
+                        handleAnswers={handleAnswers} 
+                        questionIndex={currentQuestionIndex + 1} // 현재 질문 번호 전달
+                    />
                     <FollowUp 
                         job={job} 
                         years={years} 
                         answers={answers} 
                         questions={questions} 
                         handleQuestion={handleQuestion} 
+                        initialQuestionCount={initialQuestionCount} // 질문 개수 전달
+                        shouldGenerate={shouldGenerateFollowUp} // 꼬리 질문 생성 플래그 전달
                     />
                     
                     {isLastQuestion ? (
