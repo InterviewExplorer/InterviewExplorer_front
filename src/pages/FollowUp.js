@@ -42,12 +42,13 @@ function FollowUp({ job, years, answers, questions, handleQuestion,handleIntervi
                 // handleQuestions 호출
                 handleQuestion({ [newKey]: generatedQuestion });
 
-                const data = await response.text();
-                console.log(data);
+                
+                console.log(generatedQuestion);
                 const formData2 = new FormData();
+                //키와 생성된 문제를 formdata 에 추가
+                formData2.append(newKey,generatedQuestion);
                 
-                formData2.append(newKey, data);
-                
+                //꼬리질문에 대한 영상 생성
                 const response2 = await fetch('http://localhost:8000/ai-presenter/',{
                     method : 'POST',
                     body: formData2
@@ -58,7 +59,7 @@ function FollowUp({ job, years, answers, questions, handleQuestion,handleIntervi
                 
                 const data2 = await response2.json();
                 handleInterviewerUpdate(data2)
-                console.log(data2)
+
                 // 요청 완료 상태 업데이트
                 setRequested((prevRequested) => ({
                     ...prevRequested,
