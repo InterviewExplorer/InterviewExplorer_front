@@ -77,14 +77,12 @@ const VideoRecorder = ({ handleAnswers, questionIndex }) => { // `questionIndex`
 
     return (
         <>
+            {recording ? (
+                <button onClick={stopRecording}>녹화 종료</button>
+            ) : (
+                <button onClick={startRecording}>녹화 시작</button>
+            )}
             <video ref={videoRef} autoPlay playsInline style={{width:'640px',height:'480px',backgroundColor:'black'}}></video>
-            <div>
-                {recording ? (
-                    <button onClick={stopRecording}>녹화 종료</button>
-                ) : (
-                    <button onClick={startRecording}>녹화 시작</button>
-                )}
-            </div>
             {loading && <p>답변 추출 중...</p>}
         </>
     );
