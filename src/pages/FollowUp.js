@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function FollowUp({ job, years, answers, questions, handleQuestion }) {
+function FollowUp({ job, years, answers, questions, handleQuestion,handleInterviewerUpdate }) {
     const [requested, setRequested] = useState({
         A1: false,
         A2: false,
@@ -42,6 +42,23 @@ function FollowUp({ job, years, answers, questions, handleQuestion }) {
                 // handleQuestions 호출
                 handleQuestion({ [newKey]: generatedQuestion });
 
+                const data = await response.text();
+                console.log(data);
+                const formData2 = new FormData();
+                
+                formData2.append(newKey, data);
+                
+                const response2 = await fetch('http://localhost:8000/ai-presenter/',{
+                    method : 'POST',
+                    body: formData2
+                });
+                if (!response2.ok) {
+                    throw new Error('영상 생성에 실패했습니다.');
+                }
+                
+                const data2 = await response2.json();
+                handleInterviewerUpdate(data2)
+                console.log(data2)
                 // 요청 완료 상태 업데이트
                 setRequested((prevRequested) => ({
                     ...prevRequested,
@@ -64,7 +81,7 @@ function FollowUp({ job, years, answers, questions, handleQuestion }) {
         if (answers.A2 && !requested.A2) {
             fetchQuestionForAnswer(answers.A2, 'A2');
         }
-    }, [answers, job, years, questions, handleQuestion, requested]);
+    }, [answers, job, years, questions, handleQuestion, requested,handleInterviewerUpdate]);
 
     return (
         <>

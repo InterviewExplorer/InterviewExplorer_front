@@ -6,12 +6,13 @@ import FollowUp from './FollowUp';
 function Interview_technical() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { questions: initialQuestions, job, years, interviewer } = location.state || {};
+    const { questions: initialQuestions, job, years, interviewer: initialInterviewer } = location.state || {};
     const [questions, setQuestions] = useState(initialQuestions || {});
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isLastQuestion, setIsLastQuestion] = useState(false);
     const [answers, setAnswers] = useState({});
     const [isRecordingDone, setIsRecordingDone] = useState(false);
+    const [interviewer, setInterviewer] = useState(initialInterviewer || {});
 
     useEffect(() => {
         const questionKeys = Object.keys(questions);
@@ -28,6 +29,7 @@ function Interview_technical() {
     
     console.log("questions", questions)
     console.log("answers", answers)
+    console.log("interview", interviewer)
 
     const handleAnswers = (newData) => {
         setAnswers(prevAnswers => ({
@@ -36,7 +38,12 @@ function Interview_technical() {
         }));
         setIsRecordingDone(true);
     };
-
+    const handleInterviewerUpdate = (newData) => {
+        setInterviewer(prevInterviewer => ({
+            ...prevInterviewer,
+            ...newData
+        }));
+    };
     const handleNextQuestion = () => {
         if (!isRecordingDone) {
             alert('현재 질문에 대한 답변을 먼저 완료해주세요.');
@@ -66,7 +73,8 @@ function Interview_technical() {
                         years={years} 
                         answers={answers} 
                         questions={questions} 
-                        handleQuestion={handleQuestion} 
+                        handleQuestion={handleQuestion}
+                        handleInterviewerUpdate={handleInterviewerUpdate}
                     />
                     
                     {isLastQuestion ? (
