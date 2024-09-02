@@ -77,13 +77,21 @@ function FollowUp({ job, years, answers, questions, handleQuestion, initialQuest
                 handleQuestion(newQuestions);
                 setHasGeneratedFollowUps(true); // Follow-up 질문 생성 후 상태 업데이트
             }
-        };
+        }
 
         // 조건을 만족하고 아직 Follow-up 질문이 생성되지 않았을 때만 generateFollowUpQuestions 호출
-        if (!hasGeneratedFollowUps) {
-            if (initialQuestionCount === 2 && answers['A1'] && answers['A2']) {
+        if (initialQuestionCount === 2) {
+            if (answers['A1']) {
                 generateFollowUpQuestions();
-            } else if (initialQuestionCount === 4 && answers['A1'] && answers['A2'] && answers['A3'] && answers['A4']) {
+            }
+            if (answers['A2']) {
+                generateFollowUpQuestions();
+            }
+        } else if (initialQuestionCount === 4) {
+            if (answers['A1'] && answers['A2']) {
+                generateFollowUpQuestions();
+            }
+            if (answers['A3'] && answers['A4']) {
                 generateFollowUpQuestions();
             }
         }

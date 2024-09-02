@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const VideoRecorder = ({ handleAnswers, questionIndex }) => { // `questionIndex` 추가
+const VideoRecorder = ({ handleAnswers, questionIndex }) => {
     const [recording, setRecording] = useState(false);
-    const [transcript, setTranscript] = useState(''); // 텍스트 추출 결과 상태
-    const [loading, setLoading] = useState(false); // 로딩 상태 추가
+    const [recordingDone, setRecordingDone] = useState(false); // 녹화 완료 상태
+    const [transcript, setTranscript] = useState('');
+    const [loading, setLoading] = useState(false);
     const mediaRecorderRef = useRef(null);
     const videoRef = useRef(null);
+    const startButtonRef = useRef(null); // 녹화 시작 버튼의 참조를 저장
     const chunks = useRef([]);
 
     const startRecording = async () => {
@@ -22,17 +24,22 @@ const VideoRecorder = ({ handleAnswers, questionIndex }) => { // `questionIndex`
             };
 
             mediaRecorderRef.current.onstop = async () => {
+
+                // 녹화 종료 후 녹화 시작 버튼을 숨김
+                if (startButtonRef.current) {
+                    startButtonRef.current.style.display = 'none';
+                }
+                
                 const blob = new Blob(chunks.current, { type: 'video/webm' });
                 chunks.current = [];
-                
-                // 비디오를 서버로 전송
+
                 const formData = new FormData();
                 formData.append('file', blob, 'recorded_video.webm');
 
-                setLoading(true); // 로딩 시작
+                setLoading(true);
 
                 try {
-                    const response = await fetch('http://localhost:8000/process_audio', { // 실제 서버 URL로 업데이트 필요
+                    const response = await fetch('http://localhost:8000/process_audio', {
                         method: 'POST',
                         body: formData
                     });
@@ -42,11 +49,12 @@ const VideoRecorder = ({ handleAnswers, questionIndex }) => { // `questionIndex`
                     }
 
                     const result = await response.json();
-                    setTranscript(result.transcript); // 서버에서 받은 텍스트 설정
+                    setTranscript(result.transcript);
+                    setRecordingDone(true); // 녹화 완료 상태 설정
                 } catch (error) {
                     console.error('Error uploading video:', error);
                 } finally {
-                    setLoading(false); // 로딩 종료
+                    setLoading(false);
                 }
             };
 
@@ -67,22 +75,30 @@ const VideoRecorder = ({ handleAnswers, questionIndex }) => { // `questionIndex`
 
     useEffect(() => {
         if (transcript) {
-            // 현재 질문 번호에 해당하는 키를 생성
             const key = `A${questionIndex}`;
-
-            // `handleAnswers`를 호출하여 `transcript` 값을 추가 또는 업데이트
             handleAnswers({ [key]: transcript });
         }
     }, [transcript]);
 
+    useEffect(() => {
+        // 새 질문이 로드될 때 녹화 시작 버튼을 다시 표시
+        setRecordingDone(false);
+        setTranscript('');
+        if (startButtonRef.current) {
+            startButtonRef.current.style.display = 'block';  // 새 질문이 로드되면 버튼 표시
+        }
+    }, [questionIndex]);
+
     return (
         <>
-            {recording ? (
-                <button onClick={stopRecording}>녹화 종료</button>
-            ) : (
-                <button onClick={startRecording}>녹화 시작</button>
+            {!recordingDone && (
+                recording ? (
+                    <button onClick={stopRecording}>녹화 종료</button>
+                ) : (
+                    <button ref={startButtonRef} onClick={startRecording}>녹화 시작</button> // 버튼 참조 추가
+                )
             )}
-            <video ref={videoRef} autoPlay playsInline style={{width:'640px',height:'480px',backgroundColor:'black'}}></video>
+            <video ref={videoRef} autoPlay playsInline style={{ width: '640px', height: '480px', backgroundColor: 'black' }}></video>
             {loading && <p>답변 추출 중...</p>}
         </>
     );

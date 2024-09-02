@@ -65,10 +65,6 @@ function Interview_technical() {
         navigate('/report', { state: { answers, questions, job, years } });
     };
 
-    // Determine if buttons should be enabled
-    const isNextButtonDisabled = !isAnswerComplete();
-    const isEndButtonDisabled = !isAnswerComplete();
-
     return (
         <>
             {questions && (
@@ -88,26 +84,22 @@ function Interview_technical() {
                         initialQuestionCount={initialQuestionCount} // 질문 개수 전달
                     />
                     
-                    {isLastQuestion ? (
-                        <button onClick={handleEndInterview} disabled={isEndButtonDisabled}>
-                            면접 종료
-                        </button>
-                    ) : (
-                        <button 
-                            onClick={handleNextQuestion} 
-                            disabled={isNextButtonDisabled}
-                        >
+                    {!isLastQuestion && isAnswerComplete() && (
+                        <button onClick={handleNextQuestion}>
                             다음 질문
+                        </button>
+                    )}
+                    {isLastQuestion && isAnswerComplete() && (
+                        <button onClick={handleEndInterview}>
+                            면접 종료
                         </button>
                     )}
                 </div>
             )}
             {interviewer && (
-                <div>
-                    <video src={interviewer[`Q${currentQuestionIndex + 1}`]} controls width="600">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
+                <video src={interviewer[`Q${currentQuestionIndex + 1}`]} controls width="600">
+                    Your browser does not support the video tag.
+                </video>
             )}
         </>
     );
