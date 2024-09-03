@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const VideoRecorder = ({ handleAnswers, questionIndex }) => {
+const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone }) => {
     const [recording, setRecording] = useState(false);
-    const [recordingDone, setRecordingDone] = useState(false); // 녹화 완료 상태
+    const [recordingDone, setRecordingDone] = useState(false);
     const [transcript, setTranscript] = useState('');
     const [loading, setLoading] = useState(false);
     const mediaRecorderRef = useRef(null);
     const videoRef = useRef(null);
-    const startButtonRef = useRef(null); // 녹화 시작 버튼의 참조를 저장
+    const startButtonRef = useRef(null);
     const chunks = useRef([]);
 
     const startRecording = async () => {
@@ -24,8 +24,6 @@ const VideoRecorder = ({ handleAnswers, questionIndex }) => {
             };
 
             mediaRecorderRef.current.onstop = async () => {
-
-                // 녹화 종료 후 녹화 시작 버튼을 숨김
                 if (startButtonRef.current) {
                     startButtonRef.current.style.display = 'none';
                 }
@@ -50,7 +48,12 @@ const VideoRecorder = ({ handleAnswers, questionIndex }) => {
 
                     const result = await response.json();
                     setTranscript(result.transcript);
-                    setRecordingDone(true); // 녹화 완료 상태 설정
+                    setRecordingDone(true);
+                    
+                    // 녹화가 완료된 후 FollowUp 컴포넌트에 콜백 호출
+                    if (onRecordingDone) {
+                        onRecordingDone();
+                    }
                 } catch (error) {
                     console.error('Error uploading video:', error);
                 } finally {
@@ -81,11 +84,10 @@ const VideoRecorder = ({ handleAnswers, questionIndex }) => {
     }, [transcript]);
 
     useEffect(() => {
-        // 새 질문이 로드될 때 녹화 시작 버튼을 다시 표시
         setRecordingDone(false);
         setTranscript('');
         if (startButtonRef.current) {
-            startButtonRef.current.style.display = 'block';  // 새 질문이 로드되면 버튼 표시
+            startButtonRef.current.style.display = 'block';
         }
     }, [questionIndex]);
 
@@ -95,7 +97,7 @@ const VideoRecorder = ({ handleAnswers, questionIndex }) => {
                 recording ? (
                     <button onClick={stopRecording}>녹화 종료</button>
                 ) : (
-                    <button ref={startButtonRef} onClick={startRecording}>녹화 시작</button> // 버튼 참조 추가
+                    <button ref={startButtonRef} onClick={startRecording}>녹화 시작</button>
                 )
             )}
             <video ref={videoRef} autoPlay playsInline style={{ width: '640px', height: '480px', backgroundColor: 'black' }}></video>

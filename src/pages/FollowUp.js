@@ -23,20 +23,24 @@ function FollowUp({ job, years, answers, questions, handleQuestion, initialQuest
         const generateFollowUpQuestions = async () => {
             let newQuestions = { ...questions };
 
+            const answer1 = answers['A1'];
+            const answer2 = answers['A2'];
+            const answer3 = answers['A3'];
+            const answer4 = answers['A4'];
+
             if (initialQuestionCount === 2) {
                 console.log("initialQuestionCount 2 실행중");
 
-                const answer1 = answers['A1'];
-                const answer2 = answers['A2'];
-
-                if (answer1) {
+                if (answer1 && !answer2) {
+                    console.log("answer1 실행중");
                     const generatedQuestion1 = await fetchQuestionForAnswer(answer1);
                     if (generatedQuestion1) {
                         newQuestions['Q3'] = generatedQuestion1;
                     }
                 }
 
-                if (answer2) {
+                if (answer2 && !answer3) {
+                    console.log("answer2 실행중");
                     const generatedQuestion2 = await fetchQuestionForAnswer(answer2);
                     if (generatedQuestion2) {
                         newQuestions['Q4'] = generatedQuestion2;
@@ -55,17 +59,17 @@ function FollowUp({ job, years, answers, questions, handleQuestion, initialQuest
                 const randomIndex2 = Math.floor(Math.random() * answerKeys2.length);
                 const selectedAnswerKey2 = answerKeys2[randomIndex2];
 
-                const answer1 = answers[selectedAnswerKey1];
-                const answer2 = answers[selectedAnswerKey2];
+                const ranswer1 = answers[selectedAnswerKey1];
+                const ranswer2 = answers[selectedAnswerKey2];
 
-                if (answer1) {
-                    const generatedQuestion1 = await fetchQuestionForAnswer(answer1);
+                if (answer1 && answer2 && !answer3) {
+                    const generatedQuestion1 = await fetchQuestionForAnswer(ranswer1);
                     if (generatedQuestion1) {
                         newQuestions['Q5'] = generatedQuestion1;
                     }
                 }
-                if (answer2) {
-                    const generatedQuestion2 = await fetchQuestionForAnswer(answer2);
+                if (answer3 && answer4) {
+                    const generatedQuestion2 = await fetchQuestionForAnswer(ranswer2);
                     if (generatedQuestion2) {
                         newQuestions['Q6'] = generatedQuestion2;
                     }
@@ -77,26 +81,11 @@ function FollowUp({ job, years, answers, questions, handleQuestion, initialQuest
                 handleQuestion(newQuestions);
                 setHasGeneratedFollowUps(true); // Follow-up 질문 생성 후 상태 업데이트
             }
-        }
+        };
 
-        // 조건을 만족하고 아직 Follow-up 질문이 생성되지 않았을 때만 generateFollowUpQuestions 호출
-        if (initialQuestionCount === 2) {
-            if (answers['A1']) {
-                generateFollowUpQuestions();
-            }
-            if (answers['A2']) {
-                generateFollowUpQuestions();
-            }
-        } else if (initialQuestionCount === 4) {
-            if (answers['A1'] && answers['A2']) {
-                generateFollowUpQuestions();
-            }
-            if (answers['A3'] && answers['A4']) {
-                generateFollowUpQuestions();
-            }
-        }
+        generateFollowUpQuestions()
 
-    }, [answers, hasGeneratedFollowUps, initialQuestionCount, questions, handleQuestion]);
+    }, [answers, hasGeneratedFollowUps]);
 
     return null; // FollowUp 컴포넌트는 UI를 렌더링하지 않으므로 null 반환
 }

@@ -36,10 +36,10 @@ function Interview_technical() {
         setIsRecordingDone(true);
     };
 
-    console.log("questions", questions);
-    console.log("answers", answers);
-    
-    // Check if the answer for the current question is present
+    console.log("questions", questions)
+    console.log("answers", answers)
+
+    // Define isAnswerComplete function
     const isAnswerComplete = () => {
         return answers[`A${currentQuestionIndex + 1}`] !== undefined;
     };
@@ -65,6 +65,10 @@ function Interview_technical() {
         navigate('/report', { state: { answers, questions, job, years } });
     };
 
+    const handleGenerateFollowUpQuestions = () => {
+        setIsRecordingDone(true);
+    };
+
     return (
         <>
             {questions && (
@@ -73,7 +77,8 @@ function Interview_technical() {
                     <p>{questions[`Q${currentQuestionIndex + 1}`]}</p>
                     <VideoRecorder 
                         handleAnswers={handleAnswers} 
-                        questionIndex={currentQuestionIndex + 1} // 현재 질문 번호 전달
+                        questionIndex={currentQuestionIndex + 1}
+                        onRecordingDone={handleGenerateFollowUpQuestions} // Pass the callback to VideoRecorder
                     />
                     <FollowUp 
                         job={job} 
@@ -81,7 +86,7 @@ function Interview_technical() {
                         answers={answers} 
                         questions={questions} 
                         handleQuestion={handleQuestion} 
-                        initialQuestionCount={initialQuestionCount} // 질문 개수 전달
+                        initialQuestionCount={initialQuestionCount} 
                     />
                     
                     {!isLastQuestion && isAnswerComplete() && (
