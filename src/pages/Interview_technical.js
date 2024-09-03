@@ -14,6 +14,7 @@ function Interview_technical() {
     const [isRecordingDone, setIsRecordingDone] = useState(false);
     const [shouldGenerateFollowUp, setShouldGenerateFollowUp] = useState(false);
     const [interviewer, setInterviewer] = useState(initialInterviewer || {});
+
     // 질문의 개수를 계산
     const initialQuestionCount = Object.keys(initialQuestions || {}).length;
 
@@ -36,7 +37,6 @@ function Interview_technical() {
             ...newData
         }));
     };
-    
 
     const handleAnswers = (newData) => {
         setAnswers(prevAnswers => ({
