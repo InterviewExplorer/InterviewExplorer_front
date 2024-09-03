@@ -51,14 +51,22 @@ function Interview_technical() {
         }
     };
 
-    const handleEndInterview = async () => {
-        try {
-            await axios.post("/get_consolidate_feedback", { feedback: true})
-            navigate('/report', { state: { answers, questions, job, years } });
-        } catch (error) {
-            console.error("Error getting feedback", error)
-        }
+    const handleEndInterview = () => {
+        handleNavigate()
+        // handleAxios()
     };
+
+    const handleNavigate = () => {
+        navigate('/report', { state: { answers, questions, job, years } });
+    }
+
+    // const handleAxios = async () => {
+    //     try {
+    //         await axios.post("http://localhost:8000/get_consolidate_feedback", { feedback: true })
+    //     } catch (error) {
+    //         console.error("Error getting feedback", error)
+    //     }
+    // };
 
     return (
         <>
