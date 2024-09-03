@@ -12,9 +12,7 @@ function Interview_technical() {
     const [isLastQuestion, setIsLastQuestion] = useState(false);
     const [answers, setAnswers] = useState({});
     const [isRecordingDone, setIsRecordingDone] = useState(false);
-    const [shouldGenerateFollowUp, setShouldGenerateFollowUp] = useState(false);
 
-    // 질문의 개수를 계산
     const initialQuestionCount = Object.keys(initialQuestions || {}).length;
 
     useEffect(() => {
@@ -38,11 +36,16 @@ function Interview_technical() {
         setIsRecordingDone(true);
     };
 
-    console.log("questions", questions);
-    console.log("answers", answers);
+    console.log("questions", questions)
+    console.log("answers", answers)
+
+    // Define isAnswerComplete function
+    const isAnswerComplete = () => {
+        return answers[`A${currentQuestionIndex + 1}`] !== undefined;
+    };
 
     const handleNextQuestion = () => {
-        if (!isRecordingDone) {
+        if (!isAnswerComplete()) {
             alert('현재 질문에 대한 답변을 먼저 완료해주세요.');
             return;
         }
@@ -51,12 +54,19 @@ function Interview_technical() {
         if (currentQuestionIndex < questionKeys.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             setIsRecordingDone(false);
-            setShouldGenerateFollowUp(true); // 다음 질문 클릭 시 꼬리 질문 생성 요청
         }
     };
 
     const handleEndInterview = () => {
+        if (!isAnswerComplete()) {
+            alert('현재 질문에 대한 답변을 먼저 완료해주세요.');
+            return;
+        }
         navigate('/report', { state: { answers, questions, job, years } });
+    };
+
+    const handleGenerateFollowUpQuestions = () => {
+        setIsRecordingDone(true);
     };
 
     return (
@@ -67,7 +77,8 @@ function Interview_technical() {
                     <p>{questions[`Q${currentQuestionIndex + 1}`]}</p>
                     <VideoRecorder 
                         handleAnswers={handleAnswers} 
-                        questionIndex={currentQuestionIndex + 1} // 현재 질문 번호 전달
+                        questionIndex={currentQuestionIndex + 1}
+                        onRecordingDone={handleGenerateFollowUpQuestions} // Pass the callback to VideoRecorder
                     />
                     <FollowUp 
                         job={job} 
@@ -75,28 +86,25 @@ function Interview_technical() {
                         answers={answers} 
                         questions={questions} 
                         handleQuestion={handleQuestion} 
-                        initialQuestionCount={initialQuestionCount} // 질문 개수 전달
-                        shouldGenerate={shouldGenerateFollowUp} // 꼬리 질문 생성 플래그 전달
+                        initialQuestionCount={initialQuestionCount} 
                     />
                     
-                    {isLastQuestion ? (
-                        <button onClick={handleEndInterview}>면접 종료</button>
-                    ) : (
-                        <button 
-                            onClick={handleNextQuestion} 
-                            disabled={!isRecordingDone}
-                        >
+                    {!isLastQuestion && isAnswerComplete() && (
+                        <button onClick={handleNextQuestion}>
                             다음 질문
+                        </button>
+                    )}
+                    {isLastQuestion && isAnswerComplete() && (
+                        <button onClick={handleEndInterview}>
+                            면접 종료
                         </button>
                     )}
                 </div>
             )}
             {interviewer && (
-                <div>
-                    <video src={interviewer[`Q${currentQuestionIndex + 1}`]} controls width="600">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
+                <video src={interviewer[`Q${currentQuestionIndex + 1}`]} controls width="600">
+                    Your browser does not support the video tag.
+                </video>
             )}
         </>
     );
