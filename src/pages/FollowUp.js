@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function FollowUp({ job, years, answers, questions, handleQuestion, initialQuestionCount }) {
+function FollowUp({ job, years, answers, questions, handleQuestion, initialQuestionCount, handleInterviewerUpdate }) {
     const [questionState, setQuestionState] = useState(questions);
     const [hasGeneratedFollowUps, setHasGeneratedFollowUps] = useState(false); // 추가된 상태
 
@@ -18,8 +18,26 @@ function FollowUp({ job, years, answers, questions, handleQuestion, initialQuest
                 console.error('Error fetching question:', error);
                 return null;
             }
-        };
 
+
+        };
+        const followingInterviewers =async (questionNum, generatedQuestion) =>{
+            const formData = new FormData();
+            //키와 생성된 문제를 formdata 에 추가
+            formData.append(questionNum,generatedQuestion);
+
+            //꼬리질문에 대한 영상 생성
+            const response = await fetch('http://localhost:8000/ai-presenter/',{
+                method : 'POST',
+                body: formData
+            });
+            if (!response.ok) {
+                throw new Error('영상 생성에 실패했습니다.');
+            }
+
+            const data2 = await response.json();
+            handleInterviewerUpdate(data2)
+        }     
         const generateFollowUpQuestions = async () => {
             let newQuestions = { ...questions };
 
@@ -35,7 +53,9 @@ function FollowUp({ job, years, answers, questions, handleQuestion, initialQuest
                     console.log("answer1 실행중");
                     const generatedQuestion1 = await fetchQuestionForAnswer(answer1);
                     if (generatedQuestion1) {
+                        let questionNum = 'Q3';
                         newQuestions['Q3'] = generatedQuestion1;
+                        await followingInterviewers(questionNum,generatedQuestion1)
                     }
                 }
 
@@ -43,7 +63,9 @@ function FollowUp({ job, years, answers, questions, handleQuestion, initialQuest
                     console.log("answer2 실행중");
                     const generatedQuestion2 = await fetchQuestionForAnswer(answer2);
                     if (generatedQuestion2) {
+                        let questionNum = 'Q4';
                         newQuestions['Q4'] = generatedQuestion2;
+                        await followingInterviewers(questionNum,generatedQuestion2)
                     }
                 }
             } else if (initialQuestionCount === 4) {
@@ -65,13 +87,17 @@ function FollowUp({ job, years, answers, questions, handleQuestion, initialQuest
                 if (answer1 && answer2 && !answer3) {
                     const generatedQuestion1 = await fetchQuestionForAnswer(ranswer1);
                     if (generatedQuestion1) {
+                        let questionNum = 'Q5';
                         newQuestions['Q5'] = generatedQuestion1;
+                        await followingInterviewers(questionNum,generatedQuestion1)
                     }
                 }
                 if (answer3 && answer4) {
                     const generatedQuestion2 = await fetchQuestionForAnswer(ranswer2);
                     if (generatedQuestion2) {
+                        let questionNum = 'Q6';
                         newQuestions['Q6'] = generatedQuestion2;
+                        await followingInterviewers(questionNum,generatedQuestion2)
                     }
                 }
             }
