@@ -6,14 +6,13 @@ import FollowUp from './FollowUp';
 function Interview_technical() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { questions: initialQuestions, job, years, interviewer:initialInterviewer } = location.state || {};
+    const { questions: initialQuestions, job, years, interviewer } = location.state || {};
     const [questions, setQuestions] = useState(initialQuestions || {});
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isLastQuestion, setIsLastQuestion] = useState(false);
     const [answers, setAnswers] = useState({});
     const [isRecordingDone, setIsRecordingDone] = useState(false);
     const [shouldGenerateFollowUp, setShouldGenerateFollowUp] = useState(false);
-    const [interviewer, setInterviewer] = useState(initialInterviewer || {});
 
     // 질문의 개수를 계산
     const initialQuestionCount = Object.keys(initialQuestions || {}).length;
@@ -29,13 +28,6 @@ function Interview_technical() {
             ...prevQuestions,
             ...newData
         }));
-    
-    };
-    const handleInterviewerUpdate = (newData) => {
-        setInterviewer(prevInterviewer => ({
-            ...prevInterviewer,
-            ...newData
-        }));
     };
 
     const handleAnswers = (newData) => {
@@ -48,7 +40,6 @@ function Interview_technical() {
 
     console.log("questions", questions);
     console.log("answers", answers);
-    console.log("interviewer",interviewer);
 
     const handleNextQuestion = () => {
         if (!isRecordingDone) {
@@ -84,7 +75,6 @@ function Interview_technical() {
                         answers={answers} 
                         questions={questions} 
                         handleQuestion={handleQuestion} 
-                        handleInterviewerUpdate={handleInterviewerUpdate}
                         initialQuestionCount={initialQuestionCount} // 질문 개수 전달
                         shouldGenerate={shouldGenerateFollowUp} // 꼬리 질문 생성 플래그 전달
                     />
