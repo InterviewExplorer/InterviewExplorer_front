@@ -65,6 +65,7 @@ function GetInfo() {
                 throw new Error('영상 생성에 실패했습니다.');
             }
             const data2 = await response2.json();
+
             // 질문 생성에 성공한 경우
             navigate('/interview_technical', { state: { questions: data, job, years, interviewer: data2 }});
         } catch (error) {

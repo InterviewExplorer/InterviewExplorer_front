@@ -1,76 +1,93 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function FollowUp({ job, years, answers, questions, handleQuestion }) {
-    const [requested, setRequested] = useState({
-        A1: false,
-        A2: false,
-    });
+function FollowUp({ job, years, answers, questions, handleQuestion, initialQuestionCount }) {
+    const [questionState, setQuestionState] = useState(questions);
+    const [hasGeneratedFollowUps, setHasGeneratedFollowUps] = useState(false); // 추가된 상태
 
     useEffect(() => {
-        const fetchQuestionForAnswer = async (answer, keyPrefix) => {
+        const fetchQuestionForAnswer = async (answer) => {
             try {
-                // 서버에 POST 요청을 보낼 URL
                 const url = 'http://localhost:8000/generate_question';
-
-                // 서버에 보낼 데이터
-                const userInfo = {
-                    job,
-                    years,
-                    answer // 개별 답변을 서버에 보냄
-                };
-
-                // 서버에 POST 요청 보내기
+                const userInfo = { job, years, answer };
                 const response = await axios.post(url, userInfo, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                    headers: { 'Content-Type': 'application/json' }
                 });
-
-                // 결과를 콘솔에 출력
-                console.log(`Generated Question for ${keyPrefix}:`, response.data);
-
-                // 서버로부터 받은 질문
-                const generatedQuestion = response.data;
-
-                // 현재 questions의 마지막 키를 가져와서 새로운 키 생성
-                const questionKeys = Object.keys(questions);
-                const lastKey = questionKeys[questionKeys.length - 1];
-                const lastKeyNumber = lastKey ? parseInt(lastKey.replace('Q', ''), 10) : 0;
-                const newKey = `Q${lastKeyNumber + 1}`;
-
-                // handleQuestions 호출
-                handleQuestion({ [newKey]: generatedQuestion });
-
-                // 요청 완료 상태 업데이트
-                setRequested((prevRequested) => ({
-                    ...prevRequested,
-                    [keyPrefix]: true,
-                }));
-
-                // 디버깅을 위한 로그
-                console.log(`Updated questions with new key: ${newKey} and value: ${generatedQuestion}`);
+                return response.data;
             } catch (error) {
-                console.error(`Error fetching question for ${keyPrefix}:`, error);
+                console.error('Error fetching question:', error);
+                return null;
             }
         };
 
-        // A1에 대해 요청이 한 번도 이루어지지 않았고, 유효한 값이 있을 때 요청 실행
-        if (answers.A1 && !requested.A1) {
-            fetchQuestionForAnswer(answers.A1, 'A1');
-        }
+        const generateFollowUpQuestions = async () => {
+            let newQuestions = { ...questions };
 
-        // A2에 대해 요청이 한 번도 이루어지지 않았고, 유효한 값이 있을 때 요청 실행
-        if (answers.A2 && !requested.A2) {
-            fetchQuestionForAnswer(answers.A2, 'A2');
-        }
-    }, [answers, job, years, questions, handleQuestion, requested]);
+            const answer1 = answers['A1'];
+            const answer2 = answers['A2'];
+            const answer3 = answers['A3'];
+            const answer4 = answers['A4'];
 
-    return (
-        <>
-            {/* 기타 UI 요소 */}
-        </>
-    );
+            if (initialQuestionCount === 2) {
+                console.log("initialQuestionCount 2 실행중");
+
+                if (answer1 && !answer2) {
+                    console.log("answer1 실행중");
+                    const generatedQuestion1 = await fetchQuestionForAnswer(answer1);
+                    if (generatedQuestion1) {
+                        newQuestions['Q3'] = generatedQuestion1;
+                    }
+                }
+
+                if (answer2 && !answer3) {
+                    console.log("answer2 실행중");
+                    const generatedQuestion2 = await fetchQuestionForAnswer(answer2);
+                    if (generatedQuestion2) {
+                        newQuestions['Q4'] = generatedQuestion2;
+                    }
+                }
+            } else if (initialQuestionCount === 4) {
+                console.log("initialQuestionCount 4 실행중");
+
+                // A1, A2 중 하나를 랜덤으로 선택
+                const answerKeys1 = ['A1', 'A2'];
+                const randomIndex1 = Math.floor(Math.random() * answerKeys1.length);
+                const selectedAnswerKey1 = answerKeys1[randomIndex1];
+
+                // A3, A4 중 하나를 랜덤으로 선택
+                const answerKeys2 = ['A3', 'A4'];
+                const randomIndex2 = Math.floor(Math.random() * answerKeys2.length);
+                const selectedAnswerKey2 = answerKeys2[randomIndex2];
+
+                const ranswer1 = answers[selectedAnswerKey1];
+                const ranswer2 = answers[selectedAnswerKey2];
+
+                if (answer1 && answer2 && !answer3) {
+                    const generatedQuestion1 = await fetchQuestionForAnswer(ranswer1);
+                    if (generatedQuestion1) {
+                        newQuestions['Q5'] = generatedQuestion1;
+                    }
+                }
+                if (answer3 && answer4) {
+                    const generatedQuestion2 = await fetchQuestionForAnswer(ranswer2);
+                    if (generatedQuestion2) {
+                        newQuestions['Q6'] = generatedQuestion2;
+                    }
+                }
+            }
+
+            if (Object.keys(newQuestions).length > 0) {
+                setQuestionState(newQuestions);
+                handleQuestion(newQuestions);
+                setHasGeneratedFollowUps(true); // Follow-up 질문 생성 후 상태 업데이트
+            }
+        };
+
+        generateFollowUpQuestions()
+
+    }, [answers, hasGeneratedFollowUps]);
+
+    return null; // FollowUp 컴포넌트는 UI를 렌더링하지 않으므로 null 반환
 }
 
 export default FollowUp;
