@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-
-function FollowUp({ job, years, answers, questions, handleQuestion,handleInterviewerUpdate }) {
-    const [requested, setRequested] = useState({
-        A1: false,
-        A2: false,
-    });
+function FollowUp({ job, years, answers, questions, handleQuestion, initialQuestionCount, shouldGenerate }) {
+    const [questionState, setQuestionState] = useState(questions);
 
     useEffect(() => {
         const fetchQuestionForAnswer = async (answer) => {
@@ -57,29 +53,6 @@ function FollowUp({ job, years, answers, questions, handleQuestion,handleIntervi
                 const randomQ3 = randomIndices[2];
                 const randomQ4 = randomIndices[3];
 
-                console.log(generatedQuestion);
-                const formData2 = new FormData();
-                //키와 생성된 문제를 formdata 에 추가
-                formData2.append(newKey,generatedQuestion);
-                
-                //꼬리질문에 대한 영상 생성
-                const response2 = await fetch('http://localhost:8000/ai-presenter/',{
-                    method : 'POST',
-                    body: formData2
-                });
-                if (!response2.ok) {
-                    throw new Error('영상 생성에 실패했습니다.');
-                }
-                
-                const data2 = await response2.json();
-                handleInterviewerUpdate(data2)
-
-                // 요청 완료 상태 업데이트
-                setRequested((prevRequested) => ({
-                    ...prevRequested,
-                    [keyPrefix]: true,
-                }));
-              
                 const answer1Key = `A${randomQ1 + 1}`;
                 const answer2Key = `A${randomQ2 + 1}`;
                 const answer3Key = `A${randomQ3 + 1}`;
@@ -125,8 +98,7 @@ function FollowUp({ job, years, answers, questions, handleQuestion,handleIntervi
         if (shouldGenerate) {
             generateFollowUpQuestions();
         }
-      
-    }, [answers, job, years, questions, handleQuestion, requested,handleInterviewerUpdate, initialQuestionCount, shouldGenerate]);
+    }, [answers, initialQuestionCount, questions, handleQuestion, shouldGenerate]);
 
     return null; // FollowUp 컴포넌트는 UI를 렌더링하지 않으므로 null 반환
 }
