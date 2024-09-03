@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import VideoRecorder from './VideoRecorder';
 import FollowUp from './FollowUp';
+import axios from 'axios';
 
 function Interview_technical() {
     const location = useLocation();
@@ -75,6 +76,18 @@ function Interview_technical() {
     const handleGenerateFollowUpQuestions = () => {
         setIsRecordingDone(true);
     };
+
+    const handleNavigate = () => {
+        navigate('/report', { state: { answers, questions, job, years } });
+    }
+
+    // const handleAxios = async () => {
+    //     try {
+    //         await axios.post("http://localhost:8000/get_consolidate_feedback", { feedback: true })
+    //     } catch (error) {
+    //         console.error("Error getting feedback", error)
+    //     }
+    // };
 
     return (
         <>
