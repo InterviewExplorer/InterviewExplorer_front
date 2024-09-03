@@ -4,9 +4,10 @@ import { useLocation } from 'react-router-dom';
 function Report() {
     const location = useLocation();
     const { answers = {}, questions = {}, job, years } = location.state || {};
-
     const [evaluations, setEvaluations] = useState({});
     const [loading, setLoading] = useState(true); // 로딩 상태 관리
+    const [explains, setExplains] = useState([]); // 설명을 담을 상태
+    const [summary, setSummary] = useState(''); // 요약 상태
 
     const evaluateAnswer = async (question, answer) => {
         try {
@@ -33,6 +34,8 @@ function Report() {
     useEffect(() => {
         const fetchEvaluations = async () => {
             const evaluations = {};
+            const explanations = []; // 설명을 담을 배열
+
             for (let i = 0; i < Object.keys(questions).length; i++) {
                 const questionKey = `Q${i + 1}`;
                 const answerKey = `A${i + 1}`;
@@ -41,11 +44,42 @@ function Report() {
                 const answer = answers ? answers[answerKey] : null;
 
                 if (question && answer) {
-                    evaluations[questionKey] = await evaluateAnswer(question, answer);
+                    const evaluation = await evaluateAnswer(question, answer);
+                    evaluations[questionKey] = evaluation;
+
+                    // 설명이 존재하면 배열에 추가
+                    if (evaluation.설명) {
+                        explanations.push(evaluation.설명);
+                    }
                 }
             }
+
             setEvaluations(evaluations);
-            setLoading(false); // 모든 평가가 완료되면 로딩 상태를 false로 설정
+            setExplains(explanations); // 설명 상태 업데이트
+
+            // 모든 평가가 완료되면 요약 요청
+            try {
+                const response = await fetch('http://localhost:8000/summarize', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ evaluations: evaluations }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('요약 요청에 실패했습니다.');
+                }
+
+                const data = await response.json();
+                setSummary(data.summary);
+                console.log("summary", data.summary)
+            } catch (error) {
+                console.error('요약 에러 발생:', error);
+                setSummary('요약을 불러오는 데 실패했습니다.');
+            }
+
+            setLoading(false); // 모든 요청이 완료되면 로딩 상태를 false로 설정
         };
 
         fetchEvaluations();
@@ -61,6 +95,13 @@ function Report() {
         <div>
             <h1>면접 결과</h1>
             <h3>{years}년차, {job}로써 면접에 응시한 결과입니다.</h3>
+
+            {summary && (
+                <div>
+                    <h2>종합 평가</h2>
+                    <p>{summary}</p>
+                </div>
+            )}
 
             {questionKeys.length > 0 && (
                 <>
