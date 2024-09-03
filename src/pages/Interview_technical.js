@@ -6,13 +6,13 @@ import FollowUp from './FollowUp';
 function Interview_technical() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { questions: initialQuestions, job, years, interviewer } = location.state || {};
+    const { questions: initialQuestions, job, years, interviewer:initialInterviewer } = location.state || {};
     const [questions, setQuestions] = useState(initialQuestions || {});
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isLastQuestion, setIsLastQuestion] = useState(false);
     const [answers, setAnswers] = useState({});
     const [isRecordingDone, setIsRecordingDone] = useState(false);
-
+    const [interviewer, setInterviewer] = useState(initialInterviewer || {});
     const initialQuestionCount = Object.keys(initialQuestions || {}).length;
 
     useEffect(() => {
@@ -27,6 +27,12 @@ function Interview_technical() {
             ...newData
         }));
     };
+    const handleInterviewerUpdate = (newData) => {
+        setInterviewer(prevInterviewer => ({
+            ...prevInterviewer,
+            ...newData
+        }));
+    };
 
     const handleAnswers = (newData) => {
         setAnswers(prevAnswers => ({
@@ -38,6 +44,7 @@ function Interview_technical() {
 
     console.log("questions", questions)
     console.log("answers", answers)
+    console.log("interviewers",interviewer)
 
     // Define isAnswerComplete function
     const isAnswerComplete = () => {
@@ -87,6 +94,7 @@ function Interview_technical() {
                         questions={questions} 
                         handleQuestion={handleQuestion} 
                         initialQuestionCount={initialQuestionCount} 
+                        handleInterviewerUpdate={handleInterviewerUpdate}
                     />
                     
                     {!isLastQuestion && isAnswerComplete() && (
