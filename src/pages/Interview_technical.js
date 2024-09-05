@@ -45,7 +45,7 @@ function Interview_technical() {
 
     console.log("questions", questions)
     console.log("answers", answers)
-    console.log("interviewers",interviewer)
+    // console.log("interviewers",interviewer)
 
     // Define isAnswerComplete function
     const isAnswerComplete = () => {
