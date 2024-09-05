@@ -92,7 +92,7 @@ function GetInfo() {
                     <br />
                     <label>경력 :
                         <input
-                            type="text"
+                            type="number"
                             placeholder="년 단위로 숫자만 입력해주세요."
                             value={years}
                             onChange={handleYearsChange}
