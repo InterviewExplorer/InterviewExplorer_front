@@ -8,19 +8,19 @@ function FollowUp({ job, years, answers, questions, handleQuestion, initialQuest
     useEffect(() => {
         const fetchQuestionForAnswer = async (answer) => {
             try {
-                const url = 'http://localhost:8000/generate_question';
-                const userInfo = { job, years, answer };
+                const url = 'http://localhost:8000/follow_question';
+                const userInfo = { job, years, answer, questions };
                 const response = await axios.post(url, userInfo, {
                     headers: { 'Content-Type': 'application/json' }
                 });
-                return response.data;
+                return response.data.question;
+
             } catch (error) {
                 console.error('Error fetching question:', error);
                 return null;
             }
-
-
         };
+        
         const followingInterviewers =async (questionNum, generatedQuestion) =>{
             const formData = new FormData();
             //키와 생성된 문제를 formdata 에 추가
