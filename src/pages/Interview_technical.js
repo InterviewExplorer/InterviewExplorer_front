@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import VideoRecorder from './VideoRecorder';
 import FollowUp from './FollowUp';
-import axios from 'axios';
+import { handleFeedback } from '../util/FeedbackConsolidator';
 
 function Interview_technical() {
     const location = useLocation();
@@ -65,6 +65,12 @@ function Interview_technical() {
         }
     };
 
+    const handleMultiple = async () => {
+        handleEndInterview()
+        // const feedbackData = await handleFeedback()
+        // console.log("통합 피드백: ", feedbackData)
+    }
+
     const handleEndInterview = () => {
         if (!isAnswerComplete()) {
             alert('현재 질문에 대한 답변을 먼저 완료해주세요.');
@@ -80,14 +86,6 @@ function Interview_technical() {
     const handleNavigate = () => {
         navigate('/report', { state: { answers, questions, job, years } });
     }
-
-    // const handleAxios = async () => {
-    //     try {
-    //         await axios.post("http://localhost:8000/get_consolidate_feedback", { feedback: true })
-    //     } catch (error) {
-    //         console.error("Error getting feedback", error)
-    //     }
-    // };
 
     return (
         <>
@@ -116,7 +114,7 @@ function Interview_technical() {
                         </button>
                     )}
                     {isLastQuestion && isAnswerComplete() && (
-                        <button onClick={handleEndInterview}>
+                        <button onClick={handleMultiple}>
                             면접 종료
                         </button>
                     )}
