@@ -67,8 +67,7 @@ function Interview_technical() {
 
     const handleMultiple = async () => {
         handleEndInterview()
-        // const feedbackData = await handleFeedback()
-        // console.log("통합 피드백: ", feedbackData)
+        await handleFeedback()
     }
 
     const handleEndInterview = () => {
