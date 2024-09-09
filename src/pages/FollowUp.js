@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function FollowUp({ job, years, answers, questions, handleQuestion, initialQuestionCount, handleInterviewerUpdate }) {
+function FollowUp({ job, years, answers, questions, handleQuestion, initialQuestionCount, handleInterviewerUpdate, type }) {
     const [questionState, setQuestionState] = useState(questions);
     const [hasGeneratedFollowUps, setHasGeneratedFollowUps] = useState(false); // 추가된 상태
 
@@ -9,7 +9,7 @@ function FollowUp({ job, years, answers, questions, handleQuestion, initialQuest
         const fetchQuestionForAnswer = async (answer) => {
             try {
                 const url = 'http://localhost:8000/follow_question';
-                const userInfo = { job, years, answer, questions };
+                const userInfo = { job, years, answer, questions, type };
                 const response = await axios.post(url, userInfo, {
                     headers: { 'Content-Type': 'application/json' }
                 });
@@ -47,10 +47,7 @@ function FollowUp({ job, years, answers, questions, handleQuestion, initialQuest
             const answer4 = answers['A4'];
 
             if (initialQuestionCount === 2) {
-                console.log("initialQuestionCount 2 실행중");
-
                 if (answer1 && !answer2) {
-                    console.log("answer1 실행중");
                     const generatedQuestion1 = await fetchQuestionForAnswer(answer1);
                     if (generatedQuestion1) {
                         let questionNum = 'Q3';
@@ -60,7 +57,6 @@ function FollowUp({ job, years, answers, questions, handleQuestion, initialQuest
                 }
 
                 if (answer2 && !answer3) {
-                    console.log("answer2 실행중");
                     const generatedQuestion2 = await fetchQuestionForAnswer(answer2);
                     if (generatedQuestion2) {
                         let questionNum = 'Q4';
@@ -69,8 +65,6 @@ function FollowUp({ job, years, answers, questions, handleQuestion, initialQuest
                     }
                 }
             } else if (initialQuestionCount === 4) {
-                console.log("initialQuestionCount 4 실행중");
-
                 // A1, A2 중 하나를 랜덤으로 선택
                 const answerKeys1 = ['A1', 'A2'];
                 const randomIndex1 = Math.floor(Math.random() * answerKeys1.length);
