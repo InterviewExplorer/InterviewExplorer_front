@@ -126,7 +126,7 @@ function Report() {
     const questionKeys = questions ? Object.keys(questions) : [];
 
     if (loading) {
-        return <div>면접 결과 분석중...</div>;
+        return <div>면접 결과 분석 중...</div>;
     }
 
     return (
