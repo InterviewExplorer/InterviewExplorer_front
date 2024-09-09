@@ -49,6 +49,7 @@ const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone }) => {
                     const result = await response.json();
                     setTranscript(result.transcript);
                     setRecordingDone(true);
+                    console.log("개별 피드백(VideoRecorder.js): ", result.feedback)
                     
                     // 녹화가 완료된 후 FollowUp 컴포넌트에 콜백 호출
                     if (onRecordingDone) {
