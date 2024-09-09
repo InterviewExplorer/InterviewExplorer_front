@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function FollowUp({ job, years, answers, questions, handleQuestion, initialQuestionCount, handleInterviewerUpdate }) {
+function FollowUp({ job, years, answers, questions, handleQuestion, initialQuestionCount, handleInterviewerUpdate, type }) {
     const [questionState, setQuestionState] = useState(questions);
     const [hasGeneratedFollowUps, setHasGeneratedFollowUps] = useState(false); // 추가된 상태
 
@@ -9,7 +9,7 @@ function FollowUp({ job, years, answers, questions, handleQuestion, initialQuest
         const fetchQuestionForAnswer = async (answer) => {
             try {
                 const url = 'http://localhost:8000/follow_question';
-                const userInfo = { job, years, answer, questions };
+                const userInfo = { job, years, answer, questions, type };
                 const response = await axios.post(url, userInfo, {
                     headers: { 'Content-Type': 'application/json' }
                 });

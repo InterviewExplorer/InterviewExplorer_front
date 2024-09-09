@@ -3,11 +3,12 @@ import { useLocation } from 'react-router-dom';
 
 function Report() {
     const location = useLocation();
-    const { answers = {}, questions = {}, job, years } = location.state || {};
+    const { answers = {}, questions = {}, job, years, type } = location.state || {};
     const [evaluations, setEvaluations] = useState({});
     const [loading, setLoading] = useState(true);
     const [explains, setExplains] = useState([]);
     const [summary, setSummary] = useState({});
+    const [speakingEvaluation, setSpeakingEvaluation] = useState("");
 
     const evaluateAnswer = async (question, answer) => {
         try {
@@ -16,7 +17,7 @@ function Report() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ question, answer, years, job }),
+                body: JSON.stringify({ question, answer, years, job, type }),
             });
 
             if (!response.ok) {
@@ -28,6 +29,34 @@ function Report() {
         } catch (error) {
             console.error('에러 발생:', error);
             return { 평가: "평가를 불러오는 데 실패했습니다." };
+        }
+    };
+
+    const evaluateSpeaking = async (answers) => {
+        try {
+            const response = await fetch('http://localhost:8000/speaking', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ answers }),
+            });
+    
+            if (!response.ok) {
+                throw new Error('발화 평가 요청에 실패했습니다.');
+            }
+    
+            const data = await response.json();
+    
+            // JSON 응답의 구조를 확인하고 적절한 값을 반환
+            if (data && typeof data === 'object' && data.speaking) {
+                return data.speaking;
+            } else {
+                return "발화 평가 정보를 불러오는 데 실패했습니다.";
+            }
+        } catch (error) {
+            console.error('발화 평가 에러 발생:', error);
+            return "발화 평가 정보를 불러오는 데 실패했습니다.";
         }
     };
 
@@ -62,7 +91,7 @@ function Report() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ evaluations: evaluations }),
+                    body: JSON.stringify({ evaluations: evaluations, type }),
                 });
 
                 if (!response.ok) {
@@ -80,11 +109,13 @@ function Report() {
                     setSummary('');
                 }
 
-                console.log("data", data);
-
             } catch (error) {
                 console.error('요약 에러 발생:', error);
             }
+
+            // 평가 후 발화 평가 요청
+            const speakingResult = await evaluateSpeaking(answers);
+            setSpeakingEvaluation(speakingResult);
 
             setLoading(false);
         };
@@ -95,7 +126,7 @@ function Report() {
     const questionKeys = questions ? Object.keys(questions) : [];
 
     if (loading) {
-        return <div>로딩 중...</div>;
+        return <div>면접 결과 분석중...</div>;
     }
 
     return (
@@ -112,6 +143,11 @@ function Report() {
 
             ========================================================
 
+            <h2>언어습관 및 말투 평가</h2>
+            <p>{speakingEvaluation}</p>
+
+            ========================================================
+
             {questionKeys.length > 0 && (
                 <>
                     {questionKeys.map((key, index) => {
@@ -123,7 +159,12 @@ function Report() {
                                 <p><strong>답변:</strong> {answers[answerKey]}</p>
                                 <p><strong>평가:</strong> {evaluation.score !== undefined ? evaluation.score : "점수를 불러오는 데 실패했습니다."}점</p>
                                 <p><strong>설명:</strong> {evaluation.explanation || "설명 정보가 없습니다."}</p>
-                                <p><strong>모범답안:</strong> {evaluation.model || "모범답안 정보가 없습니다."}</p>
+                                {type === "technical" && (
+                                    <p><strong>모범답안:</strong> {evaluation.model || "모범답안 정보가 없습니다."}</p>
+                                )}
+                                {type === "behavioral" && (
+                                    <p><strong>질문의 의도:</strong> {evaluation.intention || "질문의 의도 정보가 없습니다."}</p>
+                                )}
                             </div>
                         );
                     })}
