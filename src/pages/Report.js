@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useReactToPrint } from 'react-to-print';
 
 function Report() {
     const location = useLocation();
@@ -9,6 +10,8 @@ function Report() {
     const [explains, setExplains] = useState([]);
     const [summary, setSummary] = useState({});
     const [speakingEvaluation, setSpeakingEvaluation] = useState("");
+
+    const componentRef = useRef(); // PDF로 변환할 컴포넌트를 참조하는 ref
 
     const evaluateAnswer = async (question, answer) => {
         try {
@@ -123,6 +126,10 @@ function Report() {
         fetchEvaluations();
     }, [questions, answers, years, job]);
 
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+    });
+
     const questionKeys = questions ? Object.keys(questions) : [];
 
     if (loading) {
@@ -131,45 +138,49 @@ function Report() {
 
     return (
         <div>
-            <h1>면접 결과</h1>
-            <h3>{years}년차, {job}로써 면접에 응시한 결과입니다.</h3>
+            <div ref={componentRef}>
+                <h1>면접 결과</h1>
+                <h3>{years}년차, {job}로써 면접에 응시한 결과입니다.</h3>
 
-            {summary && (
-                <div>
-                    <h2>종합 평가</h2>
-                    <p>{summary}</p>
-                </div>
-            )}
+                {summary && (
+                    <div>
+                        <h2>종합 평가</h2>
+                        <p>{summary}</p>
+                    </div>
+                )}
 
-            ========================================================
+                ========================================================
 
-            <h2>언어습관 및 말투 평가</h2>
-            <p>{speakingEvaluation}</p>
+                <h2>언어습관 및 말투 평가</h2>
+                <p>{speakingEvaluation}</p>
 
-            ========================================================
+                ========================================================
 
-            {questionKeys.length > 0 && (
-                <>
-                    {questionKeys.map((key, index) => {
-                        const answerKey = `A${index + 1}`;
-                        const evaluation = evaluations[key] || {};
-                        return (
-                            <div key={key}>
-                                <p><strong>질문:</strong> {questions[key]}</p>
-                                <p><strong>답변:</strong> {answers[answerKey]}</p>
-                                <p><strong>평가:</strong> {evaluation.score !== undefined ? evaluation.score : "점수를 불러오는 데 실패했습니다."}점</p>
-                                <p><strong>설명:</strong> {evaluation.explanation || "설명 정보가 없습니다."}</p>
-                                {type === "technical" && (
-                                    <p><strong>모범답안:</strong> {evaluation.model || "모범답안 정보가 없습니다."}</p>
-                                )}
-                                {type === "behavioral" && (
-                                    <p><strong>질문의 의도:</strong> {evaluation.intention || "질문의 의도 정보가 없습니다."}</p>
-                                )}
-                            </div>
-                        );
-                    })}
-                </>
-            )}
+                {questionKeys.length > 0 && (
+                    <>
+                        {questionKeys.map((key, index) => {
+                            const answerKey = `A${index + 1}`;
+                            const evaluation = evaluations[key] || {};
+                            return (
+                                <div key={key}>
+                                    <p><strong>질문:</strong> {questions[key]}</p>
+                                    <p><strong>답변:</strong> {answers[answerKey]}</p>
+                                    <p><strong>평가:</strong> {evaluation.score !== undefined ? evaluation.score : "점수를 불러오는 데 실패했습니다."}점</p>
+                                    <p><strong>설명:</strong> {evaluation.explanation || "설명 정보가 없습니다."}</p>
+                                    {type === "technical" && (
+                                        <p><strong>모범답안:</strong> {evaluation.model || "모범답안 정보가 없습니다."}</p>
+                                    )}
+                                    {type === "behavioral" && (
+                                        <p><strong>질문의 의도:</strong> {evaluation.intention || "질문의 의도 정보가 없습니다."}</p>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </>
+                )}
+            </div>
+
+            <button onClick={handlePrint}>PDF로 저장</button>
         </div>
     );
 }
