@@ -66,8 +66,14 @@ function Interview_technical() {
     };
 
     const handleMultiple = async () => {
-        handleEndInterview()
-        await handleFeedback()
+        try {
+            console.log("handleMultiple 호출됨");
+            handleEndInterview();
+            await handleFeedback();
+            console.log("handleFeedback 완료됨");
+        } catch (error) {
+            console.error("Error in handleMultiple:", error);
+        }
     }
 
     const handleEndInterview = () => {
