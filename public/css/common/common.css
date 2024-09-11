@@ -1,0 +1,19 @@
+/* common */
+.el_bg{background: rgb(134,157,220);background: linear-gradient(140deg, rgba(134,157,220,1) 0%, rgba(205,217,227,1) 100%);}
+
+/* main */
+.el_box__main{display:inline-block;transition:bgChange 0.5s ease-in-out;}
+.el_box__main:hover{animation:bgChange 0.3s forwards;}
+/* .el_box__main:hover .el_box__txt{animation:bgChangedTxt 0.3s forwards;} */
+.el_box__icon{background:no-repeat center/65px;height:120px;width: 100%;}
+.el_icon__interviewer{background-image:url('/img/icon/interviewer.png');}
+.el_icon__interviewee{background-image:url('/img/icon/interviewee.png');}
+
+@keyframes bgChange {
+    from {background:white;}
+    to {background: rgb(111,130,254);background: linear-gradient(180deg, rgba(111,130,254,1) 0%, rgba(104,171,253,1) 50%, rgba(208,224,240,1) 100%);}
+}
+/* @keyframes bgChangedTxt{
+    from{color:#000;}
+    to{color:#fff;}
+} */
