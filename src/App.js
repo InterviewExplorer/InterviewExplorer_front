@@ -4,6 +4,7 @@ import GetInfo from "./pages/GetInfo";
 import Interview_technical from "./pages/Interview_technical";
 import Report from "./pages/Report";
 import Interview from "./pages/Interview";
+import Guide from "./pages/Guide";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/interview" element={<Interview />} />
           {/* <Route path="/interview_technical" element={<Interview_technical />} /> */}
           <Route path="/report" element={<Report />} />
+          <Route path="/guide" element={<Guide/>}/>
         </Routes>
       </BrowserRouter>
     </>
