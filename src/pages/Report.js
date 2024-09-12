@@ -163,7 +163,7 @@ function Report() {
         return <div>면접 결과 분석 중...</div>;
     }
 
-    const feedbackArray = feedback.feedbackList.flat();
+    const feedbackArray = feedback && feedback.feedbackList ? feedback.feedbackList.flat() : [];
     const uniqueFeedback = Array.from(new Set(feedbackArray));
 
     return (
@@ -186,19 +186,17 @@ function Report() {
 
                 ========================================================
 
-                <h3>피드백 목록</h3>
-                <ul>
-                    {uniqueFeedback.map((feedback, index) => (
-                        <li key={index}>{feedback}</li>
-                    ))}
-                </ul>
-
-                <h2>자세 피드백</h2>
-                <p>{consolidatedFeedback}</p>
-                {/* <h3>행동 감지</h3>
-                <p>얼굴 터치: {faceTouchTotal}</p>
-                <p>손 움직임: {handMoveTotal}</p>
-                <p>자세 불량: {notFrontTotal}</p> */}
+                {consolidatedFeedback && (
+                    <div>
+                        <h2>자세 피드백</h2>
+                        <ul>
+                            {uniqueFeedback.map((feedback, index) => (
+                                <li key={index}>{feedback}</li>
+                            ))}
+                        </ul>
+                        <p>{consolidatedFeedback}</p>
+                    </div>
+                )}
 
                 ========================================================
 
