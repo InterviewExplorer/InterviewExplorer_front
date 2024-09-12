@@ -1,4 +1,4 @@
-import MicTest from "./\bMicTest";
+import MicTest from "./MicTest";
 import CamTest from "./CamTest";
 import { useLocation, useNavigate } from 'react-router-dom';
 
