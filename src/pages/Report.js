@@ -5,14 +5,15 @@ import axios from 'axios';
 
 function Report() {
     const location = useLocation();
-    const { answers = {}, questions = {}, job, years, type, feedback = [], faceTouchTotal = 0, handMoveTotal = 0, notFrontTotal = 0 } = location.state || {};
+    // const { answers = {}, questions = {}, job, years, type, feedback = [], faceTouchTotal = 0, handMoveTotal = 0, notFrontTotal = 0 } = location.state || {};
+    const { answers = {}, questions = {}, job, years, type, feedback = [] } = location.state || {};
     const [evaluations, setEvaluations] = useState({});
     const [loading, setLoading] = useState(true);
     const [explains, setExplains] = useState([]);
     const [summary, setSummary] = useState({});
     const [speakingEvaluation, setSpeakingEvaluation] = useState("");
     const componentRef = useRef(); // PDF로 변환할 컴포넌트를 참조하는 ref
-    const [consolidated_feedback, setConsolidatedFeedback] = useState("");
+    const [consolidatedFeedback, setConsolidatedFeedback] = useState("");
 
     const evaluateAnswer = async (question, answer) => {
         try {
@@ -162,6 +163,9 @@ function Report() {
         return <div>면접 결과 분석 중...</div>;
     }
 
+    const feedbackArray = feedback.feedbackList.flat();
+    const uniqueFeedback = Array.from(new Set(feedbackArray));
+
     return (
         <div>
             <div ref={componentRef}>
@@ -182,12 +186,19 @@ function Report() {
 
                 ========================================================
 
+                <h3>피드백 목록</h3>
+                <ul>
+                    {uniqueFeedback.map((feedback, index) => (
+                        <li key={index}>{feedback}</li>
+                    ))}
+                </ul>
+
                 <h2>자세 피드백</h2>
-                <p>{consolidated_feedback}</p>
-                <h3>행동 감지</h3>
+                <p>{consolidatedFeedback}</p>
+                {/* <h3>행동 감지</h3>
                 <p>얼굴 터치: {faceTouchTotal}</p>
                 <p>손 움직임: {handMoveTotal}</p>
-                <p>자세 불량: {notFrontTotal}</p>
+                <p>자세 불량: {notFrontTotal}</p> */}
 
                 ========================================================
 

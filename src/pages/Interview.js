@@ -15,9 +15,9 @@ function Interview() {
     const [interviewer, setInterviewer] = useState(initialInterviewer || {});
     const initialQuestionCount = Object.keys(initialQuestions || {}).length;
     const [feedback, setFeedback] = useState(initialFeedback);
-    const [faceTouchTotal, setFaceTouchTotal] = useState(0);
-    const [handMoveTotal, setHandMoveTotal] = useState(0);
-    const [notFrontTotal, setNotFrontTotal] = useState(0);
+    // const [faceTouchTotal, setFaceTouchTotal] = useState(0);
+    // const [handMoveTotal, setHandMoveTotal] = useState(0);
+    // const [notFrontTotal, setNotFrontTotal] = useState(0);
 
     useEffect(() => {
         const questionKeys = Object.keys(questions);
@@ -45,17 +45,20 @@ function Interview() {
         }));
         setIsRecordingDone(true);
     };
-
-    const handleFeedbackUpdate = (newFeedback, faceTouchTotal, handMoveTotal, notFrontTotal) => {
-        setFeedback(newFeedback);
-        setFaceTouchTotal(faceTouchTotal);
-        setHandMoveTotal(handMoveTotal);
-        setNotFrontTotal(notFrontTotal);
+    
+    // const handleFeedbackUpdate = (newFeedback, faceTouchTotal, handMoveTotal, notFrontTotal) => {
+    const handleFeedbackUpdate = (feedbackList) => {
+        setFeedback(feedbackList);
+        // 카운트 잠시 대기
+        // setFaceTouchTotal(faceTouchTotal);
+        // setHandMoveTotal(handMoveTotal);
+        // setNotFrontTotal(notFrontTotal);
     };
 
     console.log("questions", questions)
     console.log("answers", answers)
     console.log("feedback", feedback);
+    // 카운트 잠시 대기
     // console.log("faceTouchTotal", faceTouchTotal);
     // console.log("handMoveTotal", handMoveTotal);
     // console.log("notFrontTotal", notFrontTotal);
@@ -83,7 +86,8 @@ function Interview() {
             alert('현재 질문에 대한 답변을 먼저 완료해주세요.');
             return;
         }
-        navigate('/report', { state: { answers, questions, job, years, type, feedback, faceTouchTotal, handMoveTotal, notFrontTotal } });
+        // navigate('/report', { state: { answers, questions, job, years, type, feedback, faceTouchTotal, handMoveTotal, notFrontTotal } });
+        navigate('/report', { state: { answers, questions, job, years, type, feedback } });
     };
 
     const handleGenerateFollowUpQuestions = () => {
