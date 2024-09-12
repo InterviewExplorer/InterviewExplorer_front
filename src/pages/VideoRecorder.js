@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone }) => {
+const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone, onFeedbackUpdate }) => {
     const [recording, setRecording] = useState(false);
     const [recordingDone, setRecordingDone] = useState(false);
     const [transcript, setTranscript] = useState('');
@@ -9,6 +9,10 @@ const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone }) => {
     const videoRef = useRef(null);
     const startButtonRef = useRef(null);
     const chunks = useRef([]);
+    const [feedback, setFeedback] = useState([]);
+    const [faceTouchTotal, setFaceTouchTotal] = useState(0);
+    const [handMoveTotal, setHandMoveTotal] = useState(0);
+    const [notFrontTotal, setNotFrontTotal] = useState(0);
 
     const startRecording = async () => {
         try {
@@ -49,7 +53,20 @@ const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone }) => {
                     const result = await response.json();
                     setTranscript(result.transcript);
                     setRecordingDone(true);
-                    
+                    setFeedback(prevFeedback => {
+                        const updateFeedbacks = [...prevFeedback, result.feedback];
+                        return updateFeedbacks;
+                    });
+                    setFaceTouchTotal(prevTotal => prevTotal + result.face_touch_total);
+                    console.log("faceTouchTotal", faceTouchTotal)
+                    console.log("result.face_touch_total", result.face_touch_total)
+                    setHandMoveTotal(prevTotal => prevTotal + result.hand_move_total);
+                    console.log("handMoveTotal", handMoveTotal)
+                    console.log("result.hand_move_total", result.hand_move_total)
+                    setNotFrontTotal(prevTotal => prevTotal + result.not_front_total);
+                    console.log("notFrontTotal", notFrontTotal)
+                    console.log("result.not_front_total", result.not_front_total)
+
                     // 녹화가 완료된 후 FollowUp 컴포넌트에 콜백 호출
                     if (onRecordingDone) {
                         onRecordingDone();
@@ -82,6 +99,17 @@ const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone }) => {
             handleAnswers({ [key]: transcript });
         }
     }, [transcript]);
+
+    useEffect(() => {
+        if (feedback.length > 0 && onFeedbackUpdate) {
+            onFeedbackUpdate({
+                feedback, 
+                faceTouchTotal, 
+                handMoveTotal, 
+                notFrontTotal
+            });
+        }
+    }, [feedback]);
 
     useEffect(() => {
         setRecordingDone(false);

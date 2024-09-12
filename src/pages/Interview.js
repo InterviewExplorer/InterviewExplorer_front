@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import VideoRecorder from './VideoRecorder';
 import FollowUp from './FollowUp';
-import axios from 'axios';
 
 function Interview() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { questions: initialQuestions, job, years, interviewer: initialInterviewer, type } = location.state || {};
+    const { questions: initialQuestions, job, years, interviewer: initialInterviewer, type, feedback: initialFeedback = [] } = location.state || {};
     const [questions, setQuestions] = useState(initialQuestions || {});
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isLastQuestion, setIsLastQuestion] = useState(false);
@@ -15,6 +14,10 @@ function Interview() {
     const [isRecordingDone, setIsRecordingDone] = useState(false);
     const [interviewer, setInterviewer] = useState(initialInterviewer || {});
     const initialQuestionCount = Object.keys(initialQuestions || {}).length;
+    const [feedback, setFeedback] = useState(initialFeedback);
+    const [faceTouchTotal, setFaceTouchTotal] = useState(0);
+    const [handMoveTotal, setHandMoveTotal] = useState(0);
+    const [notFrontTotal, setNotFrontTotal] = useState(0);
 
     useEffect(() => {
         const questionKeys = Object.keys(questions);
@@ -43,8 +46,19 @@ function Interview() {
         setIsRecordingDone(true);
     };
 
+    const handleFeedbackUpdate = (newFeedback, faceTouchTotal, handMoveTotal, notFrontTotal) => {
+        setFeedback(newFeedback);
+        setFaceTouchTotal(faceTouchTotal);
+        setHandMoveTotal(handMoveTotal);
+        setNotFrontTotal(notFrontTotal);
+    };
+
     console.log("questions", questions)
     console.log("answers", answers)
+    console.log("feedback", feedback);
+    // console.log("faceTouchTotal", faceTouchTotal);
+    // console.log("handMoveTotal", handMoveTotal);
+    // console.log("notFrontTotal", notFrontTotal);
 
     // Define isAnswerComplete function
     const isAnswerComplete = () => {
@@ -69,20 +83,12 @@ function Interview() {
             alert('현재 질문에 대한 답변을 먼저 완료해주세요.');
             return;
         }
-        navigate('/report', { state: { answers, questions, job, years, type } });
+        navigate('/report', { state: { answers, questions, job, years, type, feedback, faceTouchTotal, handMoveTotal, notFrontTotal } });
     };
 
     const handleGenerateFollowUpQuestions = () => {
         setIsRecordingDone(true);
     };
-
-    // const handleAxios = async () => {
-    //     try {
-    //         await axios.post("http://localhost:8000/get_consolidate_feedback", { feedback: true })
-    //     } catch (error) {
-    //         console.error("Error getting feedback", error)
-    //     }
-    // };
 
     return (
         <>
@@ -94,6 +100,7 @@ function Interview() {
                         handleAnswers={handleAnswers} 
                         questionIndex={currentQuestionIndex + 1}
                         onRecordingDone={handleGenerateFollowUpQuestions} // Pass the callback to VideoRecorder
+                        onFeedbackUpdate={handleFeedbackUpdate}
                     />
                     <FollowUp 
                         job={job} 
