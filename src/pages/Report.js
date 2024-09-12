@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
+import axios from 'axios';
 
 function Report() {
     const location = useLocation();
-    const { answers = {}, questions = {}, job, years, type } = location.state || {};
+    // const { answers = {}, questions = {}, job, years, type, feedback = [], faceTouchTotal = 0, handMoveTotal = 0, notFrontTotal = 0 } = location.state || {};
+    const { answers = {}, questions = {}, job, years, type, feedback = [] } = location.state || {};
     const [evaluations, setEvaluations] = useState({});
     const [loading, setLoading] = useState(true);
     const [explains, setExplains] = useState([]);
     const [summary, setSummary] = useState({});
     const [speakingEvaluation, setSpeakingEvaluation] = useState("");
-
     const componentRef = useRef(); // PDF로 변환할 컴포넌트를 참조하는 ref
+    const [consolidatedFeedback, setConsolidatedFeedback] = useState("");
 
     const evaluateAnswer = async (question, answer) => {
         try {
@@ -62,6 +64,31 @@ function Report() {
             return "발화 평가 정보를 불러오는 데 실패했습니다.";
         }
     };
+
+    const handleFeedback = async (feedback) => {
+        let consolidated_feedback;
+        
+        try {
+            const res = await axios.post("http://localhost:8000/get_consolidate_feedback", { feedback })
+            if (res.status === 200 || res.status === 201) {
+                consolidated_feedback = res.data.consolidated_feedback
+                return consolidated_feedback
+            } else {
+                throw new Error("Failed to get feedback")
+            }
+        } catch (e) {
+            console.error("Error getting feedback", e)
+        }
+    }
+
+    useEffect(() => {
+        const fetchFeedback = async () => {
+            const consolidated_feedback = await handleFeedback(feedback);
+            setConsolidatedFeedback(consolidated_feedback);
+        }
+
+        fetchFeedback();
+    }, [])
 
     useEffect(() => {
         const fetchEvaluations = async () => {
@@ -136,6 +163,9 @@ function Report() {
         return <div>면접 결과 분석 중...</div>;
     }
 
+    const feedbackArray = feedback.feedbackList.flat();
+    const uniqueFeedback = Array.from(new Set(feedbackArray));
+
     return (
         <div>
             <div ref={componentRef}>
@@ -153,6 +183,22 @@ function Report() {
 
                 <h2>언어습관 및 말투 평가</h2>
                 <p>{speakingEvaluation}</p>
+
+                ========================================================
+
+                <h3>피드백 목록</h3>
+                <ul>
+                    {uniqueFeedback.map((feedback, index) => (
+                        <li key={index}>{feedback}</li>
+                    ))}
+                </ul>
+
+                <h2>자세 피드백</h2>
+                <p>{consolidatedFeedback}</p>
+                {/* <h3>행동 감지</h3>
+                <p>얼굴 터치: {faceTouchTotal}</p>
+                <p>손 움직임: {handMoveTotal}</p>
+                <p>자세 불량: {notFrontTotal}</p> */}
 
                 ========================================================
 

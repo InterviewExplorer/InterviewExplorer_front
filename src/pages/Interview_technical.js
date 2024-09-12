@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import VideoRecorder from './VideoRecorder';
 import FollowUp from './FollowUp';
-import { handleFeedback } from '../util/FeedbackConsolidator';
 
 function Interview_technical() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { questions: initialQuestions, job, years, interviewer:initialInterviewer } = location.state || {};
+    const { questions: initialQuestions, job, years, interviewer:initialInterviewer, feedback: initialFeedback = [] } = location.state || {};
     const [questions, setQuestions] = useState(initialQuestions || {});
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isLastQuestion, setIsLastQuestion] = useState(false);
     const [answers, setAnswers] = useState({});
     const [isRecordingDone, setIsRecordingDone] = useState(false);
     const [interviewer, setInterviewer] = useState(initialInterviewer || {});
+    const [feedback, setFeedback] = useState(initialFeedback);
     const initialQuestionCount = Object.keys(initialQuestions || {}).length;
 
     useEffect(() => {
@@ -43,9 +43,15 @@ function Interview_technical() {
         setIsRecordingDone(true);
     };
 
-    console.log("questions", questions)
-    console.log("answers", answers)
-    // console.log("interviewers",interviewer)
+    const handleFeedbackUpdate = (newFeedback) => {
+        console.log("handleFeedbackUpdate 호출됨")
+        console.log("Interview_technical.js - Received feedback: ", newFeedback);
+        setFeedback(newFeedback);
+    };
+
+    console.log("questions", questions);
+    console.log("answers", answers);
+    console.log("feedback", feedback);
 
     // Define isAnswerComplete function
     const isAnswerComplete = () => {
@@ -65,23 +71,12 @@ function Interview_technical() {
         }
     };
 
-    const handleMultiple = async () => {
-        try {
-            console.log("handleMultiple 호출됨");
-            handleEndInterview();
-            await handleFeedback();
-            console.log("handleFeedback 완료됨");
-        } catch (error) {
-            console.error("Error in handleMultiple:", error);
-        }
-    }
-
     const handleEndInterview = () => {
         if (!isAnswerComplete()) {
             alert('현재 질문에 대한 답변을 먼저 완료해주세요.');
             return;
         }
-        navigate('/report', { state: { answers, questions, job, years } });
+        navigate('/report', { state: { answers, questions, job, years, feedback } });
     };
 
     const handleGenerateFollowUpQuestions = () => {
@@ -102,6 +97,7 @@ function Interview_technical() {
                         handleAnswers={handleAnswers} 
                         questionIndex={currentQuestionIndex + 1}
                         onRecordingDone={handleGenerateFollowUpQuestions} // Pass the callback to VideoRecorder
+                        onFeedbackUpdate={handleFeedbackUpdate} // 피드백 업데이트 콜백 전달
                     />
                     <FollowUp 
                         job={job} 
@@ -119,7 +115,7 @@ function Interview_technical() {
                         </button>
                     )}
                     {isLastQuestion && isAnswerComplete() && (
-                        <button onClick={handleMultiple}>
+                        <button onClick={handleEndInterview}>
                             면접 종료
                         </button>
                     )}

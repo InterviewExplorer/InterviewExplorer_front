@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone }) => {
+const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone, onFeedbackUpdate }) => {
     const [recording, setRecording] = useState(false);
     const [recordingDone, setRecordingDone] = useState(false);
     const [transcript, setTranscript] = useState('');
@@ -9,6 +9,11 @@ const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone }) => {
     const videoRef = useRef(null);
     const startButtonRef = useRef(null);
     const chunks = useRef([]);
+    const [feedbackList, setFeedbackList] = useState([]);
+    // 카운트 잠시 대기
+    // const [faceTouchTotal, setFaceTouchTotal] = useState(0);
+    // const [handMoveTotal, setHandMoveTotal] = useState(0);
+    // const [notFrontTotal, setNotFrontTotal] = useState(0);
 
     const startRecording = async () => {
         try {
@@ -47,8 +52,18 @@ const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone }) => {
                     }
 
                     const result = await response.json();
+                    console.log("feedback(VideoRecorder.js - axios)", result.feedback)
+                    // 카운트 잠시 대기
+                    // console.log("face_touch_total", result.face_touch_total)
+                    // console.log("hand_move_total", result.hand_move_total)
+                    // console.log("not_front_total", result.not_front_total)
                     setTranscript(result.transcript);
                     setRecordingDone(true);
+                    setFeedbackList(prevFeedback => [...prevFeedback, result.feedback]);
+                    // 카운트 잠시 대기
+                    // setFaceTouchTotal(prevTotal => prevTotal + result.face_touch_total);
+                    // setHandMoveTotal(prevTotal => prevTotal + result.hand_move_total);
+                    // setNotFrontTotal(prevTotal => prevTotal + result.not_front_total);
 
                     // 녹화가 완료된 후 FollowUp 컴포넌트에 콜백 호출
                     if (onRecordingDone) {
@@ -87,6 +102,18 @@ const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone }) => {
             handleAnswers({ [key]: transcript });
         }
     }, [transcript]);
+
+    useEffect(() => {
+        if (feedbackList.length > 0 && onFeedbackUpdate) {
+            onFeedbackUpdate({
+                feedbackList
+                // faceTouchTotal, 
+                // handMoveTotal, 
+                // notFrontTotal
+            });
+            console.log("feedback(VideoRecorder.js - useEffect)", feedbackList.join('\n'))
+        }
+    }, []);
 
     useEffect(() => {
         setRecordingDone(false);
