@@ -143,9 +143,11 @@ function Report() {
                 console.error('요약 에러 발생:', error);
             }
 
-            // 평가 후 발화 평가 요청
-            const speakingResult = await evaluateSpeaking(answers);
-            setSpeakingEvaluation(speakingResult);
+            // Only request speaking evaluation if the type is behavioral
+            if (type === 'behavioral') {
+                const speakingResult = await evaluateSpeaking(answers);
+                setSpeakingEvaluation(speakingResult);
+            }
 
             setLoading(false);
         };
@@ -173,21 +175,25 @@ function Report() {
                 <h3>{years}년차, {job}로써 면접에 응시한 결과입니다.</h3>
 
                 {summary && (
-                    <div>
+                    <>
                         <h2>종합 평가</h2>
                         <p>{summary}</p>
-                    </div>
+                    </>
                 )}
 
                 ========================================================
 
-                <h2>언어습관 및 말투 평가</h2>
-                <p>{speakingEvaluation}</p>
+                {type === "behavioral" && (
+                    <>
+                        <h2>언어습관 및 말투 평가</h2>
+                        <p>{speakingEvaluation}</p>
+                    </>
+                )}
 
                 ========================================================
 
                 {consolidatedFeedback && (
-                    <div>
+                    <>
                         <h2>자세 피드백</h2>
                         <ul>
                             {uniqueFeedback.map((feedback, index) => (
@@ -195,7 +201,7 @@ function Report() {
                             ))}
                         </ul>
                         <p>{consolidatedFeedback}</p>
-                    </div>
+                    </>
                 )}
 
                 ========================================================
