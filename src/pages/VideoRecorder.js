@@ -105,15 +105,15 @@ const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone, onFeedba
 
     useEffect(() => {
         if (feedbackList.length > 0 && onFeedbackUpdate) {
+            console.log("useEffect 실행확인: ", feedbackList)
             onFeedbackUpdate({
                 feedbackList
                 // faceTouchTotal, 
                 // handMoveTotal, 
                 // notFrontTotal
             });
-            console.log("feedback(VideoRecorder.js - useEffect)", feedbackList.join('\n'))
         }
-    }, []);
+    }, [feedbackList]);
 
     useEffect(() => {
         setRecordingDone(false);

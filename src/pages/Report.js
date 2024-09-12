@@ -6,7 +6,7 @@ import axios from 'axios';
 function Report() {
     const location = useLocation();
     // const { answers = {}, questions = {}, job, years, type, feedback = [], faceTouchTotal = 0, handMoveTotal = 0, notFrontTotal = 0 } = location.state || {};
-    const { answers = {}, questions = {}, job, years, type, feedback = [] } = location.state || {};
+    const { answers = {}, questions = {}, job, years, type, feedback } = location.state || {};
     const [evaluations, setEvaluations] = useState({});
     const [loading, setLoading] = useState(true);
     const [explains, setExplains] = useState([]);

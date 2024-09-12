@@ -6,7 +6,7 @@ import FollowUp from './FollowUp';
 function Interview() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { questions: initialQuestions, job, years, interviewer: initialInterviewer, type, feedback: initialFeedback = [] } = location.state || {};
+    const { questions: initialQuestions, job, years, interviewer: initialInterviewer, type } = location.state || {};
     const [questions, setQuestions] = useState(initialQuestions || {});
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isLastQuestion, setIsLastQuestion] = useState(false);
@@ -14,7 +14,7 @@ function Interview() {
     const [isRecordingDone, setIsRecordingDone] = useState(false);
     const [interviewer, setInterviewer] = useState(initialInterviewer || {});
     const initialQuestionCount = Object.keys(initialQuestions || {}).length;
-    const [feedback, setFeedback] = useState(initialFeedback);
+    const [feedback, setFeedback] = useState([]);
     // const [faceTouchTotal, setFaceTouchTotal] = useState(0);
     // const [handMoveTotal, setHandMoveTotal] = useState(0);
     // const [notFrontTotal, setNotFrontTotal] = useState(0);
@@ -49,6 +49,7 @@ function Interview() {
     // const handleFeedbackUpdate = (newFeedback, faceTouchTotal, handMoveTotal, notFrontTotal) => {
     const handleFeedbackUpdate = (feedbackList) => {
         setFeedback(feedbackList);
+        console.log("인터뷰 핸들러 감지 확인", feedbackList)
         // 카운트 잠시 대기
         // setFaceTouchTotal(faceTouchTotal);
         // setHandMoveTotal(handMoveTotal);
@@ -57,7 +58,7 @@ function Interview() {
 
     console.log("questions", questions)
     console.log("answers", answers)
-    console.log("feedback", feedback);
+    // console.log("feedback", feedback);
     // 카운트 잠시 대기
     // console.log("faceTouchTotal", faceTouchTotal);
     // console.log("handMoveTotal", handMoveTotal);
