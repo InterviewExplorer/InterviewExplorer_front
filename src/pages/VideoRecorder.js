@@ -31,7 +31,7 @@ const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone, onFeedba
                 if (startButtonRef.current) {
                     startButtonRef.current.style.display = 'none';
                 }
-                
+
                 const blob = new Blob(chunks.current, { type: 'video/webm' });
                 chunks.current = [];
 
@@ -73,6 +73,11 @@ const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone, onFeedba
                     }
                 } catch (error) {
                     console.error('Error uploading video:', error);
+
+                    // 오류 발생 시 녹화 시작 버튼을 다시 표시
+                    if (startButtonRef.current) {
+                        startButtonRef.current.style.display = 'block';
+                    }
                 } finally {
                     setLoading(false);
                 }
