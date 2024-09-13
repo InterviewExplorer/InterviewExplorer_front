@@ -45,7 +45,7 @@ function GetInfo() {
             if (!response2.ok) throw new Error('영상 생성에 실패했습니다.');
 
             const data2 = await response2.json();
-            navigate('/interview', { state: { questions: data, job, years, interviewer: data2, type: interviewType } });
+            navigate('/guide', { state: { questions: data, job, years, interviewer: data2, type: interviewType } });
         } catch (error) {
             console.error('에러 발생:', error);
             alert('질문 생성 중 오류가 발생했습니다.');
