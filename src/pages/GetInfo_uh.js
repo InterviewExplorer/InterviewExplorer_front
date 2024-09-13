@@ -22,7 +22,7 @@ function GetInfo_uh() {
         const formData = new FormData();
         formData.append('job', job);
         formData.append('years', years);
-        if (pdfFile) formData.append('file', pdfFile);
+        formData.append("interviewType", interviewType)
 
         setLoading(true);
 
