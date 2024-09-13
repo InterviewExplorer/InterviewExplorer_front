@@ -17,3 +17,13 @@
     from{color:#000;}
     to{color:#fff;}
 } */
+
+
+
+/* Loading.css */
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 화면 전체 높이로 설정 */
+}
