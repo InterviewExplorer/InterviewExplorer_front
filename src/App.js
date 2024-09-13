@@ -4,6 +4,7 @@ import GetInfo from "./pages/GetInfo";
 import Report from "./pages/Report";
 import Interview from "./pages/Interview";
 import Guide from "./pages/Guide";
+import Chart from "./pages/Chart";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/interview" element={<Interview />} />
           <Route path="/report" element={<Report />} />
           <Route path="/guide" element={<Guide/>}/>
+          <Route path="/chart" element={<Chart/>}/>
         </Routes>
       </BrowserRouter>
     </>
