@@ -35,6 +35,7 @@ function GetInfo_uh() {
             if (!response.ok) throw new Error('질문 생성에 실패했습니다.');
 
             const data = await response.json();
+            // console.log("질문 생성 목록(FE): " + JSON.stringify(data))
             const formData2 = new FormData();
             for (const key in data) formData2.append(key, data[key]);
 
@@ -56,13 +57,13 @@ function GetInfo_uh() {
     };
 
     const handleFindType = (e) => {
+        e.preventDefault();
         let type = ""
         if (e.target.value === "기술면접 응시") {
             type = "technical"
         } else {
             type = "behavioral"
         }
-        e.preventDefault();
         submitInterview("basic_question", type)
     }
 
@@ -100,8 +101,8 @@ function GetInfo_uh() {
                     </label>
                     <br />
                     <br />
-                    <button type="submit" onClick={handleFindType}>기술면접 응시</button>
-                    <button type="submit" onClick={handleFindType}>인성면접 응시</button>
+                    <button type="submit" value="기술면접 응시" onClick={handleFindType}>기술면접 응시</button>
+                    <button type="submit" value="인성면접 응시" onClick={handleFindType}>인성면접 응시</button>
                 </form>
             )}
         </div>

@@ -58,14 +58,13 @@ function Interview_uh() {
     
     const handleFeedbackUpdate = (feedbackList) => {
         setFeedback(feedbackList);
-        console.log("인터뷰 핸들러 감지 확인", feedbackList)
     };
 
     console.log("questions", questions)
     console.log("answers", answers)
     
     const isAnswerComplete = () => {
-        return answers[`A${currentQuestionIndex + 1}`] !== undefined;
+        return answers[`A${currentQuestionIndex + 1}`] !== undefined && answers[`A${currentQuestionIndex + 1}`] !== null;
     };
 
     const handleNextQuestion = () => {
