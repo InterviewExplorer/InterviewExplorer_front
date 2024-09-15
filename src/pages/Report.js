@@ -181,23 +181,6 @@ function Report() {
     }, [questions, answers, years, job]);
 
     // bl_height의 높이를 가져와서 Chart 컴포넌트에 전달
-    useEffect(() => {
-        const updateBlHeight = () => {
-            if (blHeightRef.current) {
-                setBlHeight(blHeightRef.current.offsetHeight);
-            }
-        };
-    
-        // setTimeout을 사용하여 DOM이 완전히 렌더링된 후에 높이를 가져옵니다.
-        setTimeout(updateBlHeight, 0.5);
-    
-        window.addEventListener('resize', updateBlHeight);
-    
-        return () => {
-            window.removeEventListener('resize', updateBlHeight);
-        };
-    }, []);    
-
     // useEffect(() => {
     //     const updateBlHeight = () => {
     //         if (blHeightRef.current) {
@@ -205,18 +188,35 @@ function Report() {
     //         }
     //     };
     
-    //     const resizeObserver = new ResizeObserver(updateBlHeight);
-        
-    //     if (blHeightRef.current) {
-    //         resizeObserver.observe(blHeightRef.current);
-    //     }
+    //     // setTimeout을 사용하여 DOM이 완전히 렌더링된 후에 높이를 가져옵니다.
+    //     setTimeout(updateBlHeight, 0.5);
+    
+    //     window.addEventListener('resize', updateBlHeight);
     
     //     return () => {
-    //         if (blHeightRef.current) {
-    //             resizeObserver.unobserve(blHeightRef.current);
-    //         }
+    //         window.removeEventListener('resize', updateBlHeight);
     //     };
     // }, []);    
+
+    useEffect(() => {
+        const updateBlHeight = () => {
+            if (blHeightRef.current) {
+                setBlHeight(blHeightRef.current.offsetHeight);
+            }
+        };
+    
+        const resizeObserver = new ResizeObserver(updateBlHeight);
+        
+        if (blHeightRef.current) {
+            resizeObserver.observe(blHeightRef.current);
+        }
+    
+        return () => {
+            if (blHeightRef.current) {
+                resizeObserver.unobserve(blHeightRef.current);
+            }
+        };
+    }, []);    
 
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
@@ -241,14 +241,14 @@ function Report() {
                 <div className='ly_flex'>
                     <div className='bl_height' ref={blHeightRef}>
                         {summary && (
-                            <div className='el_box hp_mt0'>
+                            <div className='el_box el_box__hover hp_mt0'>
                                 <h2>종합 평가</h2>
                                 <p>{summary}</p>
                             </div>
                         )}
 
                         {consolidatedFeedback && (
-                            <div className='el_box'>
+                            <div className='el_box el_box__hover'>
                                 <h2>자세 피드백</h2>
                                 <ul>
                                     {uniqueFeedback.map((feedback, index) => (

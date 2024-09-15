@@ -45,7 +45,8 @@
 .bl_listNumRing>li:nth-of-type(9):before{content:"⑨";}
 .bl_listNumRing>li:nth-of-type(10):before{content:"⑩";}
 
-.el_lv1Head{font-size:28px!important;font-weight:700;}
+.el_lv1Head{font-size:46px!important;font-weight:700;}
+.el_lv2Head{font-size:28px!important;font-weight:700;}
 
 .hp_br0{border-radius:0!important;}
 .hp_br5{border-radius:5px!important;}
@@ -146,8 +147,18 @@ input[type=date].hp_inputBack,.hp_inputBack{background-color:#eee;border:none;}
 
 .hp_fontNoto{font-family:'NotoKr'!important;}
 .hp_fontGmarket{font-family:'GmarketSans'!important;}
+.fascinate{
+font-family: "Fascinate Inline", system-ui;
+font-weight: 400;
+font-style: normal;
+}
+.matemasie {
+font-family: "Matemasie", sans-serif;
+font-weight: 400;
+font-style: normal;
+}
 
-.protest-guerrilla{font-family:"Protest Guerrilla", sans-serif;font-weight:400;}
+
 .hp_fw300{font-weight:300!important;}
 .hp_fw400{font-weight:400!important;}
 .hp_fw700{font-weight:700!important;}
@@ -301,3 +312,4 @@ input[type=date].hp_inputBack,.hp_inputBack{background-color:#eee;border:none;}
 .hp_ml35{margin-left:35px!important;}
 .hp_ml40{margin-left:40px!important;}
 .hp_ml50{margin-left:50px!important;}
+.hp_ml70{margin-left:70px!important;}
