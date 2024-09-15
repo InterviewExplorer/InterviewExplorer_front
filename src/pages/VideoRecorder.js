@@ -52,7 +52,6 @@ const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone, onFeedba
                     }
 
                     const result = await response.json();
-                    console.log("feedback(VideoRecorder.js - axios)", result.feedback)
                     // 카운트 잠시 대기
                     // console.log("face_touch_total", result.face_touch_total)
                     // console.log("hand_move_total", result.hand_move_total)

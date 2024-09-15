@@ -16,6 +16,7 @@ function Main() {
                         <div className='el_box__txt'>지원자 ver</div>
                         <div className='el_box__icon el_icon__interviewee'></div>
                         <Link to="/getInfo" className='el_btnM el_btn0Back hp_br99 hp_alignC'>시작하기</Link>
+                        {/* <Link to="/getInfo_uh">우현 시작</Link> */}
                     </div>
                 </div>
             </div>
