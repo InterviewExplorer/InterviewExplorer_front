@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import VideoRecorder from './VideoRecorder';
 import FollowUp from './FollowUp';
 
-function Interview2() {
+function Interview_uh() {
     const initialQuestions = {Q1: null,Q2: null,Q3: null,Q4: null,Q5: null,Q6: null,Q7: null,Q8: null,Q9: null,Q10: null};
     const [questions, setQuestions] = useState(initialQuestions);
 
@@ -58,14 +58,13 @@ function Interview2() {
     
     const handleFeedbackUpdate = (feedbackList) => {
         setFeedback(feedbackList);
-        console.log("인터뷰 핸들러 감지 확인", feedbackList)
     };
 
     console.log("questions", questions)
     console.log("answers", answers)
     
     const isAnswerComplete = () => {
-        return answers[`A${currentQuestionIndex + 1}`] !== undefined;
+        return answers[`A${currentQuestionIndex + 1}`] !== undefined && answers[`A${currentQuestionIndex + 1}`] !== null;
     };
 
     const handleNextQuestion = () => {
@@ -137,4 +136,4 @@ function Interview2() {
     );
 }
 
-export default Interview2;
+export default Interview_uh;
