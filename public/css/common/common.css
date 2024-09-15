@@ -1,40 +1,25 @@
 /* common */
 .el_bg{background: rgb(134,157,220);background: linear-gradient(140deg, rgba(134,157,220,1) 0%, rgba(205,217,227,1) 100%);}
-/* .el_bg{background: rgb(134,157,220);background: linear-gradient(90deg, #7e6bfc 0%, #71b1fc 100%);} */
 .el_box{background-color:rgba(255,255,255,1);border-radius:30px;padding:30px;box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;}
-/* .el_box:hover{background-color:rgba(255,255,255,1);} */
 .el_box__txt{font-family:'GmarketSans';font-size:17px;font-weight:600;}
-
-.el_logo{font-size:300px;background:#fff;border-radius:50%;height:450px;width:450px;display:inline-flex;align-items:center;justify-content:center;}
-.el_logo__color{background: linear-gradient(90deg, #7e6bfc 0%, #71b1fc 100%);color:#fff;}
-.el_logo2{font-size:500px;background: linear-gradient(#7e6bfc 0%, #71b1fc 100%);
-background-clip: text;
--webkit-background-clip: text;
-color: transparent;}
-
-
 
 /* new */
 .ly_main{padding-top:10%;min-height:100vh;position:relative;background:rgb(216 224 247);}
-
 .bl_main__logoBack{background:rgba(113,177,252,0.6);position:absolute;top:0;left:7%;z-index:1;width:23%;height:100vh;}
 .bl_main__logo{font-size:400px;text-align:center;}
-
 .bl_main__headBack{padding-left:35%;background:#7e6bfc;}
 .bl_main__headWrap{padding:50px 0;}
 .bl_main__headWrap *{color:#fff;}
-
 .bl_main__cont{margin-left:35%;width:800px;margin-top:70px;}
 
 
-
 /* main */
-.el_box__main{display:inline-block;transition:bgChange 0.5s ease-in-out;width:48%}
+.el_box__main{display:inline-block;transition:bgChange 0.5s ease-in-out;width:40%}
 /* .el_box__main .el_btnM:hover{animation:bgChange 0.3s forwards;} */
 .el_box__icon{background:no-repeat center/80px;height:150px;width: 100%;}
 .el_icon__interviewer{background-image:url('/img/icon/interviewer.png');}
 .el_icon__interviewee{background-image:url('/img/icon/interviewee.png');}
-
+.el_img{width:500px;height:500px;background:url('/img/main.png')no-repeat center/contain;}
 /* @keyframes bgChange {
     from {background:white;}
     to {background: rgb(111,130,254);background: linear-gradient(180deg, rgba(111,130,254,1) 0%, rgba(104,171,253,1) 50%, rgba(208,224,240,1) 100%);}
