@@ -91,7 +91,7 @@ const MicTest = () => {
             ripples.forEach((ripple, index) => {
                 canvasCtx.beginPath();
                 canvasCtx.arc(centerX, centerY, ripple.radius, 0, 2 * Math.PI);
-                canvasCtx.strokeStyle = `rgba(255, 182, 193, ${ripple.opacity})`;
+                canvasCtx.strokeStyle = `rgba(126, 107, 252, ${ripple.opacity})`;
                 canvasCtx.lineWidth = 2;
                 canvasCtx.stroke();
 
@@ -109,10 +109,11 @@ const MicTest = () => {
         draw();
     };
 
-    const micColor = isMicConnected ? (isRecording ? '#FFB6C1' : '#87CEEB') : '#FF69B4';
+    // const micColor = isMicConnected ? (isRecording ? '#FFB6C1' : '#7e6bfc') : '#FF69B4';
+    const micColor = isMicConnected ? (isRecording ? '#7e6bfc' : '#609ffe') : '#777';
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-gray-100" style={{ width: '50%', display: 'flex', flexDirection: 'column', marginTop: '100px' }}>
+        <div className="flex flex-col items-center justify-center h-screen bg-gray-100" style={{display: 'flex', flexDirection: 'column'}}>
             <div className="relative w-64 h-64" style={{ margin: '0 auto' }}>
                 <div className="absolute inset-0 flex items-center justify-center" style={{ width: '300px', height: '300px', display: 'flex', justifyContent: 'center' }}>
                     <canvas ref={canvasRef} width={300} height={300} className="absolute top-0 left-0" style={{ position: 'absolute' }}/>
@@ -126,15 +127,15 @@ const MicTest = () => {
                     </button>
                 </div>
             </div>
-            <p className="mt-4 text-lg font-semibold" style={{ color: micColor, textAlign: 'center' }}>
-                {isMicConnected ? (isRecording ? 'Recording...' : 'Tap to record') : 'Mic Disconnected'}
+            <p className="hp_fs18" style={{color:micColor}}>
+                {isMicConnected ? (isRecording ? '녹음 중...' : '마이크 아이콘을 클릭해주세요.') : '마이크가 연결되어 있지 않습니다.'}
             </p>
-            <p className="mt-2 text-sm text-gray-600" style={{ color: micColor, textAlign: 'center' }}>
-                {isMicConnected ? '마이크가 연결되어 있습니다' : '마이크가 연결되어 있지 않습니다'}
+            <p className="hp_mt15 hp_fs24 hp_fw700" style={{color:micColor}}>
+                {isMicConnected ? '마이크 연결: 성공' : '마이크 연결: 실패'}
             </p>
             {audioUrl && (
-                <div className="mt-8 w-64">
-                    <p className="mb-2 text-sm font-semibold">녹음된 내용:</p>
+                <div className="hp_mt15">
+                    <p className="hp_mb15 hp_alignL hp_7Color">녹음된 내용</p>
                     <audio controls src={audioUrl} className="w-full"></audio>
                 </div>
             )}

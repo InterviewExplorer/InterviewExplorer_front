@@ -21,7 +21,7 @@ const CamTest = () => {
       if (data.image) {
         setProcessedImage(data.image);
       }
-      setMessage(data.success ? 'Success' : 'Align your face and shoulder');
+      setMessage(data.success ? '성공' : '※ 머리와 어깨의 위치를 가이드라인에 맞춰주세요.');
     };
 
     ws.onerror = (error) => {
@@ -89,16 +89,19 @@ const CamTest = () => {
   }, [isConnected, websocket]);
 
   return (
-    <div>
-      <h1>Real-time Webcam Test</h1>
-      <video ref={videoRef} autoPlay style={{ display: 'none' }} />
-      <canvas ref={canvasRef} width={640} height={480} style={{ display: 'none' }} />
-      {processedImage && (
-        <img src={processedImage} alt="Processed frame" style={{ width: '640px', height: '480px' }} />
-      )}
-      <p>{message}</p>
-      <p>WebSocket Status: {isConnected ? 'Connected' : 'Disconnected'}</p>
-    </div>
+    <>
+      <div className="el_box">
+        <video ref={videoRef} autoPlay style={{ display: 'none' }} />
+        <canvas ref={canvasRef} width={640} height={480} style={{ display: 'none' }} />
+        {processedImage && (
+          <img src={processedImage} alt="Processed frame" style={{ width: '640px', height: '480px' }} className='hp_br20' />
+        )}
+      </div>
+      <div className="el_box el_box__cam hp_mt15">
+        <p>카메라 연결: {isConnected ? '성공' : '실패'}</p>
+        <p>{message}</p>
+      </div>
+    </>
   );
 };
 

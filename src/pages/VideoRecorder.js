@@ -10,10 +10,6 @@ const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone, onFeedba
     const startButtonRef = useRef(null);
     const chunks = useRef([]);
     const [feedbackList, setFeedbackList] = useState([]);
-    // 카운트 잠시 대기
-    // const [faceTouchTotal, setFaceTouchTotal] = useState(0);
-    // const [handMoveTotal, setHandMoveTotal] = useState(0);
-    // const [notFrontTotal, setNotFrontTotal] = useState(0);
 
     const startRecording = async () => {
         try {
@@ -52,17 +48,9 @@ const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone, onFeedba
                     }
 
                     const result = await response.json();
-                    // 카운트 잠시 대기
-                    // console.log("face_touch_total", result.face_touch_total)
-                    // console.log("hand_move_total", result.hand_move_total)
-                    // console.log("not_front_total", result.not_front_total)
                     setTranscript(result.transcript);
                     setRecordingDone(true);
                     setFeedbackList(prevFeedback => [...prevFeedback, result.feedback]);
-                    // 카운트 잠시 대기
-                    // setFaceTouchTotal(prevTotal => prevTotal + result.face_touch_total);
-                    // setHandMoveTotal(prevTotal => prevTotal + result.hand_move_total);
-                    // setNotFrontTotal(prevTotal => prevTotal + result.not_front_total);
 
                     // 녹화가 완료된 후 FollowUp 컴포넌트에 콜백 호출
                     if (onRecordingDone) {
@@ -107,9 +95,6 @@ const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone, onFeedba
             console.log("useEffect 실행확인: ", feedbackList)
             onFeedbackUpdate({
                 feedbackList
-                // faceTouchTotal, 
-                // handMoveTotal, 
-                // notFrontTotal
             });
         }
     }, [feedbackList]);
@@ -124,15 +109,15 @@ const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone, onFeedba
 
     return (
         <>
+            <video ref={videoRef} autoPlay playsInline style={{ width:'640px',height:'480px'}} className='hp_0Back'></video>
             {!recordingDone && (
                 recording ? (
-                    <button onClick={stopRecording}>녹화 종료</button>
+                    <button className='el_interviewBtn el_camBtn el_camBtn__off el_btnM hp_fw700' onClick={stopRecording}>녹화 종료</button>
                 ) : (
-                    <button ref={startButtonRef} onClick={startRecording}>녹화 시작</button>
+                    <button className='el_interviewBtn el_camBtn el_camBtn__on el_btnM hp_fw700' ref={startButtonRef} onClick={startRecording}>녹화 시작</button>
                 )
             )}
-            <video ref={videoRef} autoPlay playsInline style={{ width: '640px', height: '480px', backgroundColor: 'black' }}></video>
-            {loading && <p>답변 추출 중...</p>}
+            {loading && <p className='el_loadTxt hp_fs20'>답변 추출 중...</p>}
         </>
     );
 };

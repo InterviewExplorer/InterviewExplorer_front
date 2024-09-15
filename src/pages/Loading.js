@@ -6,7 +6,7 @@ function Loading() {
         <div className="loading-container">
             <PacmanLoader
                 size={40} // 사이즈 조정
-                color="#3498db" // 색상 조정
+                color="#fff" // 색상 조정
             />
         </div>
     );

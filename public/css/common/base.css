@@ -49,11 +49,15 @@
 
 .hp_br0{border-radius:0!important;}
 .hp_br5{border-radius:5px!important;}
+.hp_br20{border-radius:20px!important;}
+.hp_br30{border-radius:30px!important;}
 .hp_br99{border-radius:99px!important;}
 
-.el_btnS{border-radius:5px;font-size:13px;padding:6px 10px;display:block;}
-.el_btnM{border-radius:5px;font-size:16px;width:200px;padding:12px 0;display:block;}
-.el_btnF{border-radius:5px;width:100%;padding:10px 0;display:block;}
+.el_btnXS{border-radius:99px;font-size:14px!important;padding:7px 15px;display:block;text-align:center;}
+.el_btnS{border-radius:99px;font-size:16px;width:200px;padding:12px 0;display:block;text-align:center;}
+.el_btnM{border-radius:99px;font-size:17px;width:200px;padding:17px 0;display:block;text-align:center;}
+.el_btnL{border-radius:99px;font-size:24px;width:360px;padding:23px 0;display:block;text-align:center;}
+
 .el_btnblueBack{background:#006CD0;border:1px solid #006CD0;color:#fff;}
 .el_btnredBack{background:#f20000;border:1px solid #d00000;color:#fff;}
 .el_btnblueBord{background:#fff;border:1px solid #006CD0;color:#006CD0;}
@@ -61,11 +65,11 @@
 .el_btn8Bord{background:#fff;border:1px solid #888;color:#888;}
 .el_btn0Back{background:#000;border:1px solid #000;color:#fff;}
 .el_btn0Bord{border:1px solid #000;color:#000;}
+.el_btnSkyBord{border:1px solid #869ddc;color:#869ddc;background:url('/img/icon/arrow_sky.png') no-repeat 95% center/20px #fff;}
+.el_btnGradation{background: linear-gradient(90deg, #7e6bfc 0%, #71b1fc 100%);color:#fff;}
+.el_btnGradation:hover{background:#000;}
 
 button:disabled{background-color:#fff;border-color:#888;color:#888;cursor:default;}
-
-.el_box{background-color:rgba(255,255,255,1);border-radius:30px;padding:30px;box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;}
-.el_box__txt{font-family:'GmarketSans';font-size:15px;font-weight:600;}
 
 
 
@@ -73,6 +77,7 @@ button:disabled{background-color:#fff;border-color:#888;color:#888;cursor:defaul
 .el_shadowE{-webkit-box-shadow:0px 0px 10px 0px #eee;box-shadow:0px 0px 10px 0px #eee;}
 .el_shadowD{-webkit-box-shadow:0px 0px 10px 0px #ddd;box-shadow:0px 0px 10px 0px #ddd;}
 .el_shadowD4{-webkit-box-shadow:0px 4px 4px 0px #ddd;box-shadow:0px 4px 4px 0px #ddd;}
+.el_shqdowBasic{box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;}
 
 input[type=date]{background-color:#F4F6FA;}/* 포커스 됐을 때, 배경색 변경 유지를 위해 */
 input[type=date].hp_inputBack,.hp_inputBack{background-color:#eee;border:none;}
@@ -141,6 +146,8 @@ input[type=date].hp_inputBack,.hp_inputBack{background-color:#eee;border:none;}
 
 .hp_fontNoto{font-family:'NotoKr'!important;}
 .hp_fontGmarket{font-family:'GmarketSans'!important;}
+
+.protest-guerrilla{font-family:"Protest Guerrilla", sans-serif;font-weight:400;}
 .hp_fw300{font-weight:300!important;}
 .hp_fw400{font-weight:400!important;}
 .hp_fw700{font-weight:700!important;}
@@ -159,6 +166,7 @@ input[type=date].hp_inputBack,.hp_inputBack{background-color:#eee;border:none;}
 .hp_fs30{font-size:30px!important;}
 .hp_fs32{font-size:32px!important;}
 .hp_fs34{font-size:34px!important;}
+.hp_fs36{font-size:36px!important;}
 .hp_fs40{font-size:40px!important;}
 .hp_fs48{font-size:48px!important;}
 .hp_bordnone{border:none!important;}
@@ -178,11 +186,14 @@ input[type=date].hp_inputBack,.hp_inputBack{background-color:#eee;border:none;}
 .hp_36Color{color:#363636!important;}
 .hp_7Color{color:#777!important;}
 
+.hp_skyColor{color:#869ddc!important;}
+
 .hp_pointColor{color:#426B1F!important;}
 .hp_blueColor{color:#006CD0!important;}
 .hp_redColor{color:red!important;}
 
 .hp_fBack{background-color:#fff!important;}
+.hp_0Back{background-color:#000!important;}
 .hp_f9Back{background-color:#f9f9f9!important;}
 .hp_dBack{background-color:#ddd!important;}
 .hp_skyBack{background-color:rgb(232, 240, 254)!important;}
@@ -279,6 +290,7 @@ input[type=date].hp_inputBack,.hp_inputBack{background-color:#eee;border:none;}
 .hp_mb25{margin-bottom:25px!important;}
 .hp_mb30{margin-bottom:30px!important;}
 .hp_mb50{margin-bottom:50px!important;}
+.hp_mb100{margin-bottom:100px!important;}
 .hp_ml0{margin-left:0!important;}
 .hp_ml5{margin-left:5px!important;}
 .hp_ml10{margin-left:10px!important;}

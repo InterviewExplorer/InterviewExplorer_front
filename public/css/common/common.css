@@ -1,29 +1,62 @@
 /* common */
 .el_bg{background: rgb(134,157,220);background: linear-gradient(140deg, rgba(134,157,220,1) 0%, rgba(205,217,227,1) 100%);}
+.el_box{background-color:rgba(255,255,255,0.6);border-radius:30px;padding:30px;box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;}
+.el_box:hover{background-color:rgba(255,255,255,1);}
+.el_box__txt{font-family:'GmarketSans';font-size:17px;font-weight:600;}
 
 /* main */
 .el_box__main{display:inline-block;transition:bgChange 0.5s ease-in-out;}
-.el_box__main:hover{animation:bgChange 0.3s forwards;}
-/* .el_box__main:hover .el_box__txt{animation:bgChangedTxt 0.3s forwards;} */
-.el_box__icon{background:no-repeat center/65px;height:120px;width: 100%;}
+/* .el_box__main .el_btnM:hover{animation:bgChange 0.3s forwards;} */
+.el_box__icon{background:no-repeat center/65px;height:150px;width: 100%;}
 .el_icon__interviewer{background-image:url('/img/icon/interviewer.png');}
 .el_icon__interviewee{background-image:url('/img/icon/interviewee.png');}
 
-@keyframes bgChange {
+/* @keyframes bgChange {
     from {background:white;}
     to {background: rgb(111,130,254);background: linear-gradient(180deg, rgba(111,130,254,1) 0%, rgba(104,171,253,1) 50%, rgba(208,224,240,1) 100%);}
-}
-/* @keyframes bgChangedTxt{
-    from{color:#000;}
-    to{color:#fff;}
 } */
 
+/* Loading */
+.loading-container{display:flex;justify-content:center;align-items:center;height:100vh;/* 화면 전체 높이로 설정 */}
 
+/* GetInfo */
+.el_box__form h1{font-size:18px;color:#869ddc;border-bottom:2px dashed rgba(134,157,220,0.5);padding-bottom:15px;margin-bottom:30px;display:flex;justify-content:space-between;align-items:baseline;}
+.el_box__form p{font-size:13px;color:#aaa;}
+.el_box__form label{display:flex;align-items:center;margin-bottom:10px;}
+.el_box__form label *{font-size:16px;}
+.el_box__form label span{display:inline-block;width:70px;color:#aaa;}
+.el_box__form label input{width:100%;padding:10px 15px;}
+.el_box__form button:hover{color:#fff;border-color:#000;background-color:#000;background-image:url('/img/icon/arrow_white.png')}
 
-/* Loading.css */
-.loading-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* 화면 전체 높이로 설정 */
-}
+/* Guide */
+.el_box__cam *{font-size:17px;}
+.el_box__mic{height:540px;}
+.el_skipBtn{position:absolute;bottom:13px;right:0;}
+
+/* Interview */
+.el_interviewBtn{font-size:22px;border-width:3px;position:absolute;bottom:0;right:0;transform:translateY(120%);background-position:87% center;}
+.el_nextBtn{text-indent:-10px;}
+.el_camBtn{border:3px solid #000;}
+.el_camBtn::before{margin-right:15px;content:"";display:inline-block;width:20px;height:20px;border-radius:50%;background:red;vertical-align:-2px;}
+.el_camBtn__on{background:#fff;}
+.el_camBtn__off{background-color:#000;color:#fff;}
+.el_loadTxt{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);z-index:1;color:#fff;}
+
+/* Report */
+.ly_report{padding:50px 20px 100px;}
+.ly_report *, .bl_each__question *{font-size:16px;}
+.ly_reportWrap{max-width:1080px;width:100%;margin-left:auto;margin-right:auto;}
+.el_pdfBtn{background:url('/img/icon/download_white.png')no-repeat 86% center/18px #000;text-indent:-15px;width:160px;}
+.el_chart{flex-shrink:0;width:500px;height:470px;background: rgb(111,130,254);background: linear-gradient(180deg, rgba(111,130,254,1) 0%, rgba(104,171,253,1) 50%, rgba(208,224,240,1) 100%);}
+.el_chart__ttl{position:absolute;top:0;left:0;color:#fff;font-size:22px;margin:30px}
+.el_chart text{font-size:16px!important;fill:rgba(255,255,255)!important;font-family:'NotoKr', sans-serif!important;}
+.ly_report .el_box{margin-top:30px}
+.ly_report h2{font-size:24px;margin-bottom:15px;font-weight:600;}
+.el_box__each:hover{background-color:rgba(255,255,255,0.6);}
+.bl_each{margin-top:30px;background:#fff;padding:15px;border-radius:30px;}
+.bl_each__q{background: linear-gradient(90deg, #7e6bfc 0%, #71b1fc 100%);color:#fff;display:inline-flex;width:40px;height:40px;border-radius:50%;justify-content:center;align-items:center;font-family:'GmarketSans';font-size:20px;margin-right:10px;padding-top:2px;border:1px solid rgba(255,255,255,0.7);}
+.bl_each__question{font-size:19px;display:flex;align-items:center;}
+.bl_each__dots{width:40px;height:40px;background:url('/img/icon/dots_purple.png')no-repeat center/22px;}
+.bl_eachTB{margin-top:10px;}
+.bl_eachTB th, .bl_eachTB td{padding:10px;}
+.bl_eachTB th{width:50px;text-align:left;}
