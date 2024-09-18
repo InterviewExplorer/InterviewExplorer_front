@@ -257,7 +257,7 @@ function Report2() {
     return (
         <div className='ly_all el_bg ly_report'>
             <div className='ly_reportWrap' ref={componentRef}>
-                <div className='ly_spaceBetween hp_mb50'>
+                <div className='ly_spaceBetween ly_fitemC hp_mb50'>
                     <h1 className='hp_fontGmarket hp_fs36 hp_fw700'>{years}년차 {job} 면접결과</h1>
                     <button className='el_pdfBtn el_btnS el_btn0Back' onClick={handlePrint}>PDF로 저장</button>
                 </div>
