@@ -94,44 +94,46 @@ function Interview2() {
 
     return (
         <div className='ly_all el_bg ly_flexC ly_fitemC'>
-            {questions && (
-                <>
-                    <div className='hp_mb100'>
-                        <div className='el_box hp_mb50'>
-                            <h3 className='hp_fs16 hp_mb15 hp_skyColor'>질문 {currentQuestionIndex + 1}</h3>
-                            <p className='hp_fs18'>{questions[`Q${currentQuestionIndex + 1}`]}</p>
-                        </div>
-                        <div className='ly_flex'>
-                            {interviewer && (
-                                <div className=''>
-                                    <video src={interviewer[`Q${currentQuestionIndex + 1}`]} controls style={{ width: '640px', height: '480px', backgroundColor: 'black' }}>
-                                        Your browser does not support the video tag.
-                                    </video>
+            <div className='ly_maxWd'>
+                {questions && (
+                    <>
+                        <div className='hp_mb100'>
+                            <div className='el_box hp_mb50'>
+                                <h3 className='hp_fs16 hp_mb15 hp_skyColor'>질문 {currentQuestionIndex + 1}</h3>
+                                <p className='hp_fs18'>{questions[`Q${currentQuestionIndex + 1}`]}</p>
+                            </div>
+                            <div className='ly_spaceBetween'>
+                                {interviewer && (
+                                    <div className='el_video'>
+                                        <video src={interviewer[`Q${currentQuestionIndex + 1}`]} controls>
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                )}
+                                <div className='el_video hp_relative'>
+                                    <VideoRecorder handleAnswers={handleAnswers} questionIndex={currentQuestionIndex + 1} onFeedbackUpdate={handleFeedbackUpdate} onRecordingDone={handleGenerateFollowUpQuestions} />
+                                    {!isLastQuestion && isAnswerComplete() && (
+                                        <button className='el_interviewBtn el_nextBtn el_btnM el_btnSkyBord' onClick={handleNextQuestion}>다음 질문</button>
+                                    )}
+                                    {isLastQuestion && isAnswerComplete() && (
+                                        <button className='el_interviewBtn el_btnM el_btnGradation' onClick={handleEndInterview}>면접 종료</button>
+                                    )}
                                 </div>
-                            )}
-                            <div className='hp_ml30 hp_relative'>
-                                <VideoRecorder handleAnswers={handleAnswers} questionIndex={currentQuestionIndex + 1} onFeedbackUpdate={handleFeedbackUpdate} onRecordingDone={handleGenerateFollowUpQuestions} />
-                                {!isLastQuestion && isAnswerComplete() && (
-                                    <button className='el_interviewBtn el_nextBtn el_btnM el_btnSkyBord' onClick={handleNextQuestion}>다음 질문</button>
-                                )}
-                                {isLastQuestion && isAnswerComplete() && (
-                                    <button className='el_interviewBtn el_btnM el_btnGradation' onClick={handleEndInterview}>면접 종료</button>
-                                )}
                             </div>
                         </div>
-                    </div>
-                    <FollowUp 
-                        job={job} 
-                        years={years} 
-                        answers={answers} 
-                        questions={questions} 
-                        handleQuestion={handleQuestion} 
-                        initialQuestionCount={initialQuestionCount} 
-                        handleInterviewerUpdate={handleInterviewerUpdate}
-                        type={type}
-                    />
-                </>
-            )}
+                        <FollowUp 
+                            job={job} 
+                            years={years} 
+                            answers={answers} 
+                            questions={questions} 
+                            handleQuestion={handleQuestion} 
+                            initialQuestionCount={initialQuestionCount} 
+                            handleInterviewerUpdate={handleInterviewerUpdate}
+                            type={type}
+                        />
+                    </>
+                )}
+            </div>
         </div>
     );
 }

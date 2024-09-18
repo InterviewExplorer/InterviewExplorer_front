@@ -2,6 +2,7 @@
 .el_bg{background: rgb(134,157,220);background: linear-gradient(140deg, rgba(134,157,220,1) 0%, rgba(205,217,227,1) 100%);}
 .el_box{background-color:rgba(255,255,255,1);border-radius:30px;padding:30px;box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;}
 .el_box__txt{font-family:'GmarketSans';font-size:17px;font-weight:600;}
+.ly_maxWd{width:1200px;margin-left:auto;margin-right:auto;}
 
 /* new */
 .ly_main{padding-top:10%;min-height:100vh;position:relative;background:rgb(216 224 247);}
@@ -43,18 +44,19 @@
 .el_skipBtn{position:absolute;bottom:13px;right:0;}
 
 /* Interview */
-.el_interviewBtn{font-size:22px;border-width:3px;position:absolute;bottom:0;right:0;transform:translateY(120%);background-position:87% center;}
+.el_interviewBtn{font-size:22px;border-width:3px;position:absolute;bottom:0;right:0;transform:translateY(130%);background-position:87% center;}
 .el_nextBtn{text-indent:-10px;}
 .el_camBtn{border:3px solid #000;}
 .el_camBtn::before{margin-right:15px;content:"";display:inline-block;width:20px;height:20px;border-radius:50%;background:red;vertical-align:-2px;}
 .el_camBtn__on{background:#fff;}
 .el_camBtn__off{background-color:#000;color:#fff;}
 .el_loadTxt{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);z-index:1;color:#fff;}
+.el_video{width:49%;box-shadow:rgba(0, 0, 0, 0.1) 0px 4px 12px;}
+.el_video video{display:block;width:100%;height:440px;background:#000;border-radius:30px;overflow:hidden;}
 
 /* Report */
 .ly_report{padding:50px 20px 100px;}
 .ly_report *, .bl_each__question *{font-size:16px;}
-.ly_reportWrap{max-width:1200px;width:100%;margin-left:auto;margin-right:auto;}
 .el_pdfBtn{background:url('/img/icon/download_white.png')no-repeat 86% center/18px #000;text-indent:-15px;width:160px;}
 .el_chart{flex-shrink:0;width:500px;min-height:470px;background: rgb(111,130,254);background: linear-gradient(180deg, rgba(111,130,254,1) 0%, rgba(104,171,253,1) 50%, rgba(208,224,240,1) 100%);}
 .el_chart__ttl{position:absolute;top:0;left:0;color:#fff;font-size:22px;margin:30px}

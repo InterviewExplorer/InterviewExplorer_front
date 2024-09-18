@@ -247,16 +247,15 @@ function Report2() {
 
     const questionKeys = questions ? Object.keys(questions) : [];
 
-    if (loading) {
-        return <><Loading /></>;
-    }
-
     const feedbackArray = feedback && feedback.feedbackList ? feedback.feedbackList.flat() : [];
     const uniqueFeedback = Array.from(new Set(feedbackArray));
 
     return (
-        <div className='ly_all el_bg ly_report'>
-            <div className='ly_reportWrap' ref={componentRef}>
+        <div className='ly_all el_bg'>
+            {loading ? (
+                <Loading />
+            ) : (
+            <div className='ly_maxWd ly_report' ref={componentRef}>
                 <div className='ly_spaceBetween ly_fitemC hp_mb50'>
                     <h1 className='hp_fontGmarket hp_fs36 hp_fw700'>{years}년차 {job} 면접결과</h1>
                     <button className='el_pdfBtn el_btnS el_btn0Back' onClick={handlePrint}>PDF로 저장</button>
@@ -349,6 +348,7 @@ function Report2() {
                     </div>
                 )}
             </div>
+            )}
         </div>
     );
 }

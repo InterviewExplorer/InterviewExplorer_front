@@ -109,7 +109,7 @@ const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone, onFeedba
 
     return (
         <>
-            <video ref={videoRef} autoPlay playsInline style={{ width:'640px',height:'480px'}} className='hp_0Back'></video>
+            <video ref={videoRef} autoPlay playsInline></video>
             {!recordingDone && (
                 recording ? (
                     <button className='el_interviewBtn el_camBtn el_camBtn__off el_btnM hp_fw700' onClick={stopRecording}>녹화 종료</button>
