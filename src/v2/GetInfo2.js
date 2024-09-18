@@ -2,7 +2,7 @@ import { type } from '@testing-library/user-event/dist/type';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function GetInfo_uh() {
+function GetInfo2() {
     const navigate = useNavigate();
     const [job, setJob] = useState('');
     const [years, setYears] = useState('');
@@ -47,7 +47,7 @@ function GetInfo_uh() {
             if (!response2.ok) throw new Error('영상 생성에 실패했습니다.');
 
             const data2 = await response2.json();
-            navigate('/guide_uh', { state: { questions: data, job, years, interviewer: data2, type: interviewType } });
+            navigate('/guide', { state: { questions: data, job, years, interviewer: data2, type: interviewType } });
         } catch (error) {
             console.error('에러 발생:', error);
             alert('질문 생성 중 오류가 발생했습니다.');
@@ -109,4 +109,4 @@ function GetInfo_uh() {
     );
 }
 
-export default GetInfo_uh;
+export default GetInfo2;

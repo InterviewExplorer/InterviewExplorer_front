@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import VideoRecorder from './VideoRecorder';
-import FollowUp from './FollowUp';
+import VideoRecorder from '../pages/VideoRecorder';
+import FollowUp from "../v2/FollowUp2";
 
-function Interview_uh() {
+function Interview2() {
     const initialQuestions = {Q1: null,Q2: null,Q3: null,Q4: null,Q5: null,Q6: null,Q7: null,Q8: null,Q9: null,Q10: null};
     const [questions, setQuestions] = useState(initialQuestions);
 
@@ -104,7 +104,7 @@ function Interview_uh() {
                         onRecordingDone={handleGenerateFollowUpQuestions} // Pass the callback to VideoRecorder
                         onFeedbackUpdate={handleFeedbackUpdate}
                     />
-                    <FollowUp 
+                    <FollowUp
                         job={job} 
                         years={years} 
                         answers={answers} 
@@ -136,4 +136,4 @@ function Interview_uh() {
     );
 }
 
-export default Interview_uh;
+export default Interview2;

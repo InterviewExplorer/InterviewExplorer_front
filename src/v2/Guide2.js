@@ -1,15 +1,15 @@
-import MicTest from "./MicTest";
-import CamTest from "./CamTest";
+import MicTest from "../pages/MicTest";
+import CamTest from "../pages/CamTest";
 import { useLocation, useNavigate } from 'react-router-dom';
 
-function Guide_uh() {
+function Guide2() {
 
     const location = useLocation();
     const navigate = useNavigate();
     const { questions: data, job, years, interviewer: data2, type: interviewType } = location.state || {};
 
     const handleInteviewSummit = () => {
-        navigate('/interview_uh', { state: { questions: data, job, years, interviewer: data2, type: interviewType } });
+        navigate('/interview', { state: { questions: data, job, years, interviewer: data2, type: interviewType } });
     }
 
     return (
@@ -21,4 +21,4 @@ function Guide_uh() {
     );
 }
 
-export default Guide_uh;
+export default Guide2;
