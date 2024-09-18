@@ -56,7 +56,7 @@
 .ly_report *, .bl_each__question *{font-size:16px;}
 .ly_reportWrap{max-width:1080px;width:100%;margin-left:auto;margin-right:auto;}
 .el_pdfBtn{background:url('/img/icon/download_white.png')no-repeat 86% center/18px #000;text-indent:-15px;width:160px;}
-.el_chart{flex-shrink:0;width:500px;height:470px;background: rgb(111,130,254);background: linear-gradient(180deg, rgba(111,130,254,1) 0%, rgba(104,171,253,1) 50%, rgba(208,224,240,1) 100%);}
+.el_chart{flex-shrink:0;width:500px;min-height:470px;background: rgb(111,130,254);background: linear-gradient(180deg, rgba(111,130,254,1) 0%, rgba(104,171,253,1) 50%, rgba(208,224,240,1) 100%);}
 .el_chart__ttl{position:absolute;top:0;left:0;color:#fff;font-size:22px;margin:30px}
 .el_chart text{font-size:16px!important;fill:rgba(255,255,255)!important;font-family:'NotoKr', sans-serif!important;}
 .ly_report .el_box{margin-top:30px;background-color:rgba(255,255,255,0.7);}
