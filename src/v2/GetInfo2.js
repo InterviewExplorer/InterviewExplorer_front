@@ -1,6 +1,6 @@
-import { type } from '@testing-library/user-event/dist/type';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Loading from '../pages/Loading';
 
 function GetInfo2() {
     const navigate = useNavigate();
@@ -35,7 +35,6 @@ function GetInfo2() {
             if (!response.ok) throw new Error('질문 생성에 실패했습니다.');
 
             const data = await response.json();
-            // console.log("질문 생성 목록(FE): " + JSON.stringify(data))
             const formData2 = new FormData();
             for (const key in data) formData2.append(key, data[key]);
 
@@ -68,41 +67,26 @@ function GetInfo2() {
     }
 
     return (
-        <div>
+        <div className='ly_all el_bg ly_flexC ly_fitemC'>
             {loading ? (
-                <div>로딩 중...</div>
+                <Loading />
             ) : (
-                <form>
+                <form className='el_box el_box__form hp_padding70'>
+                    <h1>기본정보 입력 <p>* 필수</p></h1>
                     <label>
-                        직업 :
-                        <input
-                            type="text"
-                            placeholder="직군을 입력해주세요."
-                            value={job}
-                            onChange={handleJobChange}
-                            required
-                        />
+                        <span>직업 *</span>
+                        <input type="text" placeholder="직업을 입력해주세요." value={job} onChange={handleJobChange} required />
                     </label>
-                    <br />
                     <label>
-                        경력 :
-                        <input
-                            type="number"
-                            placeholder="년 단위로 숫자만 입력해주세요."
-                            value={years}
-                            onChange={handleYearsChange}
-                            required
-                        />
+                        <span>경력 *</span>
+                        <input type="number" placeholder="년 단위로 숫자만 입력해주세요." value={years} onChange={handleYearsChange} required />
                     </label>
-                    <br />
                     <label>
-                        이력서 :
+                        <span>이력서</span>
                         <input type="file" accept=".pdf" onChange={handleFileChange} />
                     </label>
-                    <br />
-                    <br />
-                    <button type="submit" value="기술면접 응시" onClick={handleFindType}>기술면접 응시</button>
-                    <button type="submit" value="인성면접 응시" onClick={handleFindType}>인성면접 응시</button>
+                    <button type="submit" value="기술면접 응시" onClick={handleFindType} className='el_btnM el_btnSkyBord hp_w100 hp_mt70'>기술면접 응시</button>
+                    <button type="submit" value="인성면접 응시" onClick={handleFindType} className='el_btnM el_btnSkyBord hp_w100 hp_mt15'>인성면접 응시</button>
                 </form>
             )}
         </div>
