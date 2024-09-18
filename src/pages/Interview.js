@@ -15,9 +15,6 @@ function Interview() {
     const [interviewer, setInterviewer] = useState(initialInterviewer || {});
     const initialQuestionCount = Object.keys(initialQuestions || {}).length;
     const [feedback, setFeedback] = useState([]);
-    // const [faceTouchTotal, setFaceTouchTotal] = useState(0);
-    // const [handMoveTotal, setHandMoveTotal] = useState(0);
-    // const [notFrontTotal, setNotFrontTotal] = useState(0);
 
     useEffect(() => {
         const questionKeys = Object.keys(questions);
@@ -46,25 +43,14 @@ function Interview() {
         setIsRecordingDone(true);
     };
     
-    // const handleFeedbackUpdate = (newFeedback, faceTouchTotal, handMoveTotal, notFrontTotal) => {
     const handleFeedbackUpdate = (feedbackList) => {
         setFeedback(feedbackList);
         console.log("인터뷰 핸들러 감지 확인", feedbackList)
-        // 카운트 잠시 대기
-        // setFaceTouchTotal(faceTouchTotal);
-        // setHandMoveTotal(handMoveTotal);
-        // setNotFrontTotal(notFrontTotal);
     };
 
     console.log("questions", questions)
     console.log("answers", answers)
-    // console.log("feedback", feedback);
-    // 카운트 잠시 대기
-    // console.log("faceTouchTotal", faceTouchTotal);
-    // console.log("handMoveTotal", handMoveTotal);
-    // console.log("notFrontTotal", notFrontTotal);
 
-    // Define isAnswerComplete function
     const isAnswerComplete = () => {
         return answers[`A${currentQuestionIndex + 1}`] !== undefined;
     };
@@ -87,7 +73,6 @@ function Interview() {
             alert('현재 질문에 대한 답변을 먼저 완료해주세요.');
             return;
         }
-        // navigate('/report', { state: { answers, questions, job, years, type, feedback, faceTouchTotal, handMoveTotal, notFrontTotal } });
         navigate('/report', { state: { answers, questions, job, years, type, feedback } });
     };
 
@@ -96,17 +81,33 @@ function Interview() {
     };
 
     return (
-        <>
+        <div className='ly_all el_bg ly_flexC ly_fitemC'>
             {questions && (
-                <div>
-                    <h3>질문 {currentQuestionIndex + 1}</h3>
-                    <p>{questions[`Q${currentQuestionIndex + 1}`]}</p>
-                    <VideoRecorder 
-                        handleAnswers={handleAnswers} 
-                        questionIndex={currentQuestionIndex + 1}
-                        onRecordingDone={handleGenerateFollowUpQuestions} // Pass the callback to VideoRecorder
-                        onFeedbackUpdate={handleFeedbackUpdate}
-                    />
+                <>
+                    <div className='hp_mb100'>
+                        <div className='el_box hp_mb50'>
+                            <h3 className='hp_fs16 hp_mb15 hp_skyColor'>질문 {currentQuestionIndex + 1}</h3>
+                            <p className='hp_fs18'>{questions[`Q${currentQuestionIndex + 1}`]}</p>
+                        </div>
+                        <div className='ly_flex'>
+                            {interviewer && (
+                                <div className=''>
+                                    <video src={interviewer[`Q${currentQuestionIndex + 1}`]} controls style={{ width: '640px', height: '480px', backgroundColor: 'black' }}>
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            )}
+                            <div className='hp_ml30 hp_relative'>
+                                <VideoRecorder handleAnswers={handleAnswers} questionIndex={currentQuestionIndex + 1} onFeedbackUpdate={handleFeedbackUpdate} onRecordingDone={handleGenerateFollowUpQuestions} />
+                                {!isLastQuestion && isAnswerComplete() && (
+                                    <button className='el_interviewBtn el_nextBtn el_btnM el_btnSkyBord' onClick={handleNextQuestion}>다음 질문</button>
+                                )}
+                                {isLastQuestion && isAnswerComplete() && (
+                                    <button className='el_interviewBtn el_btnM el_btnGradation' onClick={handleEndInterview}>면접 종료</button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
                     <FollowUp 
                         job={job} 
                         years={years} 
@@ -117,25 +118,9 @@ function Interview() {
                         handleInterviewerUpdate={handleInterviewerUpdate}
                         type={type}
                     />
-                    
-                    {!isLastQuestion && isAnswerComplete() && (
-                        <button onClick={handleNextQuestion}>
-                            다음 질문
-                        </button>
-                    )}
-                    {isLastQuestion && isAnswerComplete() && (
-                        <button onClick={handleEndInterview}>
-                            면접 종료
-                        </button>
-                    )}
-                </div>
+                </>
             )}
-            {interviewer && (
-                <video src={interviewer[`Q${currentQuestionIndex + 1}`]} controls width="600">
-                    Your browser does not support the video tag.
-                </video>
-            )}
-        </>
+        </div>
     );
 }
 
