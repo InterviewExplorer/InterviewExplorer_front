@@ -1,5 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Main from "./pages/Main";
+import Chart from "./pages/Chart";
+import Loading from "./pages/Loading";
 
 // ver1
 import GetInfo from "./pages/GetInfo";
@@ -19,6 +21,8 @@ function App() {
       <BrowserRouter >
         <Routes>
           <Route path="/" element={<Main />}/>
+          <Route path="/chart" element={<Chart/>}/>
+          <Route path="/loading" element={<Loading/>}/>
           {/* ver1 */}
           {/* <Route path="/getInfo" element={<GetInfo />} />
           <Route path="/guide" element={<Guide/>}/>
