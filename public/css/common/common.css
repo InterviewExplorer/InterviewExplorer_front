@@ -67,6 +67,7 @@
 .el_chart__ttl{position:absolute;top:0;left:0;color:#fff;font-size:22px;margin:30px}
 .el_chart text{font-size:14px!important;fill:rgba(255,255,255)!important;font-family:'NotoKr', sans-serif!important;}
 .ly_report .el_box{margin-top:30px;background-color:rgba(255,255,255,0.7);}
+.ly_report .el_box *{word-break:break-all;}
 .ly_report .el_box__hover:hover{background-color:rgba(255,255,255,1);}
 .ly_report h2{font-size:24px;margin-bottom:15px;font-weight:600;}
 .el_box__each:hover{background-color:rgba(255,255,255,0.6);}

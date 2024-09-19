@@ -52,8 +52,6 @@ function Chart({ blHeight, type, criteriaScores }) {
     const data = elements.map((element) => {
         const key = labelToKeyMap[element];
         const average = key ? calculateAverage(criteriaScores[key] || []) : 0;
-        console.log("key", key);
-        console.log("average", average);
 
         return {
             element,

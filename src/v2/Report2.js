@@ -15,13 +15,11 @@ function Report2() {
     const [speakingEvaluation, setSpeakingEvaluation] = useState("");
     const componentRef = useRef(); 
     const [consolidatedFeedback, setConsolidatedFeedback] = useState("");
-    const [isOpen, setIsOpen] = useState({}); // 각 질문에 대해 열림 상태를 저장하는 상태
-    const [isAllOpen, setIsAllOpen] = useState(false); // 전체 열림/닫힘 상태 관리
+    const [isOpen, setIsOpen] = useState({});
+    const [isAllOpen, setIsAllOpen] = useState(false);
     const [criteriaScores, setCriteriaScores] = useState({});
-
-    // 요소의 참조 추가
     const blHeightRef = useRef(null);
-    const [blHeight, setBlHeight] = useState(0); // bl_height의 px 높이를 저장할 상태
+    const [blHeight, setBlHeight] = useState(0);
 
     // 슬라이드 토글 함수
     const handleToggle = (key) => {
@@ -203,43 +201,12 @@ function Report2() {
         fetchEvaluations();
     }, [questions, answers, years, job]);
 
-    // bl_height의 높이를 가져와서 Chart 컴포넌트에 전달
-    // useEffect(() => {
-    //     const updateBlHeight = () => {
-    //         if (blHeightRef.current) {
-    //             setBlHeight(blHeightRef.current.offsetHeight);
-    //         }
-    //     };
-    
-    //     // setTimeout을 사용하여 DOM이 완전히 렌더링된 후에 높이를 가져옵니다.
-    //     setTimeout(updateBlHeight, 0.5);
-    
-    //     window.addEventListener('resize', updateBlHeight);
-    
-    //     return () => {
-    //         window.removeEventListener('resize', updateBlHeight);
-    //     };
-    // }, []);    
-
     useEffect(() => {
-        const updateBlHeight = () => {
-            if (blHeightRef.current) {
-                setBlHeight(blHeightRef.current.offsetHeight);
-            }
-        };
-    
-        const resizeObserver = new ResizeObserver(updateBlHeight);
-        
         if (blHeightRef.current) {
-            resizeObserver.observe(blHeightRef.current);
+            const height = blHeightRef.current.offsetHeight;
+            setBlHeight(height);
         }
-    
-        return () => {
-            if (blHeightRef.current) {
-                resizeObserver.unobserve(blHeightRef.current);
-            }
-        };
-    }, []);    
+    }, [blHeightRef.current, summary, consolidatedFeedback]);
 
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
