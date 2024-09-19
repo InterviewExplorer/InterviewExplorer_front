@@ -150,7 +150,7 @@ function Interview2() {
                                             display: isFirstVideoPlaying ? 'none' : 'block'}}>
                                             Your browser does not support the video tag.
                                         </video>
-                                        <button onClick={handleStartInterview}>시작</button>
+                                        
                                     </div>
                                 )}
                                 <div className='el_video hp_relative'>
