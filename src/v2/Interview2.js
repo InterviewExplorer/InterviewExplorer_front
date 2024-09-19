@@ -12,7 +12,7 @@ function Interview2() {
 
     const location = useLocation();
     const navigate = useNavigate();
-    const { questions: basicQuestions, job, years, interviewer: initialInterviewer, type } = location.state || {};
+    const { questions: basicQuestions, job, years, interviewer: initialInterviewer, type, resume: question } = location.state || {};
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isLastQuestion, setIsLastQuestion] = useState(false);
     const [isRecordingDone, setIsRecordingDone] = useState(false);
@@ -24,10 +24,11 @@ function Interview2() {
         if (basicQuestions) {
             setQuestions(prevQuestions => ({
                 ...prevQuestions,
-                ...basicQuestions
+                ...basicQuestions,
+                ...question
             }));
         }
-    }, [basicQuestions]);
+    }, [basicQuestions, question]);
 
     useEffect(() => {
         const questionKeys = Object.keys(questions);
