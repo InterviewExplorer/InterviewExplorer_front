@@ -272,11 +272,14 @@ function Report2() {
                         {consolidatedFeedback && (
                             <div className='el_box el_box__hover'>
                                 <h2>자세 피드백</h2>
-                                <ul>
-                                    {uniqueFeedback.map((feedback, index) => (
-                                        <li key={index}>{feedback}</li>
-                                    ))}
-                                </ul>
+                                <span>[ </span>
+                                {uniqueFeedback.map((feedback, index) => (
+                                    <span key={index}>
+                                        {feedback}
+                                        {index < uniqueFeedback.length - 1 && ', '}
+                                    </span>
+                                ))}
+                                <span> ]</span>
                                 <p>{consolidatedFeedback}</p>
                             </div>
                         )}

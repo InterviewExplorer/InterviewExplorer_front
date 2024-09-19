@@ -22,7 +22,7 @@ const calculateAverage = (arr) => {
     return sum / arr.length;
 };
 
-const MyResponsiveRadar = ({ data }) => (
+const MyResponsiveRadar = ({ data }) => (    
     <ResponsiveRadar
         data={data}
         keys={['면접자']}

@@ -3,6 +3,10 @@
 .el_box{background-color:rgba(255,255,255,1);border-radius:30px;padding:30px;box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;}
 .el_box__txt{font-family:'GmarketSans';font-size:17px;font-weight:600;}
 .ly_maxWd{width:1200px;margin-left:auto;margin-right:auto;}
+@media print {
+    .ly_report{background: rgb(134,157,220);background: linear-gradient(140deg, rgba(134,157,220,1) 0%, rgba(205,217,227,1) 100%);}
+    .bl_eachTB{display: table !important;}
+}
 
 /* new */
 .ly_main{padding-top:10%;min-height:100vh;position:relative;background:rgb(216 224 247);}
