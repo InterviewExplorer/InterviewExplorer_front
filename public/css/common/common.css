@@ -4,6 +4,7 @@
 .el_box__txt{font-family:'GmarketSans';font-size:17px;font-weight:600;}
 .ly_maxWd{width:1200px;margin-left:auto;margin-right:auto;}
 @media print {
+    .el_pdfBtn, .el_allBtn{display: none !important;}
     .ly_report{background: rgb(134,157,220);background: linear-gradient(140deg, rgba(134,157,220,1) 0%, rgba(205,217,227,1) 100%);}
     .bl_eachTB{display: table !important;}
 }

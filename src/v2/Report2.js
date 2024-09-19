@@ -299,7 +299,7 @@ function Report2() {
                     <div className='el_box el_box__each'>
                         <div className='ly_spaceBetween ly_fitemC'>
                             <h2>개별 평가</h2>
-                            <button type='button' className='el_btnXS el_btnGradation' onClick={handleToggleAll}>
+                            <button type='button' className='el_allBtn el_btnXS el_btnGradation' onClick={handleToggleAll}>
                                 {isAllOpen ? '전체 닫기' : '전체 펼치기'}
                             </button>
                         </div>
