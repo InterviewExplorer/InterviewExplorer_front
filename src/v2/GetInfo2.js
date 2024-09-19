@@ -23,6 +23,7 @@ function GetInfo2() {
         formData.append('job', job);
         formData.append('years', years);
         formData.append("interviewType", interviewType)
+        if (pdfFile) formData.append('file', pdfFile);
 
         setLoading(true);
 
@@ -38,6 +39,15 @@ function GetInfo2() {
             const formData2 = new FormData();
             for (const key in data) formData2.append(key, data[key]);
 
+            const resumeUrl = interviewType === "technical" ? "technical_resume" : "behavioral_resume";
+
+            const resumeQuestion = await fetch(`http://localhost:8000/${resumeUrl}`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            const question = await resumeQuestion.json();
+
             const response2 = await fetch('http://localhost:8000/ai-presenter/', {
                 method: 'POST',
                 body: formData2,
@@ -46,7 +56,7 @@ function GetInfo2() {
             if (!response2.ok) throw new Error('영상 생성에 실패했습니다.');
 
             const data2 = await response2.json();
-            navigate('/guide', { state: { questions: data, job, years, interviewer: data2, type: interviewType } });
+            navigate('/guide', { state: { questions: data, job, years, interviewer: data2, type: interviewType, resume: question } });
         } catch (error) {
             console.error('에러 발생:', error);
             alert('질문 생성 중 오류가 발생했습니다.');
