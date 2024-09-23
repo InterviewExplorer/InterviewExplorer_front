@@ -182,6 +182,7 @@ function Report2() {
                 if (typeof data === 'string') {
                     const cleanedData = data.replace(/^\{\s*"*([^"]*)"*"\s*\}$/, '$1');
                     setSummary(cleanedData);
+                    console("summary", summary)
                 } else {
                     setSummary('');
                 }
@@ -224,7 +225,9 @@ function Report2() {
             ) : (
             <div className='ly_maxWd ly_report' ref={componentRef}>
                 <div className='ly_spaceBetween ly_fitemC hp_mb50'>
-                    <h1 className='hp_fontGmarket hp_fs36 hp_fw700'>{years}년차 {job} 면접결과</h1>
+                    <h1 className='hp_fontGmarket hp_fs36 hp_fw700'>
+                        {years}년차 {job} {type === 'technical' ? '기술' : '인성'}면접 결과
+                    </h1>
                     <button className='el_pdfBtn el_btnS el_btn0Back' onClick={handlePrint}>PDF로 저장</button>
                 </div>
                 <div className='ly_flex'>
@@ -252,7 +255,7 @@ function Report2() {
                         )}
                     </div>
                     {/* Chart에 blHeight 전달 */}
-                    <Chart blHeight={blHeight} type={type} criteriaScores={criteriaScores} />
+                    <Chart blHeight={blHeight} criteriaScores={criteriaScores} type={type} job={job} years={years} />
                 </div>
 
                 {type === "behavioral" && (
@@ -292,7 +295,7 @@ function Report2() {
                                             </tr>
                                             <tr>
                                                 <th>평가</th>
-                                                <td>{evaluation.score !== undefined ? evaluation.score : "점수를 불러오는 데 실패했습니다."}점</td>
+                                                <td>{evaluation.score !== undefined ? evaluation.score + "점" : "점수를 불러오는 데 실패했습니다."}</td>
                                             </tr>
                                             <tr>
                                                 <th>설명</th>

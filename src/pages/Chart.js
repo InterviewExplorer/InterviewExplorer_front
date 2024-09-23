@@ -1,5 +1,5 @@
 import { ResponsiveRadar } from '@nivo/radar';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // 한글 레이블과 영어 키의 매핑 객체
 const labelToKeyMap = {
@@ -22,26 +22,86 @@ const calculateAverage = (arr) => {
     return sum / arr.length;
 };
 
-const MyResponsiveRadar = ({ data }) => (    
+const MyResponsiveRadar = ({ data }) => (
     <ResponsiveRadar
         data={data}
-        keys={['면접자']}
+        keys={[ '면접자', '평균' ]}
         indexBy="element"
         valueFormat=">-.2f"
         margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
         borderColor={{ from: 'color' }}
         gridLabelOffset={36}
         dotSize={10}
-        dotColor="white"
+        dotColor={{ theme: 'background' }}
         dotBorderWidth={2}
-        colors={{ datum: 'white' }}
+        colors={['#BB7BDF', '#B5BBE3']}
         blendMode="multiply"
         motionConfig="wobbly"
+        legends={[
+            {
+                anchor: 'top-right',
+                direction: 'column',
+                translateX: -70,
+                translateY: -60,
+                itemWidth: 80,
+                itemHeight: 20,
+                itemTextColor: '#999',
+                symbolSize: 12,
+                symbolShape: 'circle',
+                effects: [
+                    {
+                        on: 'hover',
+                        style: {
+                            itemTextColor: '#000'
+                        }
+                    }
+                ]
+            }
+        ]}
     />
+    // <ResponsiveRadar
+    //     data={data}
+    //     keys={['면접자']}
+    //     indexBy="element"
+    //     valueFormat=">-.2f"
+    //     margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
+    //     borderColor={{ from: 'color' }}
+    //     gridLabelOffset={36}
+    //     dotSize={10}
+    //     dotColor="white"
+    //     dotBorderWidth={2}
+    //     colors={{ datum: 'white' }}
+    //     blendMode="multiply"
+    //     motionConfig="wobbly"
+    // />
 );
 
-function Chart({ blHeight, type, criteriaScores }) {
-    console.log("criteriaScores", criteriaScores);
+function Chart({ blHeight, criteriaScores, type, job, years }) {
+    const [averageScore, setAverageScore] = useState({});
+
+    useEffect(() => {
+        const fetchAverages = async () => {
+            try {
+                const formData = new FormData();
+                formData.append('job', job);
+                formData.append('years', years);
+                formData.append('type', type);
+
+                const response = await fetch('http://localhost:8000/average', {
+                    method: 'POST',
+                    body: formData,
+                });
+                
+                const data = await response.json();
+                setAverageScore(data)
+
+            } catch (error) {
+                console.error('Error fetching averages:', error);
+            }
+        };
+
+        fetchAverages();
+    }, [job, years, type]);
 
     // `type`에 따라 `element` 값을 설정
     const elements = type === 'technical'
@@ -51,11 +111,13 @@ function Chart({ blHeight, type, criteriaScores }) {
     // 데이터 생성
     const data = elements.map((element) => {
         const key = labelToKeyMap[element];
-        const average = key ? calculateAverage(criteriaScores[key] || []) : 0;
-
+        const score = key ? calculateAverage(criteriaScores[key] || []) : 0;
+        const average = averageScore[key] || 0;
+        
         return {
             element,
-            '면접자': average
+            '면접자': score,
+            '평균': isNaN(average) ? 0 : average,
         };
     });
 
