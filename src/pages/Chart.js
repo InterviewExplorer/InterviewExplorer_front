@@ -59,21 +59,6 @@ const MyResponsiveRadar = ({ data }) => (
             }
         ]}
     />
-    // <ResponsiveRadar
-    //     data={data}
-    //     keys={['면접자']}
-    //     indexBy="element"
-    //     valueFormat=">-.2f"
-    //     margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
-    //     borderColor={{ from: 'color' }}
-    //     gridLabelOffset={36}
-    //     dotSize={10}
-    //     dotColor="white"
-    //     dotBorderWidth={2}
-    //     colors={{ datum: 'white' }}
-    //     blendMode="multiply"
-    //     motionConfig="wobbly"
-    // />
 );
 
 function Chart({ blHeight, criteriaScores, type, job, years }) {
