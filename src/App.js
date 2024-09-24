@@ -13,6 +13,7 @@ import GetInfo2 from "./v2/GetInfo2";
 import Guide2 from "./v2/Guide2";
 import Interview2 from "./v2/Interview2";
 import Report2 from "./v2/Report2";
+import Interviewer from "./v2/Interviewer";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/guide" element={<Guide2/>}/>
           <Route path="/interview" element={<Interview2 />} />
           <Route path="/report" element={<Report2 />} />
+          <Route path="/interviewer" element={<Interviewer />}/>
 
         </Routes>
       </BrowserRouter>
