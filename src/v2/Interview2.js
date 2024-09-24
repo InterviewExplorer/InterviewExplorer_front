@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import VideoRecorder from '../pages/VideoRecorder';
 import FollowUp from "../v2/FollowUp2";
+import { ChartColumnStackedIcon } from 'lucide-react';
 
 function Interview2() {
     const initialQuestions = {Q1: null,Q2: null,Q3: null,Q4: null,Q5: null,Q6: null,Q7: null,Q8: null,Q9: null,Q10: null};
@@ -12,7 +13,7 @@ function Interview2() {
 
     const location = useLocation();
     const navigate = useNavigate();
-    const { questions: basicQuestions, job, years, interviewer: initialInterviewer, type, resume: question } = location.state || {};
+    const { questions: basicQuestions, job, years, interviewer: initialInterviewer, type, resume: question, newQuestionData } = location.state || {};
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isLastQuestion, setIsLastQuestion] = useState(false);
     const [isRecordingDone, setIsRecordingDone] = useState(false);
@@ -25,10 +26,11 @@ function Interview2() {
             setQuestions(prevQuestions => ({
                 ...prevQuestions,
                 ...basicQuestions,
-                ...question
+                ...question,
+                Q8: newQuestionData
             }));
         }
-    }, [basicQuestions, question]);
+    }, [basicQuestions, question, newQuestionData]);
 
     useEffect(() => {
         const questionKeys = Object.keys(questions);
