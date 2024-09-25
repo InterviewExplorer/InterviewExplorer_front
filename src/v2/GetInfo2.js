@@ -62,7 +62,10 @@ function GetInfo2() {
             if (!newQuestionResponse.ok) throw new Error('새 질문 생성에 실패했습니다.');
 
             const newQuestion = await newQuestionResponse.json();
-            const newQuestionData = newQuestion.Questions;
+            let newQuestionData = newQuestion.Questions;
+            if (typeof newQuestionData === 'string') {
+                newQuestionData += " 만약 해당 기술을 모른다면, 최근에 흥미를 느낀 다른 기술이나 논문에 대해 말씀해 주세요.";
+            }
 
             // 면접관 영상
             const response2 = await fetch('http://localhost:8000/ai-presenter/', {
