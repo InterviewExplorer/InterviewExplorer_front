@@ -43,18 +43,7 @@ function Interviewer() {
     
     
 }
-const renderObject = (obj) => {
-    return (
-      <ul>
-        {Object.entries(obj).map(([key, value]) => (
-          <li key={key}>
-            <strong>{key} : {value}</strong>
-            
-          </li>
-        ))}
-      </ul>
-    );
-  }; 
+
     return (
         <>
             <input 
@@ -70,12 +59,10 @@ const renderObject = (obj) => {
             <div>
                 <h3>Selected Files:</h3>
                 <ul>
-                    {files.map((file, index) => (
-                        <>
-                        {/* <li key={index}>{file.source}</li> */}
-                        <li key={index}>{file.score}</li>
-                        {file.resume&&<li key={index}>{file.resume}</li>}
-                        </>
+                {files.map((file, index) => (
+                        
+                        <li key={index}>{file.resume}</li>
+                        
                         
                         
                         
