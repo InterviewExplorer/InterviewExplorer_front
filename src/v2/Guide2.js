@@ -5,10 +5,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 function Guide() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { questions: data, job, years, interviewer: data2, type: interviewType, resume: question, newQuestionData} = location.state || {};
+    const { basicQuestions, job, years, videoOfInterviewer, type: interviewType, resumeQuestions} = location.state || {};
 
     const handleInteviewSummit = () => {
-        navigate('/interview', { state: { questions: data, job, years, interviewer: data2, type: interviewType, resume: question, newQuestionData} });
+        navigate('/interview', { state: { basicQuestions, job, years, videoOfInterviewer, type: interviewType, resumeQuestions} });
     }
 
     return (

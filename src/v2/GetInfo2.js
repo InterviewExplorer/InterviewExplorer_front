@@ -28,19 +28,7 @@ function GetInfo2() {
         setLoading(true);
 
         try {
-            // 기본질문 Q1 ~ 5
-            const response = await fetch(`http://localhost:8000/${url}`, {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (!response.ok) throw new Error('질문 생성에 실패했습니다.');
-
-            const data = await response.json();
-            const formData2 = new FormData();
-            for (const key in data) formData2.append(key, data[key]);
-
-            // 이력서질문 Q6,7
+            // 이력서질문 Q1,2
             const resumeUrl = interviewType === "technical" ? "technical_resume" : "behavioral_resume";
 
             const resumeQuestion = await fetch(`http://localhost:8000/${resumeUrl}`, {
@@ -48,24 +36,22 @@ function GetInfo2() {
                 body: formData,
             });
 
-            const question = await resumeQuestion.json();
+            const resumeQuestions = await resumeQuestion.json();
+            console.log("resumeQuestions", resumeQuestions)
 
-            // 최신질문 Q8
-            const newQuestionResponse = await fetch(`http://localhost:8000/newQ_create`, {
+            // 기본질문 Q3 ~ 7
+            const response = await fetch(`http://localhost:8000/${url}`, {
                 method: 'POST',
-                body: new URLSearchParams({
-                    job: job,
-                    type: interviewType,
-                }),
+                body: formData,
             });
 
-            if (!newQuestionResponse.ok) throw new Error('새 질문 생성에 실패했습니다.');
+            if (!response.ok) throw new Error('질문 생성에 실패했습니다.');
 
-            const newQuestion = await newQuestionResponse.json();
-            let newQuestionData = newQuestion.Questions;
-            if (typeof newQuestionData === 'string') {
-                newQuestionData += " 만약 해당 기술을 모른다면, 최근에 흥미를 느낀 다른 기술이나 논문에 대해 말씀해 주세요.";
-            }
+            const basicQuestions = await response.json();
+            console.log("basicQuestions", basicQuestions)
+
+            const formData2 = new FormData();
+            for (const key in basicQuestions) formData2.append(key, basicQuestions[key]);
 
             // 면접관 영상
             const response2 = await fetch('http://localhost:8000/ai-presenter/', {
@@ -75,8 +61,9 @@ function GetInfo2() {
 
             if (!response2.ok) throw new Error('영상 생성에 실패했습니다.');
 
-            const data2 = await response2.json();
-            navigate('/guide', { state: { questions: data, job, years, interviewer: data2, type: interviewType, resume: question, newQuestionData } });
+            const videoOfInterviewer = await response2.json();
+
+            navigate('/guide', { state: { basicQuestions, job, years, videoOfInterviewer, type: interviewType, resumeQuestions } });
         } catch (error) {
             console.error('에러 발생:', error);
             alert('질문 생성 중 오류가 발생했습니다.');
