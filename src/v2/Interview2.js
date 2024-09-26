@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import VideoRecorder from '../pages/VideoRecorder';
 import FollowUp from "../v2/FollowUp2";
+import LastestQuestions from "./LatestQuestions";  // 이 줄을 추가합니다
 import { ChartColumnStackedIcon } from 'lucide-react';
 
 function Interview2() {
@@ -13,7 +14,7 @@ function Interview2() {
 
     const location = useLocation();
     const navigate = useNavigate();
-    const { questions: basicQuestions, job, years, interviewer: initialInterviewer, type, resume: question, newQuestionData } = location.state || {};
+    const { basicQuestions, job, years, videoOfInterviewer: initialInterviewer, type, resumeQuestions } = location.state || {};
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isLastQuestion, setIsLastQuestion] = useState(false);
     const [isRecordingDone, setIsRecordingDone] = useState(false);
@@ -25,12 +26,11 @@ function Interview2() {
         if (basicQuestions) {
             setQuestions(prevQuestions => ({
                 ...prevQuestions,
+                ...resumeQuestions,
                 ...basicQuestions,
-                ...question,
-                Q8: newQuestionData
             }));
         }
-    }, [basicQuestions, question, newQuestionData]);
+    }, [basicQuestions, resumeQuestions]);
 
     useEffect(() => {
         const questionKeys = Object.keys(questions);
@@ -65,7 +65,7 @@ function Interview2() {
 
     console.log("questions", questions)
     console.log("answers", answers)
-    
+
     const isAnswerComplete = () => {
         return answers[`A${currentQuestionIndex + 1}`] !== undefined && answers[`A${currentQuestionIndex + 1}`] !== null;
     };
@@ -134,6 +134,7 @@ function Interview2() {
                             handleInterviewerUpdate={handleInterviewerUpdate}
                             type={type}
                         />
+                        <LastestQuestions job={job} type={type} answers={answers} handleQuestion={handleQuestion} questions={questions} />
                     </>
                 )}
             </div>
