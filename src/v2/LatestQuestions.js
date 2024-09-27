@@ -4,7 +4,7 @@ function LatestQuestions({ job, type, answers, handleQuestion, questions }) {
     const [hasAnswer, setHasAnswer] = useState(false);
 
     useEffect(() => {        
-        if (answers['A1'] !== null && questions['Q8'] == null) { // 답변이 있는지 확인
+        if (answers['A6'] !== null && questions['Q8'] == null) { // 답변이 있는지 확인
             setHasAnswer(true);
         }
     }, [answers]);
