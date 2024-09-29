@@ -79,20 +79,14 @@
 .bl_eachTB th, .bl_eachTB td{padding:10px;}
 .bl_eachTB th{width:50px;text-align:left;}
 
-/* 체크박스 */
-.container{margin-left:30px;display:inline-flex;align-items:center;position:relative;cursor:pointer;font-size:22px;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
-.container input{position:absolute;opacity:0;cursor:pointer;height:0;width:0;}
-.checkmark{display:inline-block;height:25px;width:25px;background-color:#fff;margin-right:10px;border-radius:5px;}
-.container input:checked ~ .checkmark{background-color:#000;}
-.checkmark:after{content:"";position:absolute;display:none;}
-.container input:checked ~ .checkmark:after{display:block;}
-.container .checkmark:after{left:6px;top:3px;width:9px;height:16px;border: solid white;border-width: 0 4px 4px 0;-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg);}
-
 /* 면접관 버전 */
 .bl_search{display:flex;justify-content:space-between;border-radius:999px;padding:10px;}
 .bl_search__input{width:100%;border-radius:999px;margin-right:10px;font-size:24px;border:none;padding:0 30px;}
-.bl_search__btn{width:70px;height:70px;border-radius:50%;background:url('/img/icon/search_white.png')no-repeat center/70% #000;color:#fff;flex-shrink:0;}
+.bl_search__btn{width:70px;height:70px;border-radius:50%;flex-shrink:0;}
+.bl_search__btn::before{content:"";display:block;width:100%;height:100%;background:url('/img/icon/search_white.png')no-repeat center/70% transparent;}
+.bl_search__btn:hover{background: linear-gradient(90deg, #7e6bfc 0%, #71b1fc 100%);}
 
+.bl_exprience{background:rgb(255,255,255,0.2);padding:20px 0;border-radius:15px;}
 .bl_exprience__ttl{font-size:24px;width:100px;}
 
 .el_box__result{background:rgba(255,255,255,0.2);}
@@ -113,3 +107,43 @@
 .bl_resumeSummary table *{font-size:20px;}
 .bl_resumeSummary table th{color:#777}
 .bl_resumeSummary table td{padding:10px 40px;padding-right:0;}
+
+/* 체크박스 */
+.container{margin-left:30px;display:inline-flex;align-items:center;position:relative;cursor:pointer;font-size:22px;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
+.container input{position:absolute;opacity:0;cursor:pointer;height:0;width:0;}
+.checkmark{display:inline-block;height:25px;width:25px;background-color:#fff;margin-right:10px;border-radius:5px;}
+.container input:checked ~ .checkmark{background-color:#000;}
+.checkmark:after{content:"";position:absolute;display:none;}
+.container input:checked ~ .checkmark:after{display:block;}
+.container .checkmark:after{left:7px;top:5px;width:8px;height:14px;border:solid white;border-width: 0 3px 3px 0;-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg);}
+
+/* 파일첨부 */
+.el_uploadBtn{background:url('/img/icon/upload_white.png')no-repeat 88% 32%/100px #000;width:80%;font-size:80px;line-height:1;padding:65px 0 50px;text-indent:-50px;margin:-50px auto 0;cursor:pointer;}
+
+/* .filebox .upload-name {
+    display: inline-block;
+    height: 40px;
+    padding: 0 10px;
+    vertical-align: middle;
+    border: 1px solid #dddddd;
+    width: 78%;
+    color: #999999;
+}
+.filebox label {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #fff;
+    vertical-align: middle;
+    background-color: #999999;
+    cursor: pointer;
+    height: 40px;
+    margin-left: 10px;
+}
+.filebox input[type="file"] {
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+} */
