@@ -78,3 +78,38 @@
 .bl_eachTB{margin-top:10px;}
 .bl_eachTB th, .bl_eachTB td{padding:10px;}
 .bl_eachTB th{width:50px;text-align:left;}
+
+/* 체크박스 */
+.container{margin-left:30px;display:inline-flex;align-items:center;position:relative;cursor:pointer;font-size:22px;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
+.container input{position:absolute;opacity:0;cursor:pointer;height:0;width:0;}
+.checkmark{display:inline-block;height:25px;width:25px;background-color:#fff;margin-right:10px;border-radius:5px;}
+.container input:checked ~ .checkmark{background-color:#000;}
+.checkmark:after{content:"";position:absolute;display:none;}
+.container input:checked ~ .checkmark:after{display:block;}
+.container .checkmark:after{left:6px;top:3px;width:9px;height:16px;border: solid white;border-width: 0 4px 4px 0;-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg);}
+
+/* 면접관 버전 */
+.bl_search{display:flex;justify-content:space-between;border-radius:999px;padding:10px;}
+.bl_search__input{width:100%;border-radius:999px;margin-right:10px;font-size:24px;border:none;padding:0 30px;}
+.bl_search__btn{width:70px;height:70px;border-radius:50%;background:url('/img/icon/search_white.png')no-repeat center/70% #000;color:#fff;flex-shrink:0;}
+
+.bl_exprience__ttl{font-size:24px;width:100px;}
+
+.el_box__result{background:rgba(255,255,255,0.2);}
+.bl_result{flex-shrink:0;flex-basis:100%;transition:flex-basis 0.5s ease;}
+.bl_result.hp_on{flex-basis:400px;}
+.bl_resumeList li{background:url('/img/icon/plus_black.png')no-repeat 97.5% center/34px #fff;border-radius:15px;margin-top:20px;padding:20px 30px;font-size:20px;cursor:pointer;}
+.bl_resumeList li:first-child{margin-top:0;}
+.bl_resumeList li:hover{background-color:rgba(255,255,255,0.6);}
+.bl_resumeList li.hp_on{color:#fff;background:url('/img/icon/minus_white.png')no-repeat 95.5% center/22px #7e6bfc;}
+
+.bl_resumeSummary{flex-grow:1;width:0px;padding:0;overflow:hidden;border-radius:15px;position:sticky;top:50px;transition:all 0.5s ease;}
+.bl_resumeSummary.hp_on{width:auto;padding:30px;margin-left:30px;}
+
+/* .bl_resumeSummary>*{display:none;}
+.bl_resumeSummary.hp_on>*{display:inherit;} */
+
+.bl_resumeSummary table{text-align:left;width:650px;}
+.bl_resumeSummary table *{font-size:20px;}
+.bl_resumeSummary table th{color:#777}
+.bl_resumeSummary table td{padding:10px 40px;padding-right:0;}
