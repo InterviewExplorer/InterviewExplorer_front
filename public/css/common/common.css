@@ -104,9 +104,10 @@
 .bl_resumeSummary.hp_on>*{display:inherit;} */
 
 .bl_resumeSummary table{text-align:left;width:650px;}
-.bl_resumeSummary table *{font-size:20px;}
-.bl_resumeSummary table th{color:#777}
-.bl_resumeSummary table td{padding:10px 40px;padding-right:0;}
+.bl_resumeSummary table *{font-size:18px;}
+.bl_resumeSummary table tr{border-top:1px solid rgba()}
+.bl_resumeSummary table th{color:#777;width:120px;}
+.bl_resumeSummary table td{padding:7px 0;}
 
 /* 체크박스 */
 .container{margin-left:30px;display:inline-flex;align-items:center;position:relative;cursor:pointer;font-size:22px;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
@@ -119,31 +120,3 @@
 
 /* 파일첨부 */
 .el_uploadBtn{background:url('/img/icon/upload_white.png')no-repeat 88% 32%/100px #000;width:80%;font-size:80px;line-height:1;padding:65px 0 50px;text-indent:-50px;margin:-50px auto 0;cursor:pointer;}
-
-/* .filebox .upload-name {
-    display: inline-block;
-    height: 40px;
-    padding: 0 10px;
-    vertical-align: middle;
-    border: 1px solid #dddddd;
-    width: 78%;
-    color: #999999;
-}
-.filebox label {
-    display: inline-block;
-    padding: 10px 20px;
-    color: #fff;
-    vertical-align: middle;
-    background-color: #999999;
-    cursor: pointer;
-    height: 40px;
-    margin-left: 10px;
-}
-.filebox input[type="file"] {
-    position: absolute;
-    width: 0;
-    height: 0;
-    padding: 0;
-    overflow: hidden;
-    border: 0;
-} */
