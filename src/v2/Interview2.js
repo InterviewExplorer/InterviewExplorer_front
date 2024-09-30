@@ -2,8 +2,7 @@ import React, { useState, useEffect,useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import VideoRecorder from '../pages/VideoRecorder';
 import FollowUp from "../v2/FollowUp2";
-import LastestQuestions from "./LatestQuestions";  // 이 줄을 추가합니다
-import { ChartColumnStackedIcon } from 'lucide-react';
+import LastestQuestions from "./LatestQuestions";
 
 function Interview2() {
     const initialQuestions = {Q1: null,Q2: null,Q3: null,Q4: null,Q5: null,Q6: null,Q7: null,Q8: null,Q9: null,Q10: null};
@@ -64,7 +63,12 @@ function Interview2() {
         const questionKeys = Object.keys(questions);
         const isLastQuestionFlag = currentQuestionIndex >= questionKeys.length - 1;
         setIsLastQuestion(isLastQuestionFlag);
-    }, [questions, currentQuestionIndex]);
+
+        // A10에 대한 답변이 완료되면 자동으로 handleEndInterview 실행
+        if (answers.A10 !== null && answers.A10 !== undefined) {
+            handleEndInterview();
+        }
+    }, [questions, currentQuestionIndex, answers]);
 
     const handleQuestion = (newData) => {
         setQuestions(prevQuestions => ({
@@ -116,10 +120,6 @@ function Interview2() {
     };
 
     const handleEndInterview = () => {
-        if (!isAnswerComplete()) {
-            alert('현재 질문에 대한 답변을 먼저 완료해주세요.');
-            return;
-        }
         navigate('/report', { state: { answers, questions, job, years, type, feedback } });
     };
 
@@ -158,9 +158,9 @@ function Interview2() {
                                     {!isLastQuestion && isAnswerComplete() && (
                                         <button className='el_interviewBtn el_nextBtn el_btnM el_btnSkyBord' onClick={handleNextQuestion}>다음 질문</button>
                                     )}
-                                    {isLastQuestion && isAnswerComplete() && (
+                                    {/* {isLastQuestion && isAnswerComplete() && (
                                         <button className='el_interviewBtn el_btnM el_btnGradation' onClick={handleEndInterview}>면접 종료</button>
-                                    )}
+                                    )} */}
                                 </div>
                             </div>
                         </div>

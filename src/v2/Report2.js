@@ -20,6 +20,7 @@ function Report2() {
     const [criteriaScores, setCriteriaScores] = useState({});
     const blHeightRef = useRef(null);
     const [blHeight, setBlHeight] = useState(0);
+    const [averageScore, setAverageScore] = useState('');
 
     // 슬라이드 토글 함수
     const handleToggle = (key) => {
@@ -139,6 +140,29 @@ function Report2() {
         fetchFeedback();
     }, []);
 
+    // 점수를 숫자로 변환하는 함수
+    const scoreToNumber = (score) => {
+        const scoreMap = { 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'F': 1 };
+        return scoreMap[score] || 0;
+    };
+
+    // 숫자를 다시 점수로 변환하는 함수
+    const numberToScore = (number) => {
+        if (number >= 4.5) return 'A';
+        if (number >= 3.5) return 'B';
+        if (number >= 2.5) return 'C';
+        if (number >= 1.5) return 'D';
+        return 'F';
+    };
+
+    // 평균 점수 계산 함수
+    const calculateAverageScore = (evaluations) => {
+        const scores = Object.values(evaluations).map(evaluation => scoreToNumber(evaluation.score));
+        const sum = scores.reduce((acc, curr) => acc + curr, 0);
+        const average = sum / scores.length;
+        return numberToScore(average);
+    };
+
     useEffect(() => {
         const fetchEvaluations = async () => {
             const evaluations = {};
@@ -164,13 +188,17 @@ function Report2() {
             setEvaluations(evaluations);
             setExplains(explanations);
 
+            // 평균 점수 계산
+            const avgScore = calculateAverageScore(evaluations);
+            setAverageScore(avgScore);
+
             try {
                 const response = await fetch('http://localhost:8000/summarize', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ evaluations: evaluations, type }),
+                    body: JSON.stringify({ evaluations: evaluations, type, averageScore: avgScore }),
                 });
 
                 if (!response.ok) {
@@ -182,7 +210,6 @@ function Report2() {
                 if (typeof data === 'string') {
                     const cleanedData = data.replace(/^\{\s*"*([^"]*)"*"\s*\}$/, '$1');
                     setSummary(cleanedData);
-                    console("summary", summary)
                 } else {
                     setSummary('');
                 }
@@ -234,7 +261,7 @@ function Report2() {
                     <div className='bl_height' ref={blHeightRef}>
                         {summary && (
                             <div className='el_box el_box__hover hp_mt0'>
-                                <h2>종합 평가</h2>
+                                <h2>종합 평가 <span className='hp_fs24 hp_fw600 hp_purpleColor'>[ {averageScore} ]</span></h2>
                                 <p>{summary}</p>
                             </div>
                         )}
@@ -295,7 +322,7 @@ function Report2() {
                                             </tr>
                                             <tr>
                                                 <th>평가</th>
-                                                <td>{evaluation.score !== undefined ? evaluation.score + "점" : "점수를 불러오는 데 실패했습니다."}</td>
+                                                <td>{evaluation.score !== undefined ? evaluation.score : "점수를 불러오는 데 실패했습니다."}</td>
                                             </tr>
                                             <tr>
                                                 <th>설명</th>
@@ -304,12 +331,12 @@ function Report2() {
                                             {type === "technical" && (
                                             <tr>
                                                 <th>모범<br/>답안</th>
-                                                <td>{evaluation.model || "모범답안 정보가 없습니다."}</td>
+                                                <td>{evaluation.ideal || "모범답안 정보가 없습니다."}</td>
                                             </tr>
                                             )}
                                             {type === "behavioral" && (
                                             <tr>
-                                                <th>질문의<br/>의도</th>
+                                                <th>질문<br/>의도</th>
                                                 <td>{evaluation.intention || "질문의 의도 정보가 없습니다."}</td>
                                             </tr>
                                             )}

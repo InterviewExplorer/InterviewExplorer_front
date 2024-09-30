@@ -48,6 +48,17 @@ const VideoRecorder = ({ handleAnswers, questionIndex, onRecordingDone, onFeedba
                     }
 
                     const result = await response.json();
+                    console.log("@@@result: ", result)
+        
+                    if (!result.transcript || result.transcript.trim() === '') {
+                        // transcript가 비어있을 경우 녹화 시작 버튼을 다시 표시
+                        if (startButtonRef.current) {
+                            startButtonRef.current.style.display = 'block';
+                        }
+                        alert("음성이 인식되지 않았습니다.\n마이크 연결 확인 후, 다시 녹화 시작 버튼을 클릭해주세요.");
+                        throw new Error('음성 인식 결과가 없습니다.');
+                    }
+
                     setTranscript(result.transcript);
                     setRecordingDone(true);
                     setFeedbackList(prevFeedback => [...prevFeedback, result.feedback]);
