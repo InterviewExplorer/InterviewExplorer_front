@@ -150,21 +150,14 @@ function Interviewer() {
         }
     
         return (
-            <tr>
-                <th>보유<br/>기술</th>
-                <td>
-                    <table className="inner-table">
-                        <tbody>
-                            {Object.entries(skillCategories).map(([category, skillList]) => (
-                                <tr key={category}>
-                                    <th>{category.toUpperCase()}</th>
-                                    <td>{skillList}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
+            <>
+                {Object.entries(skillCategories).map(([category, skillList]) => (
+                    <tr key={category}>
+                        <th>{category.toUpperCase()}</th>
+                        <td>{skillList}</td>
+                    </tr>
+                ))}
+            </>
         );
     };
 
@@ -230,36 +223,43 @@ function Interviewer() {
                                     </ul>
                                 </div>
                                 <div className={`bl_resumeSummary el_box ${isResultActive ? 'hp_on' : ''}`}>
-                                {selectedResume && (
-                                    <table>
-                                        <tbody>
-                                        <tr>
-                                            <th>이름</th>
-                                            <td>{selectedResume.name || '정보 없음'}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>생년월일</th>
-                                            <td>{selectedResume.date_of_birth || '정보 없음'}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>프로젝트 수</th>
-                                            <td>{selectedResume.number_of_projects || '정보 없음'}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>프로젝트 이름</th>
-                                            <td>{selectedResume.project_description || '정보 없음'}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>키워드</th>
-                                            <td>{selectedResume.summary_keywords || '정보 없음'}</td>
-                                        </tr>
-                                        <TechnicalSkillsRows skills={selectedResume.technical_skills} />
-                                        <tr>
-                                            <th>경력</th>
-                                            <td>{selectedResume.work_experience || '정보 없음'}</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                    {selectedResume && (
+                                        <>
+                                            <table>
+                                                <tbody>
+                                                <tr>
+                                                    <th>이름</th>
+                                                    <td>{selectedResume.name || '정보 없음'}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>생년월일</th>
+                                                    <td>{selectedResume.date_of_birth || '정보 없음'}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>프로젝트수</th>
+                                                    <td>{selectedResume.number_of_projects || '정보 없음'}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>프로젝트명</th>
+                                                    <td>{selectedResume.project_description || '정보 없음'}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>키워드</th>
+                                                    <td>{selectedResume.summary_keywords || '정보 없음'}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>경력</th>
+                                                    <td>{selectedResume.work_experience || '정보 없음'}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                            <h3 className='hp_purpleColor hp_fs18 hp_mt40 hp_mb10'>보유기술</h3>
+                                            <table className="inner-table">
+                                                <tbody>
+                                                    <TechnicalSkillsRows skills={selectedResume.technical_skills} />
+                                                </tbody>
+                                            </table>
+                                        </>
                                     )}
                                     <button 
                                     className='bl_resumeSummary__btn el_btnM el_btnSkyBord hp_mt50 hp_w100' 
