@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import VideoRecorder from '../pages/VideoRecorder';
 import FollowUp from "../v2/FollowUp2";
@@ -21,7 +21,35 @@ function Interview2() {
     const [interviewer, setInterviewer] = useState(initialInterviewer || {});
     const initialQuestionCount = Object.keys(initialQuestions || {}).length;
     const [feedback, setFeedback] = useState([]);
-
+    const videoRef1 = useRef(null);
+    const videoRef2 = useRef(null);
+    const [loopVideo, setLoopVideo] = useState(false);
+    const [isFirstVideoPlaying, setIsFirstVideoPlaying] = useState(true);
+    const [hasStarted, setHasStarted] = useState(false);
+    
+    const handleVideoEnd = () => {
+        if (!loopVideo) {
+            
+          setIsFirstVideoPlaying(false);
+          videoRef2.current.play();  // 두 번째 비디오 재생 시작
+          
+          setLoopVideo(true);  // 루프 활성화
+        }
+      };
+      const tempVideos = { //나중에 지우기
+        "Q1": '/1725853616724.mp4',
+        "Q2":'/1725850570091.mp4'
+        
+        
+        
+      };
+      const handleStartInterview = () => {
+        setHasStarted(true);
+        if (videoRef1.current) {
+            videoRef1.current.muted = false; // Ensure sound is on
+            videoRef1.current.load(); // Play the video
+        }
+    };  
     useEffect(() => {
         if (basicQuestions) {
             setQuestions(prevQuestions => ({
@@ -78,6 +106,10 @@ function Interview2() {
 
         const questionKeys = Object.keys(questions);
         if (currentQuestionIndex < questionKeys.length - 1) {
+            setLoopVideo(false);
+            setIsFirstVideoPlaying(true);
+            videoRef1.current.currentTime = 0; // 비디오의 시작 위치로 이동
+            videoRef1.current.load(); // 비디오 재생
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             setIsRecordingDone(false);
         }
@@ -108,7 +140,15 @@ function Interview2() {
                             <div className='ly_spaceBetween'>
                                 {interviewer && (
                                     <div className='el_video'>
-                                        <video src={interviewer[`Q${currentQuestionIndex + 1}`]} controls>
+                                        <video src={interviewer[`Q${currentQuestionIndex + 1}`]}  ref={videoRef1} onEnded={handleVideoEnd} autoPlay={true}
+                                        style={{
+                                            display: isFirstVideoPlaying ? 'block' : 'none',
+                                            }}>
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        <video src="/1726112869803.mp4"   autoPlay={true} muted ref={videoRef2} loop={true}
+                                        style={{
+                                            display: isFirstVideoPlaying ? 'none' : 'block'}}>
                                             Your browser does not support the video tag.
                                         </video>
                                     </div>
