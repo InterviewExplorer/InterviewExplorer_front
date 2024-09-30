@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Loading from '../pages/Loading';
+
 function Interviewer() {
     const [files, setFiles] = useState([]);
     const [query, setQuery] = useState('');
@@ -7,9 +8,11 @@ function Interviewer() {
     const [loading, setLoading] = useState(false);
     const handleChange = (event) => setQuery(event.target.value);
     const [selectedOptions, setSelectedOptions] = useState([]);
+    const [isFileUploaded, setIsFileUploaded] = useState(false);
     const handleFileChange = (event) => {
         const selectedFiles = Array.from(event.target.files);
         setFiles(selectedFiles);
+        setIsFileUploaded(true);
     };
 
     const handleUpload = () => {
@@ -24,7 +27,7 @@ function Interviewer() {
           // 선택되지 않은 항목이면 추가
           setSelectedOptions([...selectedOptions, value]);
         }
-      };
+    };
     const submitQuery = async (value) =>{
         const formData = new FormData();
         formData.append("query",query);
@@ -53,83 +56,207 @@ function Interviewer() {
         }
      }catch (error) {
          console.error('에러 발생:', error);
-         
      }
-
      setLoading(false);
-    
-    
-    
 }
 
+    const [isResultActive, setIsResultActive] = useState(false);
+    const [selectedResume, setSelectedResume] = useState(null);
+    const [activeResumeId, setActiveResumeId] = useState(null);
+
+    const handleListItemClick = (id) => {
+        if (activeResumeId === id) {
+            setActiveResumeId(null);
+            setIsResultActive(false);
+            setSelectedResume(null);
+        } else {
+            setActiveResumeId(id);
+            setIsResultActive(true);
+            const resumeData = summaryData[id] && summaryData[id][0];
+            setSelectedResume(resumeData);
+        }
+    };
+
+    // 이다정
+    const summaryData = {
+        1: [
+          {
+            name: "홍길동",
+            birth: "1996.01.01",
+            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
+            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
+          }
+        ],
+        2: [
+          {
+            name: "김철수",
+            birth: "2000.01.01",
+            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
+            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
+          }
+        ],
+        3: [
+          {
+            name: "김영희",
+            birth: "2000.01.01",
+            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
+            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
+          }
+        ],
+        4: [
+          {
+            name: "바나나",
+            birth: "2000.01.01",
+            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
+            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
+          }
+        ],
+        5: [
+          {
+            name: "고양이",
+            birth: "2000.01.01",
+            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
+            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
+          }
+        ],
+        6: [
+          {
+            name: "홍길동",
+            birth: "1996.01.01",
+            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
+            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
+          }
+        ],
+        7: [
+          {
+            name: "김철수",
+            birth: "2000.01.01",
+            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
+            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
+          }
+        ],
+        8: [
+          {
+            name: "김영희",
+            birth: "2000.01.01",
+            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
+            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
+          }
+        ],
+        9: [
+          {
+            name: "바나나",
+            birth: "2000.01.01",
+            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
+            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
+          }
+        ],
+        10: [
+          {
+            name: "고양이",
+            birth: "2000.01.01",
+            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
+            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
+          }
+        ]
+    };
+
     return (
-        <>
-            <input 
-                type="file" 
-                accept=".pdf" 
-                multiple 
-                onChange={handleFileChange} 
-            />
-            <input type="text" onChange={handleChange}/>
-            {/* <button type="submit" onClick={()=>submitQuery("키워드")}>키워드검색</button> */}
-            <button type="submit" onClick={()=>submitQuery("벡터")}>검색</button>
-            <label>
-        <input
-          type="checkbox"
-          value="신입"
-          onChange={handleCheckboxChange}
-        />
-        신입
-      </label>
-      <label>
-        <input
-          type="checkbox"
-          value="3년이하"
-          onChange={handleCheckboxChange}
-        />
-        3년이하
-      </label>
-      <label>
-        <input
-          type="checkbox"
-          value="4년이상"
-          onChange={handleCheckboxChange}
-        />
-        4년이상 6년이하
-      </label>
-      <label>
-        <input
-          type="checkbox"
-          value="7년이상"
-          onChange={handleCheckboxChange}
-        />
-        7년이상
-      </label>
-            <div>
-                <h3>Selected Files:</h3>
-                <ul>
-                {files.map((file, index) => (
-                        <>
-                        <li key={index}>{file.source}</li>
-                        {/* <li key={index}>{file.score}</li> */}
-                        {/* <li key={index}>{file.context}</li>
-                        <li key={index}>{file.reason}</li> */}
-                        {/* <li key={index}>{file.content}</li> */}
-                        </>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                    ))}
-                </ul>
-                
+        <div className='ly_all el_bg ly_flexC ly_fitemC ly_interviewer'>
+            {loading ? (
+                <Loading />
+            ) : (
+            <div className='ly_maxWd hp_pt50 hp_pb50'>
+                {isFileUploaded ? (                    
+                    <>
+                        <div className='bl_search el_box'>
+                            <input className='bl_search__input' type="text" onChange={handleChange}/>
+                            <button className='bl_search__btn el_btnGradation' type="submit" onClick={()=>submitQuery("벡터")}><b className='WA'>검색</b></button>
+                        </div>
+                        <div className='bl_exprience ly_flexC ly_fitemC hp_mt20'>
+                            <span className='bl_exprience__ttl hp_36Color'>경력</span>
+                            <label className="container">
+                                <input type="checkbox" value="신입" onChange={handleCheckboxChange} />
+                                <span className="checkmark"></span> 신입
+                            </label>
+                            <label className="container">
+                                <input type="checkbox" value="1년이상 3년미만" onChange={handleCheckboxChange} />
+                                <span className="checkmark"></span> 1 ~ 3년
+                            </label>
+                            <label className="container">
+                                <input type="checkbox" value="3년이상 5년미만" onChange={handleCheckboxChange} />
+                                <span className="checkmark"></span> 3 ~ 5년
+                            </label>
+                            <label className="container">
+                                <input type="checkbox" value="5년이상 7년미만" onChange={handleCheckboxChange} />
+                                <span className="checkmark"></span> 5 ~ 7년
+                            </label>
+                            <label className="container">
+                                <input type="checkbox" value="7년이상 10년미만" onChange={handleCheckboxChange} />
+                                <span className="checkmark"></span> 7 ~ 10년
+                            </label>
+                            <label className="container">
+                                <input type="checkbox" value="10년이상" onChange={handleCheckboxChange} />
+                                <span className="checkmark"></span> 10년이상
+                            </label>
+                        </div>
+                        <div className='ly_flex ly_fitemC hp_mt50'>
+                            <p className='hp_fs22'>총 10개</p>
+                            <div className="filebox hp_ml20">
+                                <label htmlFor="file" className='el_btnXS el_btn0Back'>+ 이력서 추가</label> 
+                                <input type="file" id="file" accept=".pdf" multiple onChange={handleFileChange} style={{display: 'none'}}/>
+                            </div>
+                        </div>
+                        <div className='ly_flex ly_fitemStart hp_mt20 el_box el_box__result'>
+                            <div className={`bl_result  ${isResultActive ? 'hp_on' : ''}`}>
+                                <ul className='bl_resumeList'>
+                                    {Object.keys(summaryData).map((id) => (
+                                        <li 
+                                            key={id} 
+                                            onClick={() => handleListItemClick(id)}
+                                            className={activeResumeId === id ? 'hp_on' : ''}
+                                        >
+                                            {summaryData[id][0].name} ({summaryData[id][0].birth})
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className={`bl_resumeSummary el_box ${isResultActive ? 'hp_on' : ''}`}>
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <th>이름</th>
+                                            <td>{selectedResume?.name || ''}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>생년월일</th>
+                                            <td>{selectedResume?.birth || ''}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>보유기술</th>
+                                            <td>{selectedResume?.skill || ''}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>키워드</th>
+                                            <td>{selectedResume?.keyword?.join(', ') || ''}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <a className='bl_resumeSummary__btn el_btnM el_btnSkyBord hp_mt50 hp_w100' href=''>PDF 원본보기</a>
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                    <div className="filebox hp_alignC">
+                        <label htmlFor="file" className='el_uploadBtn el_btnL el_btn0Back hp_fontGmarket'>이력서 업로드</label> 
+                        <input type="file" id="file" accept=".pdf" multiple onChange={handleFileChange} style={{display: 'none'}}/>
+                        <p className='hp_fontGmarket hp_fs30 hp_mt50'>지원자들의 이력서를 모두 업로드 해주세요.</p>
+                        <p className='hp_fontGmarket hp_fs22 hp_mt10'>※ 업로드 양에 따라 분석하는데 시간이 더 소요될 수 있습니다.</p>
+                    </div>                    
+                )}
             </div>
-            {loading&&<h1>로딩</h1>}
-        </>
+            )}
+        </div>
     );
 }
 

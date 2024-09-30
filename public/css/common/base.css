@@ -59,9 +59,6 @@
 .el_btnM{border-radius:99px;font-size:17px;width:200px;padding:17px 0;display:block;text-align:center;}
 .el_btnL{border-radius:99px;font-size:24px;width:360px;padding:23px 0;display:block;text-align:center;}
 
-.el_btnblueBack{background:#006CD0;border:1px solid #006CD0;color:#fff;}
-.el_btnredBack{background:#f20000;border:1px solid #d00000;color:#fff;}
-.el_btnblueBord{background:#fff;border:1px solid #006CD0;color:#006CD0;}
 .el_btn8Back{background:#888;border:1px solid #888;color:#fff;}
 .el_btn8Bord{background:#fff;border:1px solid #888;color:#888;}
 .el_btn0Back{background:#000;border:1px solid #000;color:#fff;}
@@ -101,8 +98,6 @@ input[type=date].hp_inputBack,.hp_inputBack{background-color:#eee;border:none;}
 .hp_keepAll{word-break:keep-all;}
 .hp_breakAll{word-break:break-all;}
 .hp_ellipsis{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;vertical-align:middle;text-align:left;}
-.hp_ellipsis2{white-space:unset;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;}
-.hp_ellipsis3{white-space:unset;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;}
 .hp_overVisible{overflow:visible!important;}
 .hp_overHidden{overflow:hidden!important;}
 .hp_scrollX{overflow-x:scroll!important;}
@@ -147,17 +142,6 @@ input[type=date].hp_inputBack,.hp_inputBack{background-color:#eee;border:none;}
 
 .hp_fontNoto{font-family:'NotoKr'!important;}
 .hp_fontGmarket{font-family:'GmarketSans'!important;}
-.fascinate{
-font-family: "Fascinate Inline", system-ui;
-font-weight: 400;
-font-style: normal;
-}
-.matemasie {
-font-family: "Matemasie", sans-serif;
-font-weight: 400;
-font-style: normal;
-}
-
 
 .hp_fw300{font-weight:300!important;}
 .hp_fw400{font-weight:400!important;}
