@@ -4,67 +4,99 @@ import Loading from '../pages/Loading';
 function Interviewer() {
     const [files, setFiles] = useState([]);
     const [query, setQuery] = useState('');
-    
     const [loading, setLoading] = useState(false);
-    const handleChange = (event) => setQuery(event.target.value);
-    const [selectedOptions, setSelectedOptions] = useState([]);
+    const [summaryData, setSummaryData] = useState({});
     const [isFileUploaded, setIsFileUploaded] = useState(false);
-    const handleFileChange = (event) => {
-        const selectedFiles = Array.from(event.target.files);
-        setFiles(selectedFiles);
-        setIsFileUploaded(true);
-    };
-
-    const handleUpload = () => {
-        console.log('Uploaded files:', files);
-    };
-    const handleCheckboxChange = (event) => {
-        const value = event.target.value;
-        if (selectedOptions.includes(value)) {
-          // 이미 선택된 항목이면 제거
-          setSelectedOptions(selectedOptions.filter((option) => option !== value));
-        } else {
-          // 선택되지 않은 항목이면 추가
-          setSelectedOptions([...selectedOptions, value]);
-        }
-    };
-    const submitQuery = async (value) =>{
-        const formData = new FormData();
-        formData.append("query",query);
-        selectedOptions.forEach(option => {
-            formData.append("career_options", option);
-        });
-        console.log(selectedOptions)
-        setLoading(true);
-        try {
-            
-            if(value=="키워드"){const response = await fetch(`http://localhost:8000/search_resumes_nori`, {
-                method: 'POST',
-                body: formData,
-            });
-            const data = await response.json(); // JSON 데이터로 변환
-            
-            setFiles(data); // 받아온 배열 데이터를 상태로 저장
-        }
-        else if(value=="벡터"){
-            const response = await fetch(`http://localhost:8000/search_resumes_openai`, {
-                method: 'POST',
-                body: formData,
-            });
-            const data = await response.json(); // JSON 데이터로 변환
-            setFiles(data); // 받아온 배열 데이터를 상태로 저장
-        }
-     }catch (error) {
-         console.error('에러 발생:', error);
-     }
-     setLoading(false);
-}
-
+    const [selectedOptions, setSelectedOptions] = useState([]);
     const [isResultActive, setIsResultActive] = useState(false);
     const [selectedResume, setSelectedResume] = useState(null);
     const [activeResumeId, setActiveResumeId] = useState(null);
+    const [error, setError] = useState(null);
+    const [pdfFiles, setPdfFiles] = useState({});
+
+    const handleChange = (event) => setQuery(event.target.value);
+
+    const handleFileChange = async (event) => {
+        const selectedFiles = Array.from(event.target.files);
+        setFiles(selectedFiles);
+        setIsFileUploaded(true);
+    
+        const formData = new FormData();
+        const newPdfFiles = {};
+        selectedFiles.forEach((file) => {
+            formData.append(`files`, file);
+            formData.append(`sources`, file.name);
+            newPdfFiles[file.name] = file;
+        });
+        setPdfFiles(newPdfFiles);
+    
+        try {
+            setLoading(true);
+            setError(null);
+    
+            // Reset index first
+            const clearResponse = await fetch("http://localhost:8000/reset_index", {
+                method: 'POST',
+            });
+            if (!clearResponse.ok) {
+                throw new Error('인덱스 초기화 중 오류가 발생했습니다.');
+            }
+
+            // Then upload PDF files
+            const response = await fetch('http://localhost:8000/pdf', {
+                method: 'POST',
+                body: formData,
+            });
+    
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.detail || '파일 업로드 중 오류가 발생했습니다.');
+            }
+    
+            const data = await response.json();
+            setSummaryData(data);
+        } catch (error) {
+            console.error('오류:', error);
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCheckboxChange = (event) => {
+        const value = event.target.value;
+        if (selectedOptions.includes(value)) {
+            setSelectedOptions(selectedOptions.filter((option) => option !== value));
+        } else {
+            setSelectedOptions([...selectedOptions, value]);
+        }
+    };
+
+    const submitQuery = async (value) => {
+        const formData = new FormData();
+        formData.append("query", query);
+        selectedOptions.forEach(option => {
+            formData.append("career_options", option);
+        });
+
+        setLoading(true);
+        try {
+            const endpoint = value === "키워드" ? "search_resumes_nori" : "search_resumes_openai";
+            const response = await fetch(`http://localhost:8000/${endpoint}`, {
+                method: 'POST',
+                body: formData,
+            });
+            const data = await response.json();
+            setSummaryData(data);
+        } catch (error) {
+            console.error('Error occurred:', error);
+        }
+        setLoading(false);
+    };
+
 
     const handleListItemClick = (id) => {
+
         if (activeResumeId === id) {
             setActiveResumeId(null);
             setIsResultActive(false);
@@ -72,94 +104,70 @@ function Interviewer() {
         } else {
             setActiveResumeId(id);
             setIsResultActive(true);
-            const resumeData = summaryData[id] && summaryData[id][0];
+            const resumeData = summaryData[id];
             setSelectedResume(resumeData);
         }
     };
 
-    // 이다정
-    const summaryData = {
-        1: [
-          {
-            name: "홍길동",
-            birth: "1996.01.01",
-            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
-            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
-          }
-        ],
-        2: [
-          {
-            name: "김철수",
-            birth: "2000.01.01",
-            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
-            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
-          }
-        ],
-        3: [
-          {
-            name: "김영희",
-            birth: "2000.01.01",
-            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
-            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
-          }
-        ],
-        4: [
-          {
-            name: "바나나",
-            birth: "2000.01.01",
-            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
-            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
-          }
-        ],
-        5: [
-          {
-            name: "고양이",
-            birth: "2000.01.01",
-            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
-            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
-          }
-        ],
-        6: [
-          {
-            name: "홍길동",
-            birth: "1996.01.01",
-            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
-            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
-          }
-        ],
-        7: [
-          {
-            name: "김철수",
-            birth: "2000.01.01",
-            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
-            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
-          }
-        ],
-        8: [
-          {
-            name: "김영희",
-            birth: "2000.01.01",
-            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
-            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
-          }
-        ],
-        9: [
-          {
-            name: "바나나",
-            birth: "2000.01.01",
-            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
-            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
-          }
-        ],
-        10: [
-          {
-            name: "고양이",
-            birth: "2000.01.01",
-            skill: "Java, Python, C++, C#, UI/UX Design Figma Adobe XD Sketch HTML5 CSS3/SASS JavaScript React, Next.js Styled-components Git",
-            keyword: ["소통", "협력", "리더쉽", "긍정적", "진취적"]
-          }
-        ]
+    const handlePdfView = (fileName) => {
+        console.log('Attempting to open PDF with fileName:', fileName);
+        const file = pdfFiles[fileName];
+        if (file) {
+            const fileUrl = URL.createObjectURL(file);
+            window.open(fileUrl, '_blank');
+        } else {
+            console.error('PDF 파일을 찾을 수 없습니다.');
+            alert('PDF 파일을 열 수 없습니다. 파일을 찾을 수 없습니다.');
+        }
     };
+
+    const TechnicalSkillsRows = ({ skills }) => {
+        if (!skills || skills === '정보 없음') {
+            return (
+                <tr>
+                    <th>보유 기술</th>
+                    <td>정보 없음</td>
+                </tr>
+            );
+        }
+    
+        const skillCategories = skills.split('/ ').reduce((acc, item) => {
+            const [category, skillList] = item.split(': ');
+            if (skillList && skillList.trim() !== '') {  // 스킬 리스트가 있고 비어있지 않은 경우만 추가
+                acc[category] = skillList.trim();
+            }
+            return acc;
+        }, {});
+    
+        // 모든 카테고리가 비어있는 경우 처리
+        if (Object.keys(skillCategories).length === 0) {
+            return (
+                <tr>
+                    <th>보유 기술</th>
+                    <td>정보 없음</td>
+                </tr>
+            );
+        }
+    
+        return (
+            <tr>
+                <th>보유<br/>기술</th>
+                <td>
+                    <table className="inner-table">
+                        <tbody>
+                            {Object.entries(skillCategories).map(([category, skillList]) => (
+                                <tr key={category}>
+                                    <th>{category.toUpperCase()}</th>
+                                    <td>{skillList}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        );
+    };
+
 
     return (
         <div className='ly_all el_bg ly_flexC ly_fitemC ly_interviewer'>
@@ -201,51 +209,65 @@ function Interviewer() {
                             </label>
                         </div>
                         <div className='ly_flex ly_fitemC hp_mt50'>
-                            <p className='hp_fs22'>총 10개</p>
-                            <div className="filebox hp_ml20">
-                                <label htmlFor="file" className='el_btnXS el_btn0Back'>+ 이력서 추가</label> 
-                                <input type="file" id="file" accept=".pdf" multiple onChange={handleFileChange} style={{display: 'none'}}/>
+                                <p className='hp_fs22'>총 {summaryData.length}개</p>
+                                <div className="filebox hp_ml20">
+                                    {/* <label htmlFor="file" className='el_btnXS el_btn0Back'>+ 이력서 추가</label>  */}
+                                    {/* <input type="file" id="file" accept=".pdf" multiple onChange={handleFileChange} style={{display: 'none'}}/> */}
+                                </div>
                             </div>
-                        </div>
-                        <div className='ly_flex ly_fitemStart hp_mt20 el_box el_box__result'>
-                            <div className={`bl_result  ${isResultActive ? 'hp_on' : ''}`}>
-                                <ul className='bl_resumeList'>
-                                    {Object.keys(summaryData).map((id) => (
-                                        <li 
-                                            key={id} 
-                                            onClick={() => handleListItemClick(id)}
-                                            className={activeResumeId === id ? 'hp_on' : ''}
-                                        >
-                                            {summaryData[id][0].name} ({summaryData[id][0].birth})
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                            <div className={`bl_resumeSummary el_box ${isResultActive ? 'hp_on' : ''}`}>
-                                <table>
-                                    <tbody>
+                            <div className='ly_flex ly_fitemStart hp_mt20 el_box el_box__result'>
+                                <div className={`bl_result  ${isResultActive ? 'hp_on' : ''}`}>
+                                    <ul className='bl_resumeList'>
+                                    {Object.entries(summaryData).map(([id, resume]) => (
+                                            <li 
+                                                key={id}
+                                                onClick={() => handleListItemClick(id)}
+                                                className={activeResumeId === id ? 'hp_on' : ''}
+                                            >
+                                                {resume.name} ({resume.date_of_birth})
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                <div className={`bl_resumeSummary el_box ${isResultActive ? 'hp_on' : ''}`}>
+                                {selectedResume && (
+                                    <table>
+                                        <tbody>
                                         <tr>
                                             <th>이름</th>
-                                            <td>{selectedResume?.name || ''}</td>
+                                            <td>{selectedResume.name || '정보 없음'}</td>
                                         </tr>
                                         <tr>
                                             <th>생년월일</th>
-                                            <td>{selectedResume?.birth || ''}</td>
+                                            <td>{selectedResume.date_of_birth || '정보 없음'}</td>
                                         </tr>
                                         <tr>
-                                            <th>보유기술</th>
-                                            <td>{selectedResume?.skill || ''}</td>
+                                            <th>프로젝트 수</th>
+                                            <td>{selectedResume.number_of_projects || '정보 없음'}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>프로젝트 이름</th>
+                                            <td>{selectedResume.project_description || '정보 없음'}</td>
                                         </tr>
                                         <tr>
                                             <th>키워드</th>
-                                            <td>{selectedResume?.keyword?.join(', ') || ''}</td>
+                                            <td>{selectedResume.summary_keywords || '정보 없음'}</td>
                                         </tr>
-                                    </tbody>
-                                </table>
-                                <a className='bl_resumeSummary__btn el_btnM el_btnSkyBord hp_mt50 hp_w100' href=''>PDF 원본보기</a>
+                                        <TechnicalSkillsRows skills={selectedResume.technical_skills} />
+                                        <tr>
+                                            <th>경력</th>
+                                            <td>{selectedResume.work_experience || '정보 없음'}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    )}
+                                    <button 
+                                    className='bl_resumeSummary__btn el_btnM el_btnSkyBord hp_mt50 hp_w100' 
+                                    onClick={() => handlePdfView(selectedResume.source)}
+                                    > PDF 원본보기 </button>
+                                </div>
                             </div>
-                        </div>
-                    </>
+                        </>
                 ) : (
                     <div className="filebox hp_alignC">
                         <label htmlFor="file" className='el_uploadBtn el_btnL el_btn0Back hp_fontGmarket'>이력서 업로드</label> 
