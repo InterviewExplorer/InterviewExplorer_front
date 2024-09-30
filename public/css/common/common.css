@@ -72,7 +72,7 @@
 .ly_report h2{font-size:24px;margin-bottom:15px;font-weight:600;}
 .el_box__each:hover{background-color:rgba(255,255,255,0.6);}
 .bl_each{margin-top:30px;background:#fff;padding:15px;border-radius:30px;}
-.bl_each__q{background: linear-gradient(90deg, #7e6bfc 0%, #71b1fc 100%);color:#fff;display:inline-flex;width:40px;height:40px;border-radius:50%;justify-content:center;align-items:center;font-family:'GmarketSans';font-size:20px;margin-right:10px;padding-top:2px;border:1px solid rgba(255,255,255,0.7);}
+.bl_each__q{background: linear-gradient(90deg, #7e6bfc 0%, #71b1fc 100%);color:#fff;display:inline-flex;width:40px;height:40px;border-radius:50%;justify-content:center;align-items:center;font-family:'GmarketSans';font-size:20px;margin-right:22px;padding-top:2px;border:1px solid rgba(255,255,255,0.7);}
 .bl_each__question{font-size:19px;display:flex;align-items:center;}
 .bl_each__dots{width:40px;height:40px;background:url('/img/icon/dots_purple.png')no-repeat center/22px;}
 .bl_eachTB{margin-top:10px;}

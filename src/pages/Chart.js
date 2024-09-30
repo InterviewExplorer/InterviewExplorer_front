@@ -10,7 +10,7 @@ const labelToKeyMap = {
     '협업 및 소통': 'collaboration_communication',
     '정직성(신뢰성)': 'honesty_reliability',
     '대인관계': 'interpersonal_skills',
-    '동기부여(열정)': 'motivation_passion',
+    '동기부여(열정)': 'self_motivation_passion',
     '적응력': 'adaptability',
     '자기인식': 'self_awareness'
 };
@@ -37,6 +37,7 @@ const MyResponsiveRadar = ({ data }) => (
         colors={['#BB7BDF', '#B5BBE3']}
         blendMode="multiply"
         motionConfig="wobbly"
+        animate={false}  // 애니메이션 비활성화 : 콘솔창 에러때문에 적용
         legends={[
             {
                 anchor: 'top-right',
@@ -79,6 +80,7 @@ function Chart({ blHeight, criteriaScores, type, job, years }) {
                 
                 const data = await response.json();
                 setAverageScore(data)
+                console.log("averageScore", averageScore)
 
             } catch (error) {
                 console.error('Error fetching averages:', error);
@@ -97,12 +99,16 @@ function Chart({ blHeight, criteriaScores, type, job, years }) {
     const data = elements.map((element) => {
         const key = labelToKeyMap[element];
         const score = key ? calculateAverage(criteriaScores[key] || []) : 0;
-        const average = averageScore[key] || 0;
-        
+        let average = 0; // 초기값을 0으로 설정
+
+        if (averageScore && Object.keys(averageScore).length > 0) {
+            average = averageScore[key] || 0;
+        }
+
         return {
             element,
             '면접자': score,
-            '평균': isNaN(average) ? 0 : average,
+            '평균': average,
         };
     });
 

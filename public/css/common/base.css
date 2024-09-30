@@ -145,6 +145,7 @@ input[type=date].hp_inputBack,.hp_inputBack{background-color:#eee;border:none;}
 
 .hp_fw300{font-weight:300!important;}
 .hp_fw400{font-weight:400!important;}
+.hp_fw600{font-weight:600!important;}
 .hp_fw700{font-weight:700!important;}
 .hp_fs11{font-size:11px!important;}
 .hp_fs12{font-size:12px!important;}
@@ -182,13 +183,11 @@ input[type=date].hp_inputBack,.hp_inputBack{background-color:#eee;border:none;}
 .hp_7Color{color:#777!important;}
 
 .hp_skyColor{color:#869ddc!important;}
+.hp_purpleColor{color:#6f82fe!important;}
 
-.hp_pointColor{color:#426B1F!important;}
-.hp_blueColor{color:#006CD0!important;}
-.hp_redColor{color:red!important;}
 
 .hp_fBack{background-color:#fff!important;}
-.hp_0Back{background-color:#000!important;}
+.hp_0Back{background-color:#701616!important;}
 .hp_f9Back{background-color:#f9f9f9!important;}
 .hp_dBack{background-color:#ddd!important;}
 .hp_skyBack{background-color:rgb(232, 240, 254)!important;}
