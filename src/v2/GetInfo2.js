@@ -38,7 +38,7 @@ function GetInfo2() {
 
             const resumeQuestions = await resumeQuestion.json();
             console.log("resumeQuestions", resumeQuestions)
-
+            
             // 기본질문 Q3 ~ 7
             const response = await fetch(`http://localhost:8000/${url}`, {
                 method: 'POST',
@@ -51,8 +51,9 @@ function GetInfo2() {
             console.log("basicQuestions", basicQuestions)
 
             const formData2 = new FormData();
+            for (const key in resumeQuestions) formData2.append(key, resumeQuestions[key]);
             for (const key in basicQuestions) formData2.append(key, basicQuestions[key]);
-
+            
             // 면접관 영상
             const response2 = await fetch('http://localhost:8000/ai-presenter/', {
                 method: 'POST',
