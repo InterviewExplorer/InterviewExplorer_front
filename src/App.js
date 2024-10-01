@@ -14,6 +14,7 @@ import Guide2 from "./v2/Guide2";
 import Interview2 from "./v2/Interview2";
 import Report2 from "./v2/Report2";
 import Interviewer from "./v2/Interviewer";
+import Upload from "./v2/Upload";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/interview" element={<Interview2 />} />
           <Route path="/report" element={<Report2 />} />
           <Route path="/interviewer" element={<Interviewer />}/>
+          <Route path="/upload" element={<Upload />}/>
 
         </Routes>
       </BrowserRouter>
