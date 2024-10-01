@@ -15,7 +15,7 @@ function Interviewer() {
     const [activeResumeId, setActiveResumeId] = useState(null);
     const [error, setError] = useState(null);
     const [pdfFiles, setPdfFiles] = useState({});
-
+    const [scores, setScores] = useState([])
     useEffect(() => {
         if (location.state) {
             if (location.state.pdfData) {
@@ -26,6 +26,28 @@ function Interviewer() {
             }
         }
     }, [location.state]);
+
+
+
+
+    useEffect(() => {
+        if (summaryData && typeof summaryData === 'object' && Object.keys(summaryData).length > 0 && scores && scores.length > 0) {
+          const summaryArray = Object.values(summaryData).filter(item => typeof item === 'object');
+          const updatedSummaryData = summaryArray
+      .filter(resumeItem => scores.some(scoreItem => scoreItem.source === resumeItem.source))
+      .map(resumeItem => {
+        const scoreItem = scores.find(scoreItem => scoreItem.source === resumeItem.source);
+        return { ...resumeItem, score: scoreItem ? scoreItem.score : 0 };
+      })
+      .sort((a, b) => b.score - a.score); // 점수 내림차순 정렬
+    
+    setSummaryData(updatedSummaryData);
+        }
+      }, [scores]);
+
+
+
+
 
     const handleChange = (event) => setQuery(event.target.value);
 
@@ -41,19 +63,19 @@ function Interviewer() {
     const submitQuery = async (value) => {
         const formData = new FormData();
         formData.append("query", query);
-        selectedOptions.forEach(option => {
-            formData.append("career_options", option);
-        });
+        
 
         setLoading(true);
         try {
-            const endpoint = value === "키워드" ? "search_resumes_nori" : "search_resumes_openai";
+            const endpoint = "search_resumes";
             const response = await fetch(`http://localhost:8000/${endpoint}`, {
                 method: 'POST',
                 body: formData,
             });
             const data = await response.json();
-            setSummaryData(data);
+            setScores(data)
+            // setSummaryData(data);
+            console.log(data)
         } catch (error) {
             console.error('Error occurred:', error);
         }
