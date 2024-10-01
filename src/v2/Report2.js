@@ -44,49 +44,74 @@ function Report2() {
         setIsAllOpen(allOpen); // 전체 상태 업데이트
     };
 
-    const evaluateAnswer = async (question, answer) => {
+    const evaluateAnswer = async (question, answer, answerKey) => {
         try {
-            const response = await fetch('http://localhost:8000/each', {
+            let response;
+            let endpoint;
+
+            // A1부터 A7까지는 'each' 엔드포인트로 전송
+            if (['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7'].includes(answerKey)) {
+                endpoint = 'each';
+            } 
+            // A8은 'newQ_evaluate' 엔드포인트로 전송
+            else if (answerKey === 'A8') {
+                endpoint = 'newQ_evaluate';
+            } 
+            // A9와 A10은 'test' 엔드포인트로 전송
+            else if (['A9', 'A10'].includes(answerKey)) {
+                endpoint = 'newQ_evaluate'; // 일단 이렇게 테스트
+            } 
+            else {
+                return { 평가: "평가 대상이 아닙니다." };
+            }
+
+            response = await fetch(`http://localhost:8000/${endpoint}`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: JSON.stringify({ question, answer, years, job, type }),
+                body: new URLSearchParams({
+                    question: question,
+                    answer: answer,
+                    years: years,
+                    job: job,
+                    type: type
+                }),
             });
-    
+
             if (!response.ok) {
-                throw new Error('평가 요청에 실패했습니다.');
+                throw new Error(`${endpoint} 평가 요청에 실패했습니다.`);
             }
-    
+
             const data = await response.json();
-    
+            console.log("@@@data", data);
+
             // criteria_scores를 상태에 저장
             if (data.evaluation && data.evaluation.criteria_scores) {
                 setCriteriaScores(prevScores => {
-                    const updatedScores = { ...prevScores }; // 기존 상태 복사
-    
+                    const updatedScores = { ...prevScores };
+
                     Object.keys(data.evaluation.criteria_scores).forEach(key => {
                         const value = data.evaluation.criteria_scores[key];
                         
                         if (value !== null) {
                             if (!updatedScores[key]) {
-                                updatedScores[key] = []; // key가 없으면 배열 초기화
+                                updatedScores[key] = [];
                             }
-                            updatedScores[key].push(value); // 배열에 값 추가
+                            updatedScores[key].push(value);
                         }
                     });
-    
-                    return updatedScores; // 새로운 상태 반환
+
+                    return updatedScores;
                 });
             }
-    
+
             return data.evaluation;
         } catch (error) {
             console.error('에러 발생:', error);
             return { 평가: "평가를 불러오는 데 실패했습니다." };
         }
     };
-    
 
     const evaluateSpeaking = async (answers) => {
         try {
@@ -168,25 +193,29 @@ function Report2() {
             const evaluations = {};
             const explanations = [];
 
-            for (let i = 0; i < Object.keys(questions).length; i++) {
-                const questionKey = `Q${i + 1}`;
-                const answerKey = `A${i + 1}`;
+            for (const answerKey in answers) {
+                if (answers.hasOwnProperty(answerKey)) {
+                    const questionKey = `Q${answerKey.slice(1)}`;
+                    const question = questions ? questions[questionKey] : null;
+                    const answer = answers[answerKey];
 
-                const question = questions ? questions[questionKey] : null;
-                const answer = answers ? answers[answerKey] : null;
+                    if (question && answer !== null) {
+                        const evaluation = await evaluateAnswer(question, answer, answerKey);
+                        evaluations[questionKey] = evaluation;
 
-                if (question && answer) {
-                    const evaluation = await evaluateAnswer(question, answer);
-                    evaluations[questionKey] = evaluation;
-
-                    if (evaluation.설명) {
-                        explanations.push(evaluation.설명);
+                        // 여기를 수정합니다
+                        if (evaluation && evaluation.explanation) {
+                            explanations.push(evaluation.explanation);
+                        }
                     }
                 }
             }
 
             setEvaluations(evaluations);
             setExplains(explanations);
+            
+            console.log("@@@evaluations", evaluations);
+            console.log("@@@explanations", explanations);
 
             // 평균 점수 계산
             const avgScore = calculateAverageScore(evaluations);
@@ -331,7 +360,7 @@ function Report2() {
                                             {type === "technical" && (
                                             <tr>
                                                 <th>모범<br/>답안</th>
-                                                <td>{evaluation.ideal || "모범답안 정보가 없습니다."}</td>
+                                                <td>{evaluation.model || "모범답안 정보가 없습니다."}</td>
                                             </tr>
                                             )}
                                             {type === "behavioral" && (
