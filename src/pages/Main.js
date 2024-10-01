@@ -12,7 +12,7 @@ function Main() {
                         <div className='el_box el_box__main'>
                             <div className='el_box__txt'>면접관 ver</div>
                             <div className='el_box__icon el_icon__interviewer'></div>
-                            <Link to="/interviewer" className='el_btnS el_btn0Back hp_w100'>시작하기</Link>
+                            <Link to="/upload" className='el_btnS el_btn0Back hp_w100'>시작하기</Link>
                         </div>
                         <div className='el_box el_box__main hp_ml30'>
                             <div className='el_box__txt'>지원자 ver</div>
