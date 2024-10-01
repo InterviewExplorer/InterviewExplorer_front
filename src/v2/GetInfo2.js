@@ -22,34 +22,47 @@ function GetInfo2() {
         const formData = new FormData();
         formData.append('job', job);
         formData.append('years', years);
-        formData.append("interviewType", interviewType)
+        formData.append("interviewType", interviewType);
         if (pdfFile) formData.append('file', pdfFile);
 
         setLoading(true);
 
         try {
-            // 이력서질문 Q1,2
-            const resumeUrl = interviewType === "technical" ? "technical_resume" : "behavioral_resume";
-
-            const resumeQuestion = await fetch(`http://localhost:8000/${resumeUrl}`, {
-                method: 'POST',
-                body: formData,
-            });
-
-            const resumeQuestions = await resumeQuestion.json();
-            console.log("resumeQuestions", resumeQuestions)
-            
             // 기본질문 Q3 ~ 7
             const response = await fetch(`http://localhost:8000/${url}`, {
                 method: 'POST',
                 body: formData,
             });
 
-            if (!response.ok) throw new Error('질문 생성에 실패했습니다.');
+            if (!response.ok) throw new Error('기본 질문 생성에 실패했습니다.');
 
             const basicQuestions = await response.json();
-            console.log("basicQuestions", basicQuestions)
+            console.log("basicQuestions", basicQuestions);
 
+            // 이력서질문 Q1,2 (기본 질문 포함)
+            const resumeFormData = new FormData();
+            resumeFormData.append('job', job);
+            resumeFormData.append('years', years);
+            resumeFormData.append("interviewType", interviewType);
+            if (pdfFile) resumeFormData.append('file', pdfFile);
+            
+            // 기본 질문 추가
+            Object.entries(basicQuestions).forEach(([key, value]) => {
+                resumeFormData.append(`basicQuestion_${key}`, value);
+            });
+
+            const resumeUrl = interviewType === "technical" ? "technical_resume" : "behavioral_resume";
+            const resumeResponse = await fetch(`http://localhost:8000/${resumeUrl}`, {
+                method: 'POST',
+                body: resumeFormData,
+            });
+
+            if (!resumeResponse.ok) throw new Error('이력서 질문 생성에 실패했습니다.');
+
+            const resumeQuestions = await resumeResponse.json();
+            console.log("resumeQuestions", resumeQuestions);
+
+            // 면접관 영상
             const formData2 = new FormData();
             for (const key in resumeQuestions) formData2.append(key, resumeQuestions[key]);
             for (const key in basicQuestions) formData2.append(key, basicQuestions[key]);
@@ -75,13 +88,8 @@ function GetInfo2() {
 
     const handleFindType = (e) => {
         e.preventDefault();
-        let type = ""
-        if (e.target.value === "기술면접 응시") {
-            type = "technical"
-        } else {
-            type = "behavioral"
-        }
-        submitInterview("basic_question", type)
+        let type = e.target.value === "기술면접 응시" ? "technical" : "behavioral";
+        submitInterview("basic_question", type);
     }
 
     return (
