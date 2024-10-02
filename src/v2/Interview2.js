@@ -1,7 +1,6 @@
 import React, { useState, useEffect,useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import VideoRecorder from '../pages/VideoRecorder';
-import FollowUp from "./FollowQuestion";
 import LastestQuestions from "./LatestQuestions";
 import FollowQuestions from './FollowQuestion';
 
@@ -165,16 +164,6 @@ function Interview2() {
                                 </div>
                             </div>
                         </div>
-                        <FollowUp 
-                            job={job} 
-                            years={years} 
-                            answers={answers} 
-                            questions={questions} 
-                            handleQuestion={handleQuestion} 
-                            initialQuestionCount={initialQuestionCount} 
-                            handleInterviewerUpdate={handleInterviewerUpdate}
-                            type={type}
-                        />
                         <LastestQuestions job={job} type={type} answers={answers} handleQuestion={handleQuestion} questions={questions} />
                         <FollowQuestions job={job} type={type} answers={answers} handleQuestion={handleQuestion} questions={questions} />
                     </>
