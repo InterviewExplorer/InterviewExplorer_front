@@ -1,8 +1,8 @@
 import React, { useState, useEffect,useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import VideoRecorder from '../pages/VideoRecorder';
-import FollowUp from "../v2/FollowUp2";
 import LastestQuestions from "./LatestQuestions";
+import FollowQuestions from './FollowQuestion';
 
 function Interview2() {
     const initialQuestions = {Q1: null,Q2: null,Q3: null,Q4: null,Q5: null,Q6: null,Q7: null,Q8: null,Q9: null,Q10: null};
@@ -164,17 +164,8 @@ function Interview2() {
                                 </div>
                             </div>
                         </div>
-                        <FollowUp 
-                            job={job} 
-                            years={years} 
-                            answers={answers} 
-                            questions={questions} 
-                            handleQuestion={handleQuestion} 
-                            initialQuestionCount={initialQuestionCount} 
-                            handleInterviewerUpdate={handleInterviewerUpdate}
-                            type={type}
-                        />
                         <LastestQuestions job={job} type={type} answers={answers} handleQuestion={handleQuestion} questions={questions} />
+                        <FollowQuestions job={job} type={type} answers={answers} handleQuestion={handleQuestion} questions={questions} />
                     </>
                 )}
             </div>
