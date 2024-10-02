@@ -188,6 +188,7 @@ function Interviewer() {
                     <div className={`bl_resumeSummary el_box ${isResultActive ? 'hp_on' : ''}`}>
                         {selectedResume && (
                             <>
+                                <h3 className='hp_purpleColor hp_fs18 hp_mb10'>{selectedResume.summary_keywords || '정보 없음'}</h3>
                                 <table>
                                     <tbody>
                                     <tr>
@@ -207,13 +208,13 @@ function Interviewer() {
                                         <td>{selectedResume.project_description || '정보 없음'}</td>
                                     </tr>
                                     <tr>
-                                        <th>키워드</th>
-                                        <td>{selectedResume.summary_keywords || '정보 없음'}</td>
-                                    </tr>
-                                    <tr>
                                         <th>경력</th>
                                         <td>{selectedResume.work_experience || '정보 없음'}</td>
                                     </tr>
+                                    {/* <tr>
+                                        <th>키워드</th>
+                                        <td>{selectedResume.summary_keywords || '정보 없음'}</td>
+                                    </tr> */}
                                     </tbody>
                                 </table>
                                 <h3 className='hp_purpleColor hp_fs18 hp_mt40 hp_mb10'>보유기술</h3>

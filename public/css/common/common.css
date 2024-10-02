@@ -105,7 +105,7 @@
 .bl_resumeSummary table{text-align:left;width:650px;}
 .bl_resumeSummary table *{font-size:18px;}
 .bl_resumeSummary table tr{border-top:1px solid rgba()}
-.bl_resumeSummary table th{color:#777;width:120px;}
+.bl_resumeSummary table th{color:#777;width:150px;}
 .bl_resumeSummary table td{padding:7px 0;}
 
 /* 체크박스 */
