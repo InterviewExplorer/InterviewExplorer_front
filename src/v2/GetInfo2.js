@@ -15,6 +15,7 @@ function GetInfo2() {
 
     const submitInterview = async (url, interviewType) => {
         if (!job || !years) {
+            
             alert('직업군과 연차는 필수 입력 항목입니다.');
             return;
         }
