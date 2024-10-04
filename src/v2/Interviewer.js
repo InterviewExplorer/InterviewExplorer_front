@@ -16,10 +16,15 @@ function Interviewer() {
     const [error, setError] = useState(null);
     const [pdfFiles, setPdfFiles] = useState({});
     const [scores, setScores] = useState([])
+    const [filteredResume,setFilteredResume]=useState([])
+    const [tempSummaryData, setTempSummaryData] = useState();
+
     useEffect(() => {
         if (location.state) {
             if (location.state.pdfData) {
-                setSummaryData(location.state.pdfData);
+                setSummaryData(Object.values(location.state.pdfData).sort((a, b) => a.name.localeCompare(b.name, 'ko')));
+                setTempSummaryData(Object.values(location.state.pdfData).sort((a, b) => a.name.localeCompare(b.name, 'ko')))
+                
             }
             if (location.state.newPdfFiles) {
                 setPdfFiles(location.state.newPdfFiles);
@@ -31,7 +36,9 @@ function Interviewer() {
 
 
     useEffect(() => {
-        if (summaryData && typeof summaryData === 'object' && Object.keys(summaryData).length > 0 && scores && scores.length > 0) {
+        
+        if (summaryData && typeof summaryData === 'object' && Object.keys(summaryData).length > 0 && scores) {
+            
           const summaryArray = Object.values(summaryData).filter(item => typeof item === 'object');
           const updatedSummaryData = summaryArray
       .filter(resumeItem => scores.some(scoreItem => scoreItem.source === resumeItem.source))
@@ -40,31 +47,102 @@ function Interviewer() {
         return { ...resumeItem, score: scoreItem ? scoreItem.score : 0 };
       })
       .sort((a, b) => b.score - a.score); // 점수 내림차순 정렬
-    
+      console.log(updatedSummaryData)
     setSummaryData(updatedSummaryData);
+    
         }
+        
       }, [scores]);
 
+    useEffect(()=>{
+        if(tempSummaryData){
+            
+            const loadData = async () => {
+                
+                if(selectedOptions.length===0){
+                    
+                    setSummaryData(tempSummaryData);
+                    return;
+                }
+                setSummaryData(tempSummaryData);
+                const formdata = new FormData();
+                selectedOptions.forEach((item) => {
+                  formdata.append("career_options", item);
+                });
+                
+                try {
+                  const response = await fetch("http://localhost:8000/career_filter", {
+                    method: 'POST',
+                    body: formdata
+                  });
+                  const data = await response.json();
+                  setFilteredResume(data);
+                } catch (error) {
+                  console.error('Error:', error);
+                }
+              };
+              
+              loadData();
+              
+        }
+        
+    },[selectedOptions])
+    useEffect(() => {
+        
+        if (summaryData && typeof summaryData === 'object' && Object.keys(summaryData).length > 0 && filteredResume) {
+            
+          const summaryArray = Object.values(summaryData).filter(item => typeof item === 'object');
+          const updatedSummaryData = summaryArray
+      .filter(resumeItem => filteredResume.some(scoreItem => scoreItem.source === resumeItem.source))
+      .map(resumeItem => {
+        const scoreItem = filteredResume.find(scoreItem => scoreItem.source === resumeItem.source);
+        return { ...resumeItem, filteredResume: scoreItem ? scoreItem.career : 0 };
+      })
+      .sort((a, b) => b.career - a.career); 
+      setSummaryData(updatedSummaryData)
+      
+        }
+        
+      }, [filteredResume]);
 
 
+      const handleProjectListClick =(event) =>{
+        if (event.target.checked) {
+                const sortedData=Object.values(summaryData).sort((a,b)=>b.number_of_projects-a.number_of_projects)
+                setSummaryData(sortedData)}
+        else{
+            const sortedData=Object.values(summaryData).sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+            setSummaryData(sortedData)
 
-
+        }
+                
+            }
+        
+        
+        
+        
     const handleChange = (event) => setQuery(event.target.value);
 
     const handleCheckboxChange = (event) => {
         const value = event.target.value;
-        if (selectedOptions.includes(value)) {
-            setSelectedOptions(selectedOptions.filter((option) => option !== value));
-        } else {
+        if(event.target.checked){
             setSelectedOptions([...selectedOptions, value]);
         }
+        
+            
+         else {
+            setSelectedOptions(selectedOptions.filter((option) => option !== value));
+            
+        }
+        
+        
     };
 
     const submitQuery = async (value) => {
         const formData = new FormData();
         formData.append("query", query);
         
-
+        // setSummaryData(location.state.pdfData)
         setLoading(true);
         try {
             const endpoint = "search_resumes";
@@ -166,25 +244,30 @@ function Interviewer() {
                         <span className="checkmark"></span> 신입
                     </label>
                     <label className="container">
-                        <input type="checkbox" value="1년이상 3년미만" onChange={handleCheckboxChange} />
+                        <input type="checkbox" value="1~3년" onChange={handleCheckboxChange} />
                         <span className="checkmark"></span> 1 ~ 3년
                     </label>
                     <label className="container">
-                        <input type="checkbox" value="3년이상 5년미만" onChange={handleCheckboxChange} />
+                        <input type="checkbox" value="3~5년" onChange={handleCheckboxChange} />
                         <span className="checkmark"></span> 3 ~ 5년
                     </label>
                     <label className="container">
-                        <input type="checkbox" value="5년이상 7년미만" onChange={handleCheckboxChange} />
+                        <input type="checkbox" value="5~7년" onChange={handleCheckboxChange} />
                         <span className="checkmark"></span> 5 ~ 7년
                     </label>
                     <label className="container">
-                        <input type="checkbox" value="7년이상 10년미만" onChange={handleCheckboxChange} />
+                        <input type="checkbox" value="7~10년" onChange={handleCheckboxChange} />
                         <span className="checkmark"></span> 7 ~ 10년
                     </label>
                     <label className="container">
                         <input type="checkbox" value="10년이상" onChange={handleCheckboxChange} />
                         <span className="checkmark"></span> 10년이상
                     </label>
+                    <label>
+                    <input type="checkbox"onChange={handleProjectListClick}
+                            /> 프로젝트수 정렬
+                    </label>
+                    
                 </div>
                 <div className='ly_flex ly_fitemC hp_mt50'>
                     <p className='hp_fs22'>총 {Object.keys(summaryData).length}개</p>
