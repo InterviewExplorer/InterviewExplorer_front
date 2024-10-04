@@ -212,7 +212,8 @@ function Interviewer() {
                                         <tr>
                                             <th>프로젝트수</th>
                                             <td>
-                                                {selectedResume.number_of_projects && selectedResume.number_of_projects.replace(/,\s*$/, '') === '0개' ? '-' 
+                                                {selectedResume.number_of_projects && selectedResume.number_of_projects.replace(/,\s*$/, '') === '0개' ||
+                                                selectedResume.number_of_projects && selectedResume.number_of_projects.replace(/,\s*$/, '') === '없음' ? '-' 
                                                 : (selectedResume.number_of_projects && selectedResume.number_of_projects.replace(/,\s*$/, '')) || '정보 없음'}
                                             </td>
                                         </tr>
