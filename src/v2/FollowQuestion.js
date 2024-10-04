@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-function FollowQuestions({ job, type, answers, handleQuestion, questions }) {
+function FollowQuestions({ job, type, answers, handleQuestion, questions, onRagStateUpdate }) {
     const [hasAnswer, setHasAnswer] = useState(false);
     const [ragAnswer, setRagAnswer] = useState(false);
+    const [ragState, setRagState] = useState("No");
 
     useEffect(() => {        
         if (answers['A7'] !== null && questions['Q9'] == null) { // 답변이 있는지 확인
@@ -116,6 +117,14 @@ function FollowQuestions({ job, type, answers, handleQuestion, questions }) {
                     const LastestQuestion = { Q10: data.Question };
 
                     handleQuestion(LastestQuestion);
+
+                    if (data.rag === "Yes") {
+                        setRagState("Yes");
+                        onRagStateUpdate("Yes");
+                    } else {
+                        setRagState("No");
+                        onRagStateUpdate("No");
+                    }
                     
                 } catch (error) {
                     console.error('새 질문 생성 중 오류 발생:', error);
