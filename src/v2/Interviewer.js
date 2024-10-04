@@ -226,9 +226,14 @@ function Interviewer() {
                                                     '-'
                                                 ) : (
                                                     <ul className='bl_listRing'>
-                                                        {selectedResume.project_description.split(',').map((project, index) => (
-                                                            <li key={index}>{project.trim()}</li>
-                                                        ))}
+                                                        {selectedResume.project_description.split(',')
+                                                            .map((project, index) => {
+                                                                const trimmedProject = project.trim();
+                                                                return trimmedProject && (
+                                                                    <li key={index}>{trimmedProject}</li>
+                                                                );
+                                                            })
+                                                            .filter(Boolean)}
                                                     </ul>
                                                 )}
                                             </td>
