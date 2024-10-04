@@ -7,7 +7,7 @@ import Chart from '../pages/Chart';
 
 function Report2() {
     const location = useLocation();
-    const { answers = {}, questions = {}, job, years, type, feedback } = location.state || {};
+    const { answers = {}, questions = {}, job, years, type, feedback, rag } = location.state || {};
     const [evaluations, setEvaluations] = useState({});
     const [loading, setLoading] = useState(true);
     const [explains, setExplains] = useState([]);
@@ -57,9 +57,9 @@ function Report2() {
             else if (answerKey === 'A8') {
                 endpoint = 'newQ_evaluate';
             } 
-            // A9와 A10은 'test' 엔드포인트로 전송
+            // A9와 A10은 'follow_evaluete' 엔드포인트로 전송
             else if (['A9', 'A10'].includes(answerKey)) {
-                endpoint = 'newQ_evaluate'; // 일단 이렇게 테스트
+                endpoint = 'follow_evaluete';
             } 
             else {
                 return { 평가: "평가 대상이 아닙니다." };
@@ -75,7 +75,8 @@ function Report2() {
                     answer: answer,
                     years: years,
                     job: job,
-                    type: type
+                    type: type,
+                    rag: rag
                 }),
             });
 

@@ -25,6 +25,7 @@ function Interview2() {
     const [loopVideo, setLoopVideo] = useState(false);
     const [isFirstVideoPlaying, setIsFirstVideoPlaying] = useState(true);
     const [hasStarted, setHasStarted] = useState(false);
+    const [ragState, setRagState] = useState("No");
     
     const handleVideoEnd = () => {
         if (!loopVideo) {
@@ -120,11 +121,15 @@ function Interview2() {
     };
 
     const handleEndInterview = () => {
-        navigate('/report', { state: { answers, questions, job, years, type, feedback } });
+        navigate('/report', { state: { answers, questions, job, years, type, feedback, rag: ragState } });
     };
 
     const handleGenerateFollowUpQuestions = () => {
         setIsRecordingDone(true);
+    };
+
+    const handleRagStateUpdate = (newRagState) => {
+        setRagState(newRagState);
     };
 
     return (
@@ -165,7 +170,7 @@ function Interview2() {
                             </div>
                         </div>
                         <LastestQuestions job={job} type={type} answers={answers} handleQuestion={handleQuestion} questions={questions} />
-                        <FollowQuestions job={job} type={type} answers={answers} handleQuestion={handleQuestion} questions={questions} />
+                        <FollowQuestions job={job} type={type} answers={answers} handleQuestion={handleQuestion} questions={questions} onRagStateUpdate={handleRagStateUpdate} />
                     </>
                 )}
             </div>
