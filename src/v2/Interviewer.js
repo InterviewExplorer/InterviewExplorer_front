@@ -202,7 +202,7 @@ function Interviewer() {
                                     onClick={() => handleListItemClick(id)}
                                     className={activeResumeId === id ? 'hp_on' : ''}
                                 >
-                                    {resume.name} ({resume.date_of_birth})
+                                    {resume.name && resume.name.replace(/,\s*$/, '')} ({resume.date_of_birth && resume.date_of_birth.replace(/,\s*$/, '')})
                                 </li>
                             ))}
                         </ul>
@@ -210,32 +210,56 @@ function Interviewer() {
                     <div className={`bl_resumeSummary el_box ${isResultActive ? 'hp_on' : ''}`}>
                         {selectedResume && (
                             <>
+                                <h3 className='hp_purpleColor hp_fs18 hp_mb10'>{selectedResume.summary_keywords || '정보 없음'}</h3>
                                 <table>
                                     <tbody>
-                                    <tr>
-                                        <th>이름</th>
-                                        <td>{selectedResume.name || '정보 없음'}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>생년월일</th>
-                                        <td>{selectedResume.date_of_birth || '정보 없음'}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>프로젝트수</th>
-                                        <td>{selectedResume.number_of_projects || '정보 없음'}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>프로젝트명</th>
-                                        <td>{selectedResume.project_description || '정보 없음'}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>키워드</th>
-                                        <td>{selectedResume.summary_keywords || '정보 없음'}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>경력</th>
-                                        <td>{selectedResume.work_experience || '정보 없음'}</td>
-                                    </tr>
+                                        <tr>
+                                            <th>이름</th>
+                                            <td>{(selectedResume.name && selectedResume.name.replace(/,\s*$/, '')) || '정보 없음'}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>생년월일</th>
+                                            <td>
+                                                {selectedResume.date_of_birth && selectedResume.date_of_birth.replace(/,\s*$/, '') === '없음' ? '-'
+                                                : (selectedResume.date_of_birth && selectedResume.date_of_birth.replace(/,\s*$/, '')) || '정보 없음'}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>경력</th>
+                                            <td>
+                                                {selectedResume.work_experience && selectedResume.work_experience.replace(/,\s*$/, '') === '없음' ? '-'
+                                                : (selectedResume.work_experience && selectedResume.work_experience.replace(/,\s*$/, '')) || '-'}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>프로젝트수</th>
+                                            <td>
+                                                {selectedResume.number_of_projects && selectedResume.number_of_projects.replace(/,\s*$/, '') === '0개' ||
+                                                selectedResume.number_of_projects && selectedResume.number_of_projects.replace(/,\s*$/, '') === '없음' ? '-' 
+                                                : (selectedResume.number_of_projects && selectedResume.number_of_projects.replace(/,\s*$/, '')) || '정보 없음'}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>프로젝트명</th>
+                                            <td>
+                                                {!selectedResume.project_description || 
+                                                selectedResume.project_description.replace(/,\s*$/, '').trim() === '' || 
+                                                selectedResume.project_description.replace(/,\s*$/, '').trim() === '없음' ? (
+                                                    '-'
+                                                ) : (
+                                                    <ul className='bl_listRing'>
+                                                        {selectedResume.project_description.split(',')
+                                                            .map((project, index) => {
+                                                                const trimmedProject = project.trim();
+                                                                return trimmedProject && (
+                                                                    <li key={index}>{trimmedProject}</li>
+                                                                );
+                                                            })
+                                                            .filter(Boolean)}
+                                                    </ul>
+                                                )}
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                                 <h3 className='hp_purpleColor hp_fs18 hp_mt40 hp_mb10'>보유기술</h3>
