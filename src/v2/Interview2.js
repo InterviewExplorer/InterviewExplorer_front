@@ -113,8 +113,8 @@ function Interview2() {
         if (currentQuestionIndex < questionKeys.length - 1) {
             setLoopVideo(false);
             setIsFirstVideoPlaying(true);
-            videoRef1.current.currentTime = 0; // 비디오의 시작 위치로 이동
-            videoRef1.current.load(); // 비디오 재생
+            // videoRef1.current.currentTime = 0; //디버그용으로 써둔 코드인데 혹시 
+            // videoRef1.current.load(); 
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             setIsRecordingDone(false);
         }
@@ -151,7 +151,7 @@ function Interview2() {
                                             }}>
                                             Your browser does not support the video tag.
                                         </video>
-                                        <video src="/1726112869803.mp4"   autoPlay={true} muted ref={videoRef2} loop={true}
+                                        <video src="video/1728108263580.mp4"   autoPlay={true} muted ref={videoRef2} loop={true}
                                         style={{
                                             display: isFirstVideoPlaying ? 'none' : 'block'}}>
                                             Your browser does not support the video tag.
