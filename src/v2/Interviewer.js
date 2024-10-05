@@ -32,9 +32,6 @@ function Interviewer() {
         }
     }, [location.state]);
 
-
-
-
     useEffect(() => {
         
         if (summaryData && typeof summaryData === 'object' && Object.keys(summaryData).length > 0 && scores) {
@@ -47,9 +44,8 @@ function Interviewer() {
         return { ...resumeItem, score: scoreItem ? scoreItem.score : 0 };
       })
       .sort((a, b) => b.score - a.score); // 점수 내림차순 정렬
-      console.log(updatedSummaryData)
-    setSummaryData(updatedSummaryData);
-    
+        console.log(updatedSummaryData)
+            setSummaryData(updatedSummaryData);
         }
         
       }, [scores]);
@@ -106,36 +102,25 @@ function Interviewer() {
       }, [filteredResume]);
 
 
-      const handleProjectListClick =(event) =>{
+    const handleProjectListClick =(event) =>{
         if (event.target.checked) {
-                const sortedData=Object.values(summaryData).sort((a,b)=>b.number_of_projects-a.number_of_projects)
-                setSummaryData(sortedData)}
-        else{
+            const sortedData=Object.values(summaryData).sort((a,b)=>b.number_of_projects-a.number_of_projects)
+            setSummaryData(sortedData)
+        }else{
             const sortedData=Object.values(summaryData).sort((a, b) => a.name.localeCompare(b.name, 'ko'));
             setSummaryData(sortedData)
-
         }
-                
-            }
-        
-        
-        
-        
+    }
+
     const handleChange = (event) => setQuery(event.target.value);
 
     const handleCheckboxChange = (event) => {
         const value = event.target.value;
         if(event.target.checked){
             setSelectedOptions([...selectedOptions, value]);
-        }
-        
-            
-         else {
+        }else{
             setSelectedOptions(selectedOptions.filter((option) => option !== value));
-            
         }
-        
-        
     };
 
     const submitQuery = async (value) => {
@@ -162,7 +147,6 @@ function Interviewer() {
 
 
     const handleListItemClick = (id) => {
-
         if (activeResumeId === id) {
             setActiveResumeId(null);
             setIsResultActive(false);
@@ -310,8 +294,11 @@ function Interviewer() {
                                         <tr>
                                             <th>경력</th>
                                             <td>
-                                                {selectedResume.work_experience && selectedResume.work_experience.replace(/,\s*$/, '') === '없음' ? '-'
-                                                : (selectedResume.work_experience && selectedResume.work_experience.replace(/,\s*$/, '')) || '-'}
+                                                {selectedResume.work_experience && 
+                                                (selectedResume.work_experience.replace(/,\s*$/, '') === '없음' || 
+                                                 selectedResume.work_experience.replace(/,\s*$/, '') === '0년 0개월') 
+                                                    ? '-'
+                                                    : (selectedResume.work_experience && selectedResume.work_experience.replace(/,\s*$/, '')) || '-'}
                                             </td>
                                         </tr>
                                         <tr>
