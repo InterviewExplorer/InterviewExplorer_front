@@ -90,9 +90,19 @@ function FollowQuestions({ job, type, answers, handleQuestion, questions, onRagS
                                 return acc;
                             }, {});
                     };
+
+                    const extractQ9Data = (data) => {
+                        return Object.entries(data)
+                            .filter(([key, value]) => key === 'Q9' && value !== null)
+                            .reduce((acc, [key, value]) => {
+                                acc[key] = value;
+                                return acc;
+                            }, {});
+                    };
                         
                     const answersRag = extractA8Data(answers);
                     const questionsRag = extractQ8Data(questions);
+                    const followQuestion = extractQ9Data(questions);
                         
                     const response = await fetch('http://localhost:8000/follow_question', {
                         method: 'POST',
@@ -106,6 +116,7 @@ function FollowQuestions({ job, type, answers, handleQuestion, questions, onRagS
                             questions : questionString,
                             answersRag : answersRag,
                             questionsRag : questionsRag,
+                            followQuestion : followQuestion
                         }),
                     });
 
