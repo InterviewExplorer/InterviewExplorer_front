@@ -3,14 +3,14 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import VideoRecorder from '../pages/VideoRecorder';
 import LastestQuestions from "./LatestQuestions";
 import FollowQuestions from './FollowQuestion';
-
+import Loading from '../pages/Loading';
 function Interview2() {
     const initialQuestions = {Q1: null,Q2: null,Q3: null,Q4: null,Q5: null,Q6: null,Q7: null,Q8: null,Q9: null,Q10: null};
     const [questions, setQuestions] = useState(initialQuestions);
 
     const initialAnswers = {A1: null,A2: null,A3: null,A4: null,A5: null,A6: null,A7: null,A8: null,A9: null,A10: null};
     const [answers, setAnswers] = useState(initialAnswers);
-
+    
     const location = useLocation();
     const navigate = useNavigate();
     const { basicQuestions, job, years, videoOfInterviewer: initialInterviewer, type, resumeQuestions } = location.state || {};
@@ -98,6 +98,7 @@ function Interview2() {
 
     console.log("questions", questions)
     console.log("answers", answers)
+    console.log("interviewers",interviewer)
 
     const isAnswerComplete = () => {
         return answers[`A${currentQuestionIndex + 1}`] !== undefined && answers[`A${currentQuestionIndex + 1}`] !== null;
@@ -113,8 +114,8 @@ function Interview2() {
         if (currentQuestionIndex < questionKeys.length - 1) {
             setLoopVideo(false);
             setIsFirstVideoPlaying(true);
-            videoRef1.current.currentTime = 0; // 비디오의 시작 위치로 이동
-            videoRef1.current.load(); // 비디오 재생
+            videoRef1.current.currentTime = 0; //디버그용으로 써둔 코드인데 혹시 
+            videoRef1.current.load(); 
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             setIsRecordingDone(false);
         }
@@ -134,6 +135,9 @@ function Interview2() {
 
     return (
         <div className='ly_all el_bg ly_flexC ly_fitemC'>
+              {!interviewer[`Q${currentQuestionIndex + 1}`] ? (
+                <Loading />
+            ) : (
             <div className='ly_maxWd'>
                 {questions && (
                     <>
@@ -151,7 +155,7 @@ function Interview2() {
                                             }}>
                                             Your browser does not support the video tag.
                                         </video>
-                                        <video src="/1726112869803.mp4"   autoPlay={true} muted ref={videoRef2} loop={true}
+                                        <video src="video/1728108263580.mp4"   autoPlay={true} muted ref={videoRef2} loop={true}
                                         style={{
                                             display: isFirstVideoPlaying ? 'none' : 'block'}}>
                                             Your browser does not support the video tag.
@@ -169,11 +173,11 @@ function Interview2() {
                                 </div>
                             </div>
                         </div>
-                        <LastestQuestions job={job} type={type} answers={answers} handleQuestion={handleQuestion} questions={questions} />
-                        <FollowQuestions job={job} type={type} answers={answers} handleQuestion={handleQuestion} questions={questions} onRagStateUpdate={handleRagStateUpdate} />
+                        <LastestQuestions job={job} type={type} answers={answers} handleQuestion={handleQuestion} questions={questions} handleInterviewerUpdate={handleInterviewerUpdate}/>
+                        <FollowQuestions job={job} type={type} answers={answers} handleQuestion={handleQuestion} questions={questions} onRagStateUpdate={handleRagStateUpdate} handleInterviewerUpdate={handleInterviewerUpdate}/>
                     </>
                 )}
-            </div>
+            </div>)}
         </div>
     );
 }
