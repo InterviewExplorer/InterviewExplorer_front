@@ -37,9 +37,7 @@ function LatestQuestions({ job, type, answers, handleQuestion, questions ,handle
 
                     const data = await response.json();
                     const LastestQuestion = { Q8: data.Questions };
-                    followingInterviewers('Q8',data.questions)
-                    console.log(data.Questions)
-                    console.log(data.questions)
+                    followingInterviewers('Q8',data.Questions)
                     handleQuestion(LastestQuestion);
                     
                 } catch (error) {

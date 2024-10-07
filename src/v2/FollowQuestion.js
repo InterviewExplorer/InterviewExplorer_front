@@ -44,7 +44,8 @@ function FollowQuestions({ job, type, answers, handleQuestion, questions, onRagS
 
                     const data = await response.json();
                     const LastestQuestion = { Q9: data.Question };
-                    followingInterviewers('Q9',data.question)
+                    followingInterviewers('Q9',data.Question)
+                    
                     handleQuestion(LastestQuestion);
                     
                 } catch (error) {
@@ -145,7 +146,8 @@ function FollowQuestions({ job, type, answers, handleQuestion, questions, onRagS
 
                     const data = await response.json();
                     const LastestQuestion = { Q10: data.Question };
-                    followingInterviewers('Q10',data.question)
+                    
+                    followingInterviewers('Q10',data.Question)
                     handleQuestion(LastestQuestion);
 
                     if (data.rag === "Yes") {
@@ -175,6 +177,7 @@ function FollowQuestions({ job, type, answers, handleQuestion, questions, onRagS
                 }
         
                 const data2 = await response.json();
+                
                 console.log("데이터잘옴?2",data2)
                 handleInterviewerUpdate(data2)
             }    
