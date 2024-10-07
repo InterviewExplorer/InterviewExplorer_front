@@ -121,13 +121,8 @@ function Interviewer() {
 
     const handleChange = (event) => setQuery(event.target.value);
 
-    const handleCheckboxChange = (event,option) => {
+    const handleCheckboxChange = (event) => {
 
-        setSelectedOptions((prev) =>
-            prev.includes(option)
-              ? prev.filter((item) => item !== option)
-              : [...prev, option]
-          );
         
         const value = event.target.value;
         if(event.target.checked){
@@ -240,27 +235,27 @@ function Interviewer() {
                 <div className='bl_exprience ly_flexC ly_fitemC hp_mt20'>
                     <span className='bl_exprience__ttl hp_36Color'>경력</span>
                     <label className="container">
-                        <input type="checkbox" value="신입" onChange={(e) => handleCheckboxChange(e, '신입')} checked={isChecked('신입')} />
+                        <input type="checkbox" value="신입" onChange={handleCheckboxChange} checked={isChecked('신입')} />
                         <span className="checkmark"></span> 신입
                     </label>
                     <label className="container">
-                        <input type="checkbox" value="1~3년" onChange={(e) => handleCheckboxChange(e, '1~3년')} checked={isChecked('1~3년')}/>
+                        <input type="checkbox" value="1~3년" onChange={handleCheckboxChange} checked={isChecked('1~3년')}/>
                         <span className="checkmark"></span> 1 ~ 3년
                     </label>
                     <label className="container">
-                        <input type="checkbox" value="3~5년" onChange={(e) => handleCheckboxChange(e, '3~5년')} checked={isChecked('3~5년')}/>
+                        <input type="checkbox" value="3~5년" onChange={handleCheckboxChange} checked={isChecked('3~5년')}/>
                         <span className="checkmark"></span> 3 ~ 5년
                     </label>
                     <label className="container">
-                        <input type="checkbox" value="5~7년" onChange={(e) => handleCheckboxChange(e, '5~7년')} checked={isChecked('5~7년')}/>
+                        <input type="checkbox" value="5~7년" onChange={handleCheckboxChange} checked={isChecked('5~7년')}/>
                         <span className="checkmark"></span> 5 ~ 7년
                     </label>
                     <label className="container">
-                        <input type="checkbox" value="7~10년" onChange={(e) => handleCheckboxChange(e, '7~10년')} checked={isChecked('7~10년')}/>
+                        <input type="checkbox" value="7~10년" onChange={handleCheckboxChange} checked={isChecked('7~10년')}/>
                         <span className="checkmark"></span> 7 ~ 10년
                     </label>
                     <label className="container">
-                        <input type="checkbox" value="10년이상" onChange={(e) => handleCheckboxChange(e, '10년이상')} checked={isChecked('10년이상')}/>
+                        <input type="checkbox" value="10년이상" onChange={handleCheckboxChange} checked={isChecked('10년이상')}/>
                         <span className="checkmark"></span> 10년이상
                     </label>
                     <label>
