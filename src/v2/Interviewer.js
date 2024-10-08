@@ -263,12 +263,12 @@ function Interviewer() {
                         <span className="checkmark"></span> 10년이상
                     </label>                    
                 </div>
-                <div className='ly_spaceBetween ly_fitemC hp_mt50'>
+                <div className='ly_flex ly_fitemC hp_mt50'>
                     <p className='hp_fs22'>총 {Object.keys(summaryData).length}개</p>
-                    <label className="container bl_sortBtn">
+                    {/* <label className="container bl_sortBtn">
                         <input type="checkbox"onChange={handleProjectListClick} />
                         <span className="checkmark"></span> 프로젝트 : 많은 순
-                    </label>   
+                    </label>    */}
                 </div>
                 <div className='ly_flex ly_fitemStart hp_mt20 el_box el_box__result'>
                     <div className={`bl_result  ${isResultActive ? 'hp_on' : ''}`}>
