@@ -18,6 +18,7 @@ function Interviewer() {
     const [scores, setScores] = useState([])
     const [filteredResume,setFilteredResume]=useState([])
     const [tempSummaryData, setTempSummaryData] = useState();
+    const [searchKeyword, setSearchKeyword] = useState(null);
 
     useEffect(() => {
         if (location.state) {
@@ -119,7 +120,9 @@ function Interviewer() {
 
     
 
-    const handleChange = (event) => setQuery(event.target.value);
+    const handleChange = (event) => {setQuery(event.target.value);
+        setSearchKeyword(event.target.value);
+    }
 
     const handleCheckboxChange = (event) => {
 
@@ -154,6 +157,7 @@ function Interviewer() {
             console.error('Error occurred:', error);
         }
         setLoading(false);
+        
     };
 
 
@@ -229,7 +233,7 @@ function Interviewer() {
             ) : (
             <div className='ly_maxWd hp_pt50 hp_pb50'>
                 <div className='bl_search el_box'>
-                    <input className='bl_search__input' type="text" onChange={handleChange}/>
+                    <input className='bl_search__input' type="text" onChange={handleChange} value={searchKeyword}/>
                     <button className='bl_search__btn el_btnGradation' type="submit" onClick={()=>submitQuery("벡터")}><b className='WA'>검색</b></button>
                 </div>
                 <div className='bl_exprience ly_flexC ly_fitemC hp_mt20'>
