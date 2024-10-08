@@ -119,3 +119,7 @@
 
 /* 파일첨부 */
 .el_uploadBtn{background:url('/img/icon/upload_white.png')no-repeat 85% 32%/68px #000;width:700px;font-size:55px;line-height:1;padding:40px 0 30px;text-indent:-50px;margin:-50px auto 0;cursor:pointer;}
+
+/* 정렬 */
+.bl_sortBtn{font-size:18px;}
+.bl_sortBtn .checkmark:after{top:2px;}

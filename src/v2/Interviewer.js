@@ -261,19 +261,14 @@ function Interviewer() {
                     <label className="container">
                         <input type="checkbox" value="10년이상" onChange={handleCheckboxChange} checked={isChecked('10년이상')}/>
                         <span className="checkmark"></span> 10년이상
-                    </label>
-                    <label>
-                    <input type="checkbox"onChange={handleProjectListClick}
-                            /> 프로젝트수 정렬
-                    </label>
-                    
+                    </label>                    
                 </div>
-                <div className='ly_flex ly_fitemC hp_mt50'>
+                <div className='ly_spaceBetween ly_fitemC hp_mt50'>
                     <p className='hp_fs22'>총 {Object.keys(summaryData).length}개</p>
-                    {/* <div className="filebox hp_ml20">
-                        <label htmlFor="file" className='el_btnXS el_btn0Back'>+ 이력서 추가</label> 
-                        <input type="file" id="file" accept=".pdf" multiple onChange={handleFileChange} style={{display: 'none'}}/>
-                    </div> */}
+                    <label className="container bl_sortBtn">
+                        <input type="checkbox"onChange={handleProjectListClick} />
+                        <span className="checkmark"></span> 프로젝트 : 많은 순
+                    </label>   
                 </div>
                 <div className='ly_flex ly_fitemStart hp_mt20 el_box el_box__result'>
                     <div className={`bl_result  ${isResultActive ? 'hp_on' : ''}`}>
